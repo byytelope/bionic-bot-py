@@ -2,3 +2,4 @@ discord
 requests
 beautifulsoup4
 COVID19Py
+html5lib
