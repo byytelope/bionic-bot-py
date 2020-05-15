@@ -18,6 +18,12 @@ async def on_ready():
     print("Bot be ready.")
 
 
+@bot.command()
+@commands.has_permissions(manage_messages=True)
+async def clear(ctx, amount=3):
+    await ctx.channel.purge(limit=amount)
+
+
 @bot.command(aliases=["members"])
 async def aju_members(ctx, *, members):
     server_id = bot.get_guild(id_bionic)
@@ -59,6 +65,12 @@ async def aju_bot(ctx, *, hello):
 @bot.command(aliases=["corona"])
 async def aju_number(ctx, value: str):
     await ctx.send(f"{covid19[value]} hei meehun.")
+
+
+@clear.error
+async def on_clear_error(ctx, error):
+    if isinstance(error, commands.MissingPermissions):
+        await ctx.send("Adhi the command beynun vey varah ekalo bondo nivei.")
 
 
 @aju_bot.error
