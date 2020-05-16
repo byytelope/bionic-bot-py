@@ -19,6 +19,7 @@ async def on_ready():
 
 
 @bot.command()
+@commands.has_any_role('Chernobyl', 'Three Mile Island', 'Covid-19')
 @commands.has_permissions(manage_messages=True)
 async def clear(ctx, amount=3):
     await ctx.channel.purge(limit=amount)
