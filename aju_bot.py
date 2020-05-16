@@ -15,7 +15,7 @@ id_bionic = 585576337041784862
 
 @bot.event
 async def on_ready():
-    await bot.change_presence(status=discord.Status.online, activity=discord.Game("csgo road to mg"))
+    await bot.change_presence(status=discord.Status.online, activity=discord.Game("use .help for help"))
     print("Bot be ready.")
 
 
