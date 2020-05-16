@@ -21,7 +21,7 @@ async def on_ready():
 @bot.command()
 @commands.has_any_role('Chernobyl', 'Three Mile Island', 'Covid-19')
 @commands.has_permissions(manage_messages=True)
-async def clear(ctx, amount=3):
+async def cls(ctx, amount=3):
     await ctx.channel.purge(limit=amount)
 
 
@@ -68,9 +68,9 @@ async def aju_number(ctx, value: str):
     await ctx.send(f"{covid19[value]} hei meehun.")
 
 
-@clear.error
-async def on_clear_error(ctx, error):
-    if isinstance(error, commands.MissingPermissions):
+@cls.error
+async def on_cls_error(ctx, error):
+    if isinstance(error, commands.MissingPermissions) or isinstance(error, commands.MissingAnyRole):
         await ctx.send("Adhi the command beynun vey varah ekalo bondo nivei.")
 
 
