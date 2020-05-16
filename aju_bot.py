@@ -8,6 +8,7 @@ from web_scraper import web_scrape
 covid19 = COVID19Py.COVID19("https://coronavirus-tracker-api.herokuapp.com").getLatest()
 
 bot = commands.Bot(command_prefix=".")
+bot.remove_command('help')
 
 id_bionic = 585576337041784862
 
@@ -17,6 +18,25 @@ async def on_ready():
     await bot.change_presence(status=discord.Status.online, activity=discord.Game("csgo road to mg"))
     print("Bot be ready.")
 
+
+@bot.command()
+async def help(ctx):
+
+    embed=discord.Embed(
+        colour=discord.Colour.blurple(),
+        title='Use a "." before command',
+        description='How 2 use Aju'
+    )
+    embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/592639239683047424/711173474592489543/unknown.png")
+    embed.add_field(name='aju', value="Talk to Aju when you're bored.", inline=False)
+    embed.add_field(name='corona', value="Use corona confirmed for confirmed and corona deaths for deaths.", inline=False)
+    embed.add_field(name='cls', value='Aju will erase a defined number of messages for you. Default value is 3. (Admin role required)', inline=False)
+    embed.add_field(name='members', value='Aju will count the number of members in the server.', inline=False)
+    embed.add_field(name='spam', value="Don't.", inline=False)
+    embed.add_field(name='csgo', value='HLTV rankings for all time best CS:GO players.', inline=False)
+    embed.set_footer(text='Be nice to Aju thank.')
+
+    await ctx.send(embed=embed)
 
 @bot.command()
 @commands.has_any_role('Chernobyl', 'Three Mile Island', 'Covid-19')
