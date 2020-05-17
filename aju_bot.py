@@ -19,6 +19,26 @@ async def on_ready():
     print("Bot be ready.")
 
 
+@bot.event
+async def on_raw_reaction_add(payload):
+    message_id = payload.message_id
+    if message_id == 711498386427084822:
+        guild_id = payload.guild_id
+        # guild = discord.utils.find(lambda bruh: bruh.id == guild_id, bot.guilds)
+
+        if payload.emoji.name == 'csgo':
+            # role = discord.utils.get(guild.roles, name='CSGO')
+            print('csgo')
+        elif payload.emoji.name == 'gtav':
+            # role = discord.utils.get(guild.roles, name='GTA V')
+            print('gta')
+
+
+@bot.event
+async def on_raw_reaction_remove(payload):
+    pass
+
+
 @bot.command()
 async def help(ctx):
 
