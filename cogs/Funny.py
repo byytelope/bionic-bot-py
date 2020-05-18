@@ -1,6 +1,5 @@
 import random
 import COVID19Py
-from web_scraper import web_scrape
 from discord.ext import commands
 
 covid19 = COVID19Py.COVID19("https://coronavirus-tracker-api.herokuapp.com").getLatest()
@@ -31,10 +30,10 @@ class Funny(commands.Cog):
                 "Go ahead, call me lonely, a simp, or horny. These are MY FUCKING FEELINGS. I want to have the roughest and hottest sex with Belle Delphine. Seriously. Her cute accent, her lovely face, and her supple body drive me to horny madness. Every inch of her would be massaged and licked. When I want to finish and climax with all of my love, I would do it on her stomach, face, tits, and roll her over on her ass to blow the last of my load on those supple cheeks. I want to cuddle with her when I am done busting, and ask her how her day was, feeling each other's warmth on our naked, vulnerable bodies. She'd tell me how good it was and she'd confide her truest feelings to me, telling me how much she loves me. I would tell her I love her back, and she would give me a loving peck on my cheeks. Then we would get dressed and spend the day watching the Sopranos, still cuddling and even eating our favorite foods. I want Belle to be my girlfriend, my lover, my wife, and my life. I love her and want her to be mine. Is this a copy-pasta? No. I typed out every word to proclaim how I feel. Every time you ask who she is, look back on this: SHE IS MY WIFE. I love Belle Delphine, and these are MY original thoughts and feelings.",
                 "I cannot FUCKING believe that Japanese-American musician Joji of 88rising is in actuality the popular Japanese-American YouTuber Joji Miller also know as Filthy Frank who was popular for his satirical content who has used a derogatory racial slur in his 2017 album ‘Pink Season’. I cannot believe this. I'm literally shaking. This can't be happening. My mom came into my room to bring me a plate of chicken nuggets and I literally screamed at her and hit the plate of chicken nuggets out of her hand. She started yelling and swearing at me and I slammed the door on her. I’m so distressed right now I don’t know what to do. I didn’t mean to do that to my mom but I’m literally in shock from the what happened today. I feel like I’m going to explode. This can’t be happening. I’m having a fucking breakdown. I don’t want to believe the world is so corrupt. I want a future to believe in. I cannot fucking deal with this right now. It wasn’t supposed to be like this. This is so fucked. I’m literally shaking right now... There’s no way Joji would do this... This can’t be real..."]
         await ctx.send(f"{random.choice(spams)}")
-
-    @commands.command(aliases=["csgo"])
-    async def aju_csgo(self, ctx, num: int):
-        await ctx.send(web_scrape(num-1))
+ 
+    @commands.command(aliases=["corona"])
+    async def aju_number(self, ctx, value: str):
+        await ctx.send(f"{covid19[value]} hei meehun.")
 
     @commands.command(aliases=["aju"])
     async def aju_bot(self, ctx, *, hello):
@@ -51,10 +50,6 @@ class Funny(commands.Cog):
                     "Hanagen aase.",
                     "I rike to uhh eat duh sticky rais."]
         await ctx.send(f"{random.choice(responses)}")
-
-    @commands.command(aliases=["corona"])
-    async def aju_number(self, ctx, value: str):
-        await ctx.send(f"{covid19[value]} hei meehun.")
 
     @aju_bot.error
     async def on_aju_bot_error(self, ctx, error):
