@@ -8,7 +8,7 @@ class HelpCommands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
     
-    @commands.Cog.listener()
+    @commands.command()
     async def help(self, ctx):
 
         embed=discord.Embed(
