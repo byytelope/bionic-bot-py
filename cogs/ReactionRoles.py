@@ -10,7 +10,7 @@ class ReactionRoles(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
     
-    @commands.command(aliases='roleid')
+    @commands.command(aliases=['roleid'])
     async def set_message_id(self, ctx, id_: int):
         global message_id_setter
         message_id_setter = id_
