@@ -13,6 +13,7 @@ class AdminCommands(commands.Cog):
     @commands.has_permissions(manage_messages=True)
     async def cls(self, ctx, amount=3):
         await ctx.channel.purge(limit=amount)
+        await ctx.channel.send(f"Aju {amount} message delete kollin.")
 
     @cls.error
     async def on_cls_error(self, ctx, error):

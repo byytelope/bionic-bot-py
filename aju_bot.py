@@ -66,6 +66,7 @@ async def on_raw_reaction_remove(payload):
         else:
             print("Role not found.")
 
+
 bot.load_extension('cogs.HelpCommands')
 bot.load_extension('cogs.Roles')
 bot.load_extension('cogs.Funny')
