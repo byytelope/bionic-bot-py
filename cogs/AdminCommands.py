@@ -8,7 +8,7 @@ class AdminCommands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.Cog.listener()
+    @commands.command(aliases=['cls', 'clear'])
     @commands.has_any_role('Chernobyl', 'Three Mile Island', 'Covid-19')
     @commands.has_permissions(manage_messages=True)
     async def cls(self, ctx, amount=3):
