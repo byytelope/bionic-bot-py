@@ -1,10 +1,12 @@
 import random
 import COVID19Py
-from WebScraper import web_scrape
+from web_scraper import web_scrape
 from discord.ext import commands
 
 covid19 = COVID19Py.COVID19("https://coronavirus-tracker-api.herokuapp.com").getLatest()
 id_bionic = 585576337041784862
+
+bot = commands.Bot(command_prefix=".")
 
 class Funny(commands.Cog):
     def __init__(self, bot):
