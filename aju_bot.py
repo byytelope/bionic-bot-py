@@ -27,10 +27,47 @@ async def on_command_error(ctx, error):
         responses = ["They aju ah niegey command ah.",
                      "Aju ah egey ehthakaau keyfele."]
         await ctx.send(random.choice(responses))
+    
+@bot.event
+async def on_raw_reaction_add(payload):
+    message_id = payload.message_id
+    if message_id == 711977846112911490:
+        guild_id = payload.guild_id
+        guild = discord.utils.find(lambda f: f.id == guild_id, bot.guilds)
 
+        role = discord.utils.get(guild.roles, name=payload.emoji.name)
+
+        if role is not None:
+            member = discord.utils.find(lambda ree: ree.id == payload.user_id, guild.members)
+            if member is not None:
+                await member.add_roles(role)
+                print(f"Added {role} to {member}")
+            else:
+                print("Member not found.")
+        else:
+            print("Role not found.")
+
+@bot.event
+async def on_raw_reaction_remove(payload):
+    message_id = payload.message_id
+    if message_id == 711977846112911490:
+        guild_id = payload.guild_id
+        guild = discord.utils.find(lambda bruh: bruh.id == guild_id, bot.guilds)
+
+        role = discord.utils.get(guild.roles, name=payload.emoji.name)
+
+        if role is not None:
+            member = discord.utils.find(lambda ree: ree.id == payload.user_id, guild.members)
+            if member is not None:
+                await member.remove_roles(role)
+                print(f"Removed {role} from {member}")
+            else:
+                print("Member not found.")
+        else:
+            print("Role not found.")
 
 bot.load_extension('cogs.HelpCommands')
-bot.load_extension('cogs.ReactionRoles')
+bot.load_extension('cogs.Roles')
 bot.load_extension('cogs.Funny')
 bot.load_extension('cogs.AdminCommands')
 
