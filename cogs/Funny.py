@@ -64,7 +64,7 @@ class Funny(commands.Cog):
 
     @aju_number.error
     async def on_aju_number_error(self, ctx, error):
-        if isinstance(error, commands.MissingRequiredArgument) or isinstance(error, commands.CommandNotFound):
+        if isinstance(error, commands.MissingRequiredArgument) or isinstance(error, commands.UserInputError):
             responses = ["Corona cowcow?",
                         "Adhi ada neevene ey.",
                         "Thankeda baaraa benafele.",
