@@ -5,15 +5,13 @@ from discord.ext import commands
 covid19 = COVID19Py.COVID19("https://coronavirus-tracker-api.herokuapp.com").getLatest()
 id_bionic = 585576337041784862
 
-bot = commands.Bot(command_prefix=".")
-
 class Funny(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
     
     @commands.command(aliases=["members"])
     async def aju_members(self, ctx, *, members):
-        server_id = bot.get_guild(id_bionic)
+        server_id = self.bot.get_guild(id_bionic)
         await ctx.send(f"There are {server_id.member_count} corona-free people in bionic.")
 
     @commands.command(aliases=["spam"])
@@ -66,7 +64,7 @@ class Funny(commands.Cog):
 
     @aju_number.error
     async def on_aju_number_error(self, ctx, error):
-        if isinstance(error, commands.MissingRequiredArgument):
+        if isinstance(error, commands.MissingRequiredArgument) or isinstance(error, commands.CommandNotFound):
             responses = ["Corona cowcow?",
                         "Adhi ada neevene ey.",
                         "Thankeda baaraa benafele.",

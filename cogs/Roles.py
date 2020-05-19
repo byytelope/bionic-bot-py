@@ -1,7 +1,6 @@
 import discord
 from discord.ext import commands
 
-bot = commands.Bot(command_prefix=".")
 default_role = 'Kyshtym'
 
 class Roles(commands.Cog):
