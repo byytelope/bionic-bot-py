@@ -13,21 +13,10 @@ async def on_ready():
     await bot.change_presence(status=discord.Status.online, activity=discord.Game("use .help for help"))
     print("Bot be ready.")
 
-@bot.command(aliases=["ping"])
-async def aju_ping(ctx):
-    await ctx.send(f"{round(bot.latency * 1000)}ms in thiyaa aju ah libenei.")
-
 @bot.command(aliases=["csgo"])
-async def aju_csgo(ctx, num: int):
+async def aju_csgo(self, ctx, num: int):
     await ctx.send(web_scrape(num-1))
 
-@bot.event
-async def on_command_error(ctx, error):
-    if isinstance(error, commands.CommandNotFound):
-        responses = ["They aju ah niegey command ah.",
-                     "Aju ah egey ehthakaau keyfele."]
-        await ctx.send(random.choice(responses))
-    
 @bot.event
 async def on_raw_reaction_add(payload):
     message_id = payload.message_id
@@ -65,6 +54,13 @@ async def on_raw_reaction_remove(payload):
                 print("Member not found.")
         else:
             print("Role not found.")
+
+@bot.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.CommandNotFound):
+        responses = ["They aju ah niegey command ah.",
+                    "Aju ah egey ehthakaau keyfele."]
+        await ctx.send(random.choice(responses))
 
 
 bot.load_extension('cogs.HelpCommands')

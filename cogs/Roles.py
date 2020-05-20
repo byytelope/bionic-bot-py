@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 
-default_role = 'Kyshtym'
+default_role = 'Fukushima Daichi'
 
 class Roles(commands.Cog):
     """

@@ -1,4 +1,5 @@
 import discord
+import random
 from discord.ext import commands
 
 class AdminCommands(commands.Cog):
@@ -9,16 +10,41 @@ class AdminCommands(commands.Cog):
         self.bot = bot
 
     @commands.command(aliases=['clear'])
-    @commands.has_any_role('Chernobyl', 'Three Mile Island', 'Covid-19')
+    @commands.has_any_role('Chernobyl', 'Three Mile Island')
     @commands.has_permissions(manage_messages=True)
     async def cls(self, ctx, amount=3):
+        embed = discord.Embed(title=f'{ctx.author.name} cleared {amount} messages.', description=f'in {ctx.channel.name}')
+        audit_ch = self.bot.get_channel(712599778868854794)
+
         await ctx.channel.purge(limit=amount)
         await ctx.channel.send(f"Aju {amount} message delete kollin.")
+        await audit_ch.send(embed=embed)
 
     @cls.error
     async def on_cls_error(self, ctx, error):
         if isinstance(error, commands.MissingPermissions) or isinstance(error, commands.MissingAnyRole):
-            await ctx.send("Adhi the command beynun vey varah ekalo bondo nivei.")
+            responses = ['Adhi the command beynun vey varah ekalo bondo nivei.',
+                         'Hoho kanthethi.'
+                        ]
+            await ctx.send(random.choice(responses))
+      
+    @commands.command()
+    @commands.has_permissions(kick_members=True)
+    async def kick(self, ctx, user: discord.Member, *, reason=None):
+        embed = discord.Embed(title=f'{ctx.author.name} kicked {user} from bionic.', description=reason)
+        audit_ch = self.bot.get_channel(712599778868854794)
+
+        await user.kick(reason=reason)
+        await ctx.send(f'{user} kick vege.')
+        await audit_ch.send(embed=embed)
+
+    @kick.error
+    async def on_kick_error(self, ctx, error):
+        if isinstance(error, commands.MissingPermissions):
+            responses = ['Adhi the command beynun vey varah ekalo bondo nivei.',
+                            'Hoho kanthethi.'
+                        ]
+            await ctx.send(random.choice(responses))
 
 
 def setup(bot):
