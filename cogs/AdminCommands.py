@@ -14,7 +14,6 @@ class AdminCommands(commands.Cog):
     @commands.has_permissions(manage_messages=True)
     async def cls(self, ctx, amount=3):
         embed = discord.Embed(title=f'{ctx.author.name} cleared {amount} messages.', description=f'in {ctx.channel.name}')
-        global audit_ch
         audit_ch = self.bot.get_channel(712599778868854794)
 
         await ctx.channel.purge(limit=amount)
@@ -33,6 +32,7 @@ class AdminCommands(commands.Cog):
     @commands.has_permissions(kick_members=True)
     async def kick(self, ctx, user: discord.Member, *,reason=None):
         embed = discord.Embed(title=f'{ctx.author.name} kicked {user} from bionic.', description=reason)
+        audit_ch = self.bot.get_channel(712599778868854794)
         
         await user.kick(reason=reason)
         await ctx.send(f'{user} kick vege.')
@@ -63,6 +63,7 @@ class AdminCommands(commands.Cog):
         link = await ctx.channel.create_invite(max_age=86400, max_uses=i)
         dm = self.bot.get_user(inv_author.id)
         embed = discord.Embed(title=f'{ctx.author.name} confirmed an invite link request from {inv_author.name}', description=f'for {auth_ch}')
+        audit_ch = self.bot.get_channel(712599778868854794)
 
         await dm.send(f'{link}')
         await auth_ch.send(f'Invite link requested by {inv_author.mention} was confirmed. Pls check your dms for the link.')
@@ -72,6 +73,7 @@ class AdminCommands(commands.Cog):
     @commands.has_any_role('Chernobyl', 'Three Mile Island')
     async def deny(self, ctx):
         embed = discord.Embed(title=f'{ctx.author.name} denied an invite link request from {inv_author.name}', description=f'for {auth_ch}')
+        audit_ch = self.bot.get_channel(712599778868854794)
 
         await auth_ch.send(f"Invite link requested by {inv_author.mention} was denied.")
         await audit_ch.send(embed=embed)
