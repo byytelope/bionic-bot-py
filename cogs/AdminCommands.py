@@ -55,7 +55,7 @@ class AdminCommands(commands.Cog):
         global auth_ch
         auth_ch = ctx.channel
 
-        await admin_ch.send(f'{inv_author.mention} is requesting an invite link. .confirm or .deny')
+        await admin_ch.send(f'{inv_author.mention} is requesting an invite link... Use .confirm or .deny')
     
     @commands.command()
     @commands.has_any_role('Chernobyl', 'Three Mile Island')
