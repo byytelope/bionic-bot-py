@@ -23,6 +23,7 @@ class HelpCommands(commands.Cog):
         embed.add_field(name='spam', value="Don't.", inline=False)
         embed.add_field(name='csgo', value='HLTV rankings for all time best CS:GO players.', inline=False)
         embed.add_field(name='clear/cls (Admin role required)', value='Aju will erase a defined number of messages for you. Default value is 3.', inline=False)
+        embed.add_field(name='reqinv', value='Request an invite link from admins.', inline=False)
         embed.set_footer(text='Be nice to Aju thank.')
 
         await ctx.send(embed=embed)

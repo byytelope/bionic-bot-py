@@ -14,6 +14,7 @@ class AdminCommands(commands.Cog):
     @commands.has_permissions(manage_messages=True)
     async def cls(self, ctx, amount=3):
         embed = discord.Embed(title=f'{ctx.author.name} cleared {amount} messages.', description=f'in {ctx.channel.name}')
+        global audit_ch
         audit_ch = self.bot.get_channel(712599778868854794)
 
         await ctx.channel.purge(limit=amount)
@@ -32,8 +33,6 @@ class AdminCommands(commands.Cog):
     @commands.has_permissions(kick_members=True)
     async def kick(self, ctx, user: discord.Member, *,reason=None):
         embed = discord.Embed(title=f'{ctx.author.name} kicked {user} from bionic.', description=reason)
-        global audit_ch
-        audit_ch = self.bot.get_channel(712599778868854794)
         
         await user.kick(reason=reason)
         await ctx.send(f'{user} kick vege.')
