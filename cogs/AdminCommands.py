@@ -32,6 +32,7 @@ class AdminCommands(commands.Cog):
     @commands.has_permissions(kick_members=True)
     async def kick(self, ctx, user: discord.Member, *,reason=None):
         embed = discord.Embed(title=f'{ctx.author.name} kicked {user} from bionic.', description=reason)
+        global audit_ch
         audit_ch = self.bot.get_channel(712599778868854794)
         
         await user.kick(reason=reason)
@@ -49,24 +50,31 @@ class AdminCommands(commands.Cog):
     @commands.command(aliases=['request'])
     async def req_invite(self, ctx):
         admin_ch = self.bot.get_channel(712447089623171104)
-        global author
-        author = ctx.author
+        global inv_author
+        inv_author = ctx.author
         global auth_ch
         auth_ch = ctx.channel
-        await admin_ch.send(f'{author.mention} is requesting an invite link. .confirm or .deny')
+
+        await admin_ch.send(f'{inv_author.mention} is requesting an invite link. .confirm or .deny')
     
     @commands.command()
     @commands.has_any_role('Chernobyl', 'Three Mile Island')
     async def confirm(self, ctx, i=5):
         link = await ctx.channel.create_invite(max_age=86400, max_uses=i)
-        dm = self.bot.get_user(author.id)
+        dm = self.bot.get_user(inv_author.id)
+        embed = discord.Embed(title=f'{ctx.author.name} confirmed an invite link request from {inv_author.name}', description=f'for {auth_ch}')
+
         await dm.send(f'{link}')
-        await auth_ch.send(f'Invite link requested by {author.mention} was confirmed. Pls check your dms for the link.')
+        await auth_ch.send(f'Invite link requested by {inv_author.mention} was confirmed. Pls check your dms for the link.')
+        await audit_ch.send(embed=embed)
 
     @commands.command()
     @commands.has_any_role('Chernobyl', 'Three Mile Island')
     async def deny(self, ctx):
-        await auth_ch.send(f"Invite link requested by {author.mention} was denied.")
+        embed = discord.Embed(title=f'{ctx.author.name} denied an invite link request from {inv_author.name}', description=f'for {auth_ch}')
+
+        await auth_ch.send(f"Invite link requested by {inv_author.mention} was denied.")
+        await audit_ch.send(embed=embed)
 
 
 def setup(bot):
