@@ -13,7 +13,7 @@ class AdminCommands(commands.Cog):
     @commands.has_any_role('Chernobyl', 'Three Mile Island')
     @commands.has_permissions(manage_messages=True)
     async def cls(self, ctx, amount=3):
-        embed = discord.Embed(title=f'{ctx.author.name} cleared {amount} messages.', description=f'in {ctx.channel.name}')
+        embed = discord.Embed(title=f'{ctx.author.name} cleared {amount} messages.', description=f'in {ctx.channel.name}', colour=discord.Colour.blurple())
         audit_ch = self.bot.get_channel(712599778868854794)
 
         await ctx.channel.purge(limit=amount)
@@ -31,7 +31,7 @@ class AdminCommands(commands.Cog):
     @commands.command()
     @commands.has_permissions(kick_members=True)
     async def kick(self, ctx, user: discord.Member, *,reason=None):
-        embed = discord.Embed(title=f'{ctx.author.name} kicked {user} from bionic.', description=reason)
+        embed = discord.Embed(title=f'{ctx.author.name} kicked {user} from bionic.', description=reason, colour=discord.Colour.blurple())
         audit_ch = self.bot.get_channel(712599778868854794)
         
         await user.kick(reason=reason)
@@ -62,7 +62,7 @@ class AdminCommands(commands.Cog):
     async def confirm(self, ctx, i=5):
         link = await ctx.channel.create_invite(max_age=86400, max_uses=i)
         dm = self.bot.get_user(inv_author.id)
-        embed = discord.Embed(title=f'{ctx.author.name} confirmed an invite link request from {inv_author.name}', description=f'for {auth_ch}')
+        embed = discord.Embed(title=f'{ctx.author.name} confirmed an invite link request from {inv_author.name}', description=f'for channel: {auth_ch}', colour=discord.Colour.blurple())
         audit_ch = self.bot.get_channel(712599778868854794)
 
         await dm.send(f'{link}')
@@ -72,7 +72,7 @@ class AdminCommands(commands.Cog):
     @commands.command()
     @commands.has_any_role('Chernobyl', 'Three Mile Island')
     async def deny(self, ctx):
-        embed = discord.Embed(title=f'{ctx.author.name} denied an invite link request from {inv_author.name}', description=f'for {auth_ch}')
+        embed = discord.Embed(title=f'{ctx.author.name} denied an invite link request from {inv_author.name}', description=f'for channel: {auth_ch}', colour=discord.Colour.blurple())
         audit_ch = self.bot.get_channel(712599778868854794)
 
         await auth_ch.send(f"Invite link requested by {inv_author.mention} was denied.")
