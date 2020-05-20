@@ -30,10 +30,10 @@ class AdminCommands(commands.Cog):
       
     @commands.command()
     @commands.has_permissions(kick_members=True)
-    async def kick(self, ctx, user: discord.Member, *, reason=None):
+    async def kick(self, ctx, user: discord.Member, *,reason=None):
         embed = discord.Embed(title=f'{ctx.author.name} kicked {user} from bionic.', description=reason)
         audit_ch = self.bot.get_channel(712599778868854794)
-
+        
         await user.kick(reason=reason)
         await ctx.send(f'{user} kick vege.')
         await audit_ch.send(embed=embed)
@@ -45,6 +45,28 @@ class AdminCommands(commands.Cog):
                             'Hoho kanthethi.'
                         ]
             await ctx.send(random.choice(responses))
+
+    @commands.command(aliases=['request'])
+    async def req_invite(self, ctx):
+        admin_ch = self.bot.get_channel(712447089623171104)
+        global author
+        author = ctx.author
+        global auth_ch
+        auth_ch = ctx.channel
+        await admin_ch.send(f'{author.mention} is requesting an invite link. .confirm or .deny')
+    
+    @commands.command()
+    @commands.has_any_role('Chernobyl', 'Three Mile Island')
+    async def confirm(self, ctx, i=5):
+        link = await ctx.channel.create_invite(max_age=86400, max_uses=i)
+        dm = self.bot.get_user(author.id)
+        await dm.send(f'{link}')
+        await auth_ch.send(f'Invite link requested by {author.mention} was confirmed. Pls check your dms for the link.')
+
+    @commands.command()
+    @commands.has_any_role('Chernobyl', 'Three Mile Island')
+    async def deny(self, ctx):
+        await auth_ch.send(f"Invite link requested by {author.mention} was denied.")
 
 
 def setup(bot):
