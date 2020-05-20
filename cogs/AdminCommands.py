@@ -47,7 +47,7 @@ class AdminCommands(commands.Cog):
                         ]
             await ctx.send(random.choice(responses))
 
-    @commands.command(aliases=['request'])
+    @commands.command(aliases=['reqinv'])
     async def req_invite(self, ctx):
         admin_ch = self.bot.get_channel(712447089623171104)
         global inv_author
@@ -55,6 +55,7 @@ class AdminCommands(commands.Cog):
         global auth_ch
         auth_ch = ctx.channel
 
+        await ctx.channel.send(f'Requesting invite link from admins...')
         await admin_ch.send(f'{inv_author.mention} is requesting an invite link... Use .confirm or .deny')
     
     @commands.command()
