@@ -63,7 +63,7 @@ class AdminCommands(commands.Cog):
         auth_ch = ctx.channel
 
         await ctx.channel.send(f'Requesting invite link from admins...')
-        await admin_ch.send(f'{inv_author.mention} is requesting an invite link for {ctx.channel.mention}. Use .confirm <no. of uses> or .deny')
+        await admin_ch.send(f'{inv_author.mention} is requesting an invite link for {ctx.channel.mention}. Use .confirm **no. of uses** or .deny')
     
     @commands.command()
     @commands.has_any_role('Chernobyl', 'Three Mile Island')
