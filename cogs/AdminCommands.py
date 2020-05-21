@@ -14,8 +14,8 @@ class AdminCommands(commands.Cog):
     @commands.has_permissions(manage_messages=True)
     async def cls(self, ctx, amount=3):
         embed = discord.Embed(
-            title=ctx.author.name,
-            description=f'cleared {amount} message(s) in {ctx.channel.mention}',
+            title=ctx.author,
+            description=f'cleared **{amount}** message(s) in {ctx.channel.mention}',
             colour=discord.Colour.blurple()
         )
         audit_ch = self.bot.get_channel(712599778868854794)
@@ -36,14 +36,14 @@ class AdminCommands(commands.Cog):
     @commands.has_permissions(kick_members=True)
     async def kick(self, ctx, user: discord.Member, *,reason=None):
         embed = discord.Embed(
-            title=f'{ctx.author.name} kicked {user} from bionic.',
+            title=f'**{ctx.author}** kicked **{user}** from bionic.',
             description=reason,
             colour=discord.Colour.blurple()
             )
         audit_ch = self.bot.get_channel(712599778868854794)
         
         await user.kick(reason=reason)
-        await ctx.send(f'{user} kick vege.')
+        await ctx.send(f'Bye bye **{user.mention}**.')
         await audit_ch.send(embed=embed)
 
     @kick.error
@@ -71,8 +71,8 @@ class AdminCommands(commands.Cog):
         link = await ctx.channel.create_invite(max_age=86400, max_uses=i)
         dm = self.bot.get_user(inv_author.id)
         embed = discord.Embed(
-            title=f'{ctx.author.name} confirmed an invite link request.',
-            description=f'from {inv_author.name} for {auth_ch.mention}',
+            title=f'**{ctx.author}** confirmed an invite link request.',
+            description=f'from **{inv_author}** for {auth_ch.mention}',
             colour=discord.Colour.blurple()
             )
         audit_ch = self.bot.get_channel(712599778868854794)
@@ -85,8 +85,8 @@ class AdminCommands(commands.Cog):
     @commands.has_any_role('Chernobyl', 'Three Mile Island')
     async def deny(self, ctx):
         embed = discord.Embed(
-            title=f'{ctx.author.name} denied an invite link request.',
-            description=f'from {inv_author.name} for {auth_ch.mention}',
+            title=f'**{ctx.author}** denied an invite link request.',
+            description=f'from **{inv_author}** for {auth_ch.mention}',
             colour=discord.Colour.blurple())
         audit_ch = self.bot.get_channel(712599778868854794)
 
