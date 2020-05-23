@@ -13,6 +13,10 @@ class Funny(commands.Cog):
     async def aju_ping(self, ctx):
         await ctx.send(f"{round(self.bot.latency * 1000)}ms in thiyaa aju ah libenei.")
 
+    @commands.command()
+    async def say(self, ctx, *, echo):
+        await ctx.send(f'{echo}')
+
     @commands.command(aliases=["members"])
     async def aju_members(self, ctx, *, members):
         server_id = self.bot.get_guild(id_bionic)

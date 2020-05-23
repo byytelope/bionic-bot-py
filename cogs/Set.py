@@ -6,23 +6,6 @@ from discord.ext import commands
 class Set(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-    
-        DATABASE_URL = os.getenv("DATABASE_URL")
-        self.db = psycopg2.connect(DATABASE_URL, sslmode="require")
-        self.cursor = self.db.cursor()
-        self.cursor.execute("""
-        CREATE SCHEMA IF NOT EXISTS aju_bot;
-        CREATE TABLE IF NOT EXISTS main (
-            guild_id TEXT,
-            welc_text TEXT,
-            msg_id_reaction TEXT,
-            ch_id_welcome TEXT,
-            ch_id_audit TEXT,
-            ch_id_general TEXT,
-            ch_id_admin TEXT
-        );
-        """)
-        self.db.commit()
 
     @commands.group(invoke_without_command=True)
     async def set(self, ctx):
@@ -39,8 +22,27 @@ class Set(commands.Cog):
     @set.command(aliases=['welctext'])
     @commands.has_any_role('Chernobyl', 'Three Mile Island')
     async def set_welc_text(self, ctx, *, welc_text):
-        self.cursor.execute(f"SELECT welc_text FROM main WHERE guild_id = {ctx.guild.id}")
-        result = self.cursor.fetchone()
+        try:
+            DATABASE_URL = os.getenv("DATABASE_URL")
+            self.db = psycopg2.connect(DATABASE_URL, sslmode="require")
+            self.cursor = self.db.cursor()
+            self.cursor.execute("""
+            CREATE TABLE IF NOT EXISTS main (
+                guild_id TEXT,
+                welc_text TEXT,
+                msg_id_reaction TEXT,
+                ch_id_welcome TEXT,
+                ch_id_audit TEXT,
+                ch_id_general TEXT,
+                ch_id_admin TEXT
+            );
+            """)
+            self.cursor.execute(f"SELECT welc_text FROM main WHERE guild_id = {ctx.guild.id}")
+            result = self.cursor.fetchone()
+
+        except (Exception, psycopg2.Error) as error:
+            print(error)
+        
 
         audit_ch = self.bot.get_channel(712599778868854794)
 
