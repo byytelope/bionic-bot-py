@@ -1,6 +1,7 @@
 import discord
 import random
 import os
+import psycopg2
 from web_scraper import web_scrape
 from discord.ext import commands
 
@@ -12,6 +13,24 @@ bot.remove_command('help')
 async def on_ready():
     await bot.change_presence(status=discord.Status.online, activity=discord.Game("use .help for help"))
     print("Bot be ready.")
+    
+    DATABASE_URL = os.getenv("DATABASE_URL")
+    db = psycopg2.connect(DATABASE_URL, sslmode="require")
+    cursor = db.cursor()
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS main (
+        guild_id TEXT,
+        welc_text TEXT,
+        msg_id_reaction TEXT,
+        ch_id_welcome TEXT,
+        ch_id_audit TEXT,
+        ch_id_general TEXT,
+        ch_id_admin TEXT
+    );
+    """)
+    db.commit()
+    cursor.close()
+    db.close()
 
 @bot.command(aliases=["csgo"])
 async def aju_csgo(self, ctx, num: int):
