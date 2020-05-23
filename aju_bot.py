@@ -30,5 +30,6 @@ bot.load_extension('cogs.Roles')
 bot.load_extension('cogs.Funny')
 bot.load_extension('cogs.AdminCommands')
 bot.load_extension('cogs.Welcome')
+bot.load_extension('cogs.Set')
 
 bot.run(os.environ['api_key'])
