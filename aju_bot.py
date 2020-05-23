@@ -29,6 +29,7 @@ async def on_ready():
     );
     ''')
     db.commit()
+    print("Heroku pg ready.")
 
 @bot.command(aliases=["csgo"])
 async def aju_csgo(self, ctx, num: int):
