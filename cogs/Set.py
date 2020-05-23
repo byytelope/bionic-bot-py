@@ -27,14 +27,13 @@ class Set(commands.Cog):
     @commands.has_any_role('Chernobyl', 'Three Mile Island')
     async def set_welc_text(self, ctx, *, welc_text):
 
-        self.cursor.execute(f'SELECT welc_text FROM main WHERE guild_id = {ctx.guild.id}')
+        self.cursor.execute(f'SELECT welc_text FROM main WHERE guild_id=%s', (ctx.guild.id,))
         result = self.cursor.fetchone()
 
         audit_ch = self.bot.get_channel(712599778868854794)
 
         if result is None:
-            sql = ('INSERT INTO main(guild_id, welc_text) VALUES(?,?)')
-            val = (ctx.guild.id, welc_text)
+            sql = ('INSERT INTO main(guild_id, welc_text) VALUES(%s,%s)', (str(ctx.guild.id), welc_text,))
             await ctx.send(f'''
                 Welcome text has been set to **"{welc_text}"**
                 ''')
@@ -47,8 +46,7 @@ class Set(commands.Cog):
             await audit_ch.send(embed=embed)
 
         elif result is not None:
-            sql = ('UPDATE main SET welc_text = ? WHERE guild_id = ?')
-            val = (welc_text, ctx.guild.id)
+            sql = ('UPDATE main SET welc_text=%s WHERE guild_id=%s', (welc_text, str(ctx.guild.id),))
             await ctx.send(f'''
                 Welcome text has been changed to "{welc_text}"
                 ''')
@@ -60,7 +58,7 @@ class Set(commands.Cog):
             )
             await audit_ch.send(embed=embed)
     
-        self.cursor.execute(sql, val)
+        self.cursor.execute(sql)
         self.db.commit()
         self.cursor.close()
         self.db.close()
@@ -74,8 +72,7 @@ class Set(commands.Cog):
         audit_ch = self.bot.get_channel(712599778868854794)
 
         if result is None:
-            sql = ('INSERT INTO main(guild_id, ch_id_welc) VALUES(?,?)')
-            val = (ctx.guild.id, welc_ch)
+            sql = ('INSERT INTO main(guild_id, ch_id_welc) VALUES(%s,%s)', (str(ctx.guild.id), welc_ch,))
             await ctx.send(f'Welcome channel has been set to {welc_ch.mention}')
 
             embed = discord.Embed(
@@ -86,8 +83,7 @@ class Set(commands.Cog):
             await audit_ch.send(embed=embed)
 
         elif result is not None:
-            sql = ('UPDATE main SET ch_id_welc = ? WHERE guild_id = ?')
-            val = (welc_ch, ctx.guild.id)
+            sql = ('UPDATE main SET ch_id_welc=%s WHERE guild_id=%s', (welc_ch, str(ctx.guild.id),))
             await ctx.send(f'Welcome channel has been changed to {welc_ch.mention}')
 
             embed = discord.Embed(
@@ -97,7 +93,7 @@ class Set(commands.Cog):
             )
             await audit_ch.send(embed=embed)
 
-        self.cursor.execute(sql, val)
+        self.cursor.execute(sql)
         self.db.commit()
         self.cursor.close()
         self.db.close()
