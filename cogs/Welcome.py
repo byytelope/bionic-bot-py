@@ -20,12 +20,12 @@ class Welcome(commands.Cog):
         await member.add_roles(role)
         print(f'{member} was given {role}')
 
-        self.cursor.execute(f"SELECT ch_id_welcome FROM main WHERE guild_id = {member.guild.id}")
+        self.cursor.execute(f'SELECT ch_id_welcome FROM main WHERE guild_id = {member.guild.id}')
         result = self.cursor.fetchone()
         if result is None:
             return
         else:
-            self.cursor.execute(f"SELECT welc_text FROM main WHERE guild_id = {member.guild.id}")
+            self.cursor.execute(f'SELECT welc_text FROM main WHERE guild_id = {member.guild.id}')
             result_1 = self.cursor.fetchone()
 
             embed = discord.Embed(description = f'{str(result_1[0])}', colour = discord.Colour.blurple())

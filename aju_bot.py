@@ -17,7 +17,7 @@ async def on_ready():
     DATABASE_URL = os.getenv("DATABASE_URL")
     db = psycopg2.connect(DATABASE_URL, sslmode="require")
     cursor = db.cursor()
-    cursor.execute("""
+    cursor.execute('''
     CREATE TABLE IF NOT EXISTS main (
         guild_id TEXT,
         welc_text TEXT,
@@ -27,10 +27,8 @@ async def on_ready():
         ch_id_general TEXT,
         ch_id_admin TEXT
     );
-    """)
+    ''')
     db.commit()
-    cursor.close()
-    db.close()
 
 @bot.command(aliases=["csgo"])
 async def aju_csgo(self, ctx, num: int):
