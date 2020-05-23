@@ -27,10 +27,10 @@ class Set(commands.Cog):
     @commands.has_any_role('Chernobyl', 'Three Mile Island')
     async def set_welc_text(self, ctx, *, welc_text):
 
+        audit_ch = self.bot.get_channel(712599778868854794)
+
         self.cursor.execute(f'SELECT welc_text FROM main WHERE guild_id=%s', (ctx.guild.id,))
         result = self.cursor.fetchone()
-
-        audit_ch = self.bot.get_channel(712599778868854794)
 
         if result is None:
             sql = ('INSERT INTO main(guild_id, welc_text) VALUES(%s,%s)', (str(ctx.guild.id), welc_text,))

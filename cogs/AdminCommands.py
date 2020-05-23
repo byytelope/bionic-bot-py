@@ -46,13 +46,13 @@ class AdminCommands(commands.Cog):
         await ctx.send(f'Bye bye **{user.mention}**.')
         await audit_ch.send(embed=embed)
 
-    # @kick.error
-    # async def on_kick_error(self, ctx, error):
-    #     if isinstance(error, commands.MissingPermissions):
-    #         responses = ['Adhi the command beynun vey varah ekalo bondo nivei.',
-    #                         'Hoho kanthethi.'
-    #                     ]
-    #         await ctx.send(random.choice(responses))
+    @kick.error
+    async def on_kick_error(self, ctx, error):
+        if isinstance(error, commands.MissingPermissions):
+            responses = ['Adhi the command beynun vey varah ekalo bondo nivei.',
+                            'Hoho kanthethi.'
+                        ]
+            await ctx.send(random.choice(responses))
 
     @commands.command(aliases=['reqinv'])
     async def req_invite(self, ctx):
