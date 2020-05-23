@@ -18,7 +18,7 @@ async def on_ready():
     db = psycopg2.connect(DATABASE_URL, sslmode="require")
     cursor = db.cursor()
     cursor.execute('''
-    CREATE TABLE IF NOT EXISTS main (
+    CREATE TABLE IF NOT EXISTS main(
         guild_id TEXT,
         welc_text TEXT,
         msg_id_reaction TEXT,
