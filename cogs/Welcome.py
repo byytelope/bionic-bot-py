@@ -21,6 +21,7 @@ class Welcome(commands.Cog):
         print(f'{member} was given {role}')
         
         embed = discord.Embed(description = f'Welcome to Bionic {member.mention}!', colour = discord.Colour.blurple())
+        embed.set_author(name=f'{member.name}', icon_url=f'{member.avatar_url}')
         embed.set_thumbnail(url=f'{member.avatar_url}')
         embed.set_footer(text=f'{member.guild}', icon_url=f'{member.guild.icon_url}')
         # embed.timestamp = datetime.datetime.now()
