@@ -19,7 +19,7 @@ async def on_ready():
     cursor = db.cursor()
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS main(
-        guild_id TEXT,
+        guild_id TEXT PRIMARY KEY,
         welc_text TEXT,
         msg_id_reaction TEXT,
         ch_id_welcome TEXT,
