@@ -22,6 +22,7 @@ class Set(commands.Cog):
             ch_id_admin TEXT
         );
         """)
+        self.db.commit()
 
     @commands.group(invoke_without_command=True)
     async def set(self, ctx):
