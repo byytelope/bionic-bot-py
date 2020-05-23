@@ -63,7 +63,7 @@ class AdminCommands(commands.Cog):
         auth_ch = ctx.channel
 
         await ctx.channel.send(f'Requesting invite link from admins...')
-        await admin_ch.send(f'{inv_author.mention} is requesting an invite link for {ctx.channel.mention}. Use .confirm **no. of uses** or .deny')
+        await admin_ch.send(f'{inv_author.mention} is requesting an invite link for {ctx.channel.mention}. Use **.confirm** <no. of uses> or **.deny**')
     
     @commands.command()
     @commands.has_any_role('Chernobyl', 'Three Mile Island')
@@ -78,7 +78,7 @@ class AdminCommands(commands.Cog):
         audit_ch = self.bot.get_channel(712599778868854794)
 
         await dm.send(f'{link}')
-        await auth_ch.send(f'Invite link requested by {inv_author.mention} was confirmed. Pls check your dms for the link.')
+        await auth_ch.send(f'Invite link requested by {inv_author.mention} was **confirmed**. Pls check your dms for the link.')
         await audit_ch.send(embed=embed)
 
     @commands.command()
@@ -90,7 +90,7 @@ class AdminCommands(commands.Cog):
             colour=discord.Colour.blurple())
         audit_ch = self.bot.get_channel(712599778868854794)
 
-        await auth_ch.send(f"Invite link requested by {inv_author.mention} was denied.")
+        await auth_ch.send(f"Invite link requested by {inv_author.mention} was **denied**.")
         await audit_ch.send(embed=embed)
 
 

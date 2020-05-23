@@ -1,14 +1,17 @@
 import discord
 import psycopg2
-import os
 from discord.ext import commands
 
 class Set(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-        DATABASE_URL = os.getenv("DATABASE_URL")
-        self.db = psycopg2.connect(DATABASE_URL, sslmode="require")
+        self.db = psycopg2.connect(
+            database="del1asvmurnfd5", 
+            user="cicfacausylfdh", 
+            password="535c731241092f847dacd3a99d27405fa3c3fc54beb401e5b44b878bfa78555f", 
+            host="ec2-54-86-170-8.compute-1.amazonaws.com", 
+            port="5432")
         self.cursor = self.db.cursor()
 
     @commands.group(invoke_without_command=True)

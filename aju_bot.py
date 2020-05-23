@@ -13,8 +13,12 @@ bot.remove_command('help')
 async def on_ready():
     await bot.change_presence(status=discord.Status.online, activity=discord.Game("use .help for help"))
     
-    # DATABASE_URL = os.getenv("DATABASE_URL")
-    # db = psycopg2.connect(DATABASE_URL, sslmode="require")
+    # db = psycopg2.connect(
+    #     database="del1asvmurnfd5", 
+    #     user="cicfacausylfdh", 
+    #     password="535c731241092f847dacd3a99d27405fa3c3fc54beb401e5b44b878bfa78555f", 
+    #     host="ec2-54-86-170-8.compute-1.amazonaws.com", 
+    #     port="5432")
     # cursor = db.cursor()
     # cursor.execute('''
     #     CREATE TABLE IF NOT EXISTS main(
