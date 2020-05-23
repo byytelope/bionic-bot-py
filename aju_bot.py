@@ -12,24 +12,23 @@ bot.remove_command('help')
 @bot.event
 async def on_ready():
     await bot.change_presence(status=discord.Status.online, activity=discord.Game("use .help for help"))
-    print("Bot be ready.")
     
     DATABASE_URL = os.getenv("DATABASE_URL")
     db = psycopg2.connect(DATABASE_URL, sslmode="require")
     cursor = db.cursor()
     cursor.execute('''
-    CREATE TABLE IF NOT EXISTS main(
-        guild_id TEXT PRIMARY KEY,
-        welc_text TEXT,
-        msg_id_reaction TEXT,
-        ch_id_welcome TEXT,
-        ch_id_audit TEXT,
-        ch_id_general TEXT,
-        ch_id_admin TEXT
-    );
+        CREATE TABLE IF NOT EXISTS main(
+            guild_id TEXT PRIMARY KEY,
+            welc_text TEXT,
+            msg_id_reaction TEXT,
+            ch_id_welcome TEXT,
+            ch_id_audit TEXT,
+            ch_id_general TEXT,
+            ch_id_admin TEXT
+        );
     ''')
     db.commit()
-    print("Heroku pg ready.")
+    print("Bot be ready.")
 
 @bot.command(aliases=["csgo"])
 async def aju_csgo(self, ctx, num: int):
