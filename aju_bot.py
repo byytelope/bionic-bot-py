@@ -14,14 +14,14 @@ async def on_ready():
     await bot.change_presence(status=discord.Status.online, activity=discord.Game("use .help for help"))
     
     # db = psycopg2.connect(
-    #     database="del1asvmurnfd5", 
-    #     user="cicfacausylfdh", 
-    #     password="535c731241092f847dacd3a99d27405fa3c3fc54beb401e5b44b878bfa78555f", 
-    #     host="ec2-54-86-170-8.compute-1.amazonaws.com", 
+    #     database="d5gmd9koh5vegt", 
+    #     user="htildhifgbegjh", 
+    #     password="b4b03250555235feb27acab0d9abbf0be289a0b08cc265478be37bcbd87c5c8c", 
+    #     host="ec2-52-202-22-140.compute-1.amazonaws.com", 
     #     port="5432")
     # cursor = db.cursor()
     # cursor.execute('''
-    #     CREATE TABLE IF NOT EXISTS main(
+    #     CREATE TABLE IF NOT EXISTS main (
     #         guild_id TEXT PRIMARY KEY,
     #         welc_text TEXT,
     #         msg_id_reaction TEXT,
@@ -32,6 +32,7 @@ async def on_ready():
     #     );
     # ''')
     # db.commit()
+    # db.close()
     print("Bot be ready.")
 
 @bot.command(aliases=["csgo"])
@@ -51,6 +52,6 @@ bot.load_extension('cogs.Roles')
 bot.load_extension('cogs.Funny')
 bot.load_extension('cogs.AdminCommands')
 bot.load_extension('cogs.Welcome')
-bot.load_extension('cogs.Set')
+# bot.load_extension('cogs.Set')
 
 bot.run(os.environ['api_key'])
