@@ -1,13 +1,29 @@
 import random
 import COVID19Py
+import psycopg2
+import os
 from discord.ext import commands
 
 covid19 = COVID19Py.COVID19("https://coronavirus-tracker-api.herokuapp.com").getLatest()
-id_bionic = 585576337041784862
 
 class Funny(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+
+        db_database = os.environ['db_database']
+        db_user = os.environ['db_user']
+        db_password = os.environ['db_password']
+        db_host = os.environ['db_host']
+        db_port = os.environ['db_port']
+
+        self.db = psycopg2.connect(
+            database=db_database, 
+            user=db_user, 
+            password=db_password, 
+            host=db_host, 
+            port=db_port
+            )
+        self.cursor = self.db.cursor()
     
     @commands.command(aliases=["ping"])
     async def aju_ping(self, ctx):
@@ -19,8 +35,7 @@ class Funny(commands.Cog):
 
     @commands.command(aliases=["members"])
     async def aju_members(self, ctx, *, members):
-        server_id = self.bot.get_guild(id_bionic)
-        await ctx.send(f"There are {server_id.member_count} corona-free people in bionic.")
+        await ctx.send(f"There are {ctx.guild.member_count} corona-free people in bionic.")
 
     @commands.command(aliases=["spam"])
     async def aju_spam(self, ctx):
@@ -35,7 +50,11 @@ class Funny(commands.Cog):
                 "Give it up folks, einstein over here has something to say. What's that buddy? Wha- A grammatical error?!? WHAT?!? B... Bu... That can't be possible! Surely not! A GRAMMAR MISTAKE? IN MY SIGHT?!? What a great, absolute miracle that you and your 257 IQ Brain was here to correct it! Thank you! Have my grattitude, Actually, What's your cashapp? I'd like to give you 20$... Know what? While we're at it have the keys to my car. Actually, no, scratch that. Have the keys to my house, go watch my kids grow up and fuck my wife. Also, my Paypal username and password is: Ilikesmartazzes4 and 968386329. Go have fun. Thank you for your work.",
                 "Go ahead, call me lonely, a simp, or horny. These are MY FUCKING FEELINGS. I want to have the roughest and hottest sex with Belle Delphine. Seriously. Her cute accent, her lovely face, and her supple body drive me to horny madness. Every inch of her would be massaged and licked. When I want to finish and climax with all of my love, I would do it on her stomach, face, tits, and roll her over on her ass to blow the last of my load on those supple cheeks. I want to cuddle with her when I am done busting, and ask her how her day was, feeling each other's warmth on our naked, vulnerable bodies. She'd tell me how good it was and she'd confide her truest feelings to me, telling me how much she loves me. I would tell her I love her back, and she would give me a loving peck on my cheeks. Then we would get dressed and spend the day watching the Sopranos, still cuddling and even eating our favorite foods. I want Belle to be my girlfriend, my lover, my wife, and my life. I love her and want her to be mine. Is this a copy-pasta? No. I typed out every word to proclaim how I feel. Every time you ask who she is, look back on this: SHE IS MY WIFE. I love Belle Delphine, and these are MY original thoughts and feelings.",
                 "I cannot FUCKING believe that Japanese-American musician Joji of 88rising is in actuality the popular Japanese-American YouTuber Joji Miller also know as Filthy Frank who was popular for his satirical content who has used a derogatory racial slur in his 2017 album ‘Pink Season’. I cannot believe this. I'm literally shaking. This can't be happening. My mom came into my room to bring me a plate of chicken nuggets and I literally screamed at her and hit the plate of chicken nuggets out of her hand. She started yelling and swearing at me and I slammed the door on her. I’m so distressed right now I don’t know what to do. I didn’t mean to do that to my mom but I’m literally in shock from the what happened today. I feel like I’m going to explode. This can’t be happening. I’m having a fucking breakdown. I don’t want to believe the world is so corrupt. I want a future to believe in. I cannot fucking deal with this right now. It wasn’t supposed to be like this. This is so fucked. I’m literally shaking right now... There’s no way Joji would do this... This can’t be real..."]
-        if ctx.channel.id == 585576337041784864:
+
+        self.cursor.execute(f"SELECT ch_id_general FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
+        result = self.cursor.fetchone()
+
+        if ctx.channel.id == int(result[0]):
             await ctx.send('Thebai nihigaahe mi channel aki.')
         else:
             await ctx.send(f"{random.choice(spams)}")

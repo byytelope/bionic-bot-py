@@ -1,5 +1,7 @@
 import discord
+import psycopg2
 import random
+import os
 from discord.ext import commands
 
 class AdminCommands(commands.Cog):
@@ -8,21 +10,41 @@ class AdminCommands(commands.Cog):
     """
     def __init__(self, bot):
         self.bot = bot
+        
+        db_database = os.environ['db_database']
+        db_user = os.environ['db_user']
+        db_password = os.environ['db_password']
+        db_host = os.environ['db_host']
+        db_port = os.environ['db_port']
+
+        self.db = psycopg2.connect(
+            database=db_database, 
+            user=db_user, 
+            password=db_password, 
+            host=db_host, 
+            port=db_port
+            )
+        self.cursor = self.db.cursor()
 
     @commands.command(aliases=['clear'])
     @commands.has_any_role('Chernobyl', 'Three Mile Island')
     @commands.has_permissions(manage_messages=True)
     async def cls(self, ctx, amount=3):
         embed = discord.Embed(
-            title=ctx.author,
+            title=f'**{ctx.author}**',
             description=f'cleared **{amount}** message(s) in {ctx.channel.mention}',
             colour=discord.Colour.blurple()
         )
-        audit_ch = self.bot.get_channel(712599778868854794)
-
         await ctx.channel.purge(limit=amount)
         await ctx.channel.send(f"Aju {amount} message delete kollin.")
-        await audit_ch.send(embed=embed)
+
+        self.cursor.execute(f"SELECT ch_id_audit FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
+        result_1 = self.cursor.fetchone()
+        if result_1 is None:
+            return
+        else:
+            audit_ch = self.bot.get_channel(id=int(result_1[0]))
+            await audit_ch.send(embed=embed)     
 
     @cls.error
     async def on_cls_error(self, ctx, error):
@@ -40,11 +62,17 @@ class AdminCommands(commands.Cog):
             description=reason,
             colour=discord.Colour.blurple()
             )
-        audit_ch = self.bot.get_channel(712599778868854794)
         
         await user.kick(reason=reason)
         await ctx.send(f'Bye bye **{user.mention}**.')
-        await audit_ch.send(embed=embed)
+
+        self.cursor.execute(f"SELECT ch_id_audit FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
+        result_1 = self.cursor.fetchone()
+        if result_1 is None:
+            return
+        else:
+            audit_ch = self.bot.get_channel(id=int(result_1[0]))
+            await audit_ch.send(embed=embed) 
 
     @kick.error
     async def on_kick_error(self, ctx, error):
@@ -62,8 +90,14 @@ class AdminCommands(commands.Cog):
         global auth_ch
         auth_ch = ctx.channel
 
-        await ctx.channel.send(f'Requesting invite link from admins...')
-        await admin_ch.send(f'{inv_author.mention} is requesting an invite link for {ctx.channel.mention}. Use **.confirm** <no. of uses> or **.deny**')
+        self.cursor.execute(f"SELECT ch_id_admin FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
+        result_1 = self.cursor.fetchone()
+        if result_1 is None:
+            ctx.send("Please set admin channel first. Use .set for more info.")
+        else:        
+            admin_ch = self.bot.get_channel(id=int(result_1[0]))
+            await ctx.channel.send(f'Requesting invite link from admins...')
+            await admin_ch.send(f'{inv_author.mention} is requesting an invite link for {ctx.channel.mention}. Use **.confirm** <no. of uses> or **.deny**')
     
     @commands.command()
     @commands.has_any_role('Chernobyl', 'Three Mile Island')
@@ -75,11 +109,17 @@ class AdminCommands(commands.Cog):
             description=f'from **{inv_author}** for {auth_ch.mention}',
             colour=discord.Colour.blurple()
             )
-        audit_ch = self.bot.get_channel(712599778868854794)
 
         await dm.send(f'{link}')
         await auth_ch.send(f'Invite link requested by {inv_author.mention} was **confirmed**. Pls check your dms for the link.')
-        await audit_ch.send(embed=embed)
+
+        self.cursor.execute(f"SELECT ch_id_audit FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
+        result_1 = self.cursor.fetchone()
+        if result_1 is None:
+            return
+        else:
+            audit_ch = self.bot.get_channel(id=int(result_1[0]))
+            await audit_ch.send(embed=embed) 
 
     @commands.command()
     @commands.has_any_role('Chernobyl', 'Three Mile Island')
@@ -88,10 +128,16 @@ class AdminCommands(commands.Cog):
             title=f'**{ctx.author}** denied an invite link request.',
             description=f'from **{inv_author}** for {auth_ch.mention}',
             colour=discord.Colour.blurple())
-        audit_ch = self.bot.get_channel(712599778868854794)
 
         await auth_ch.send(f"Invite link requested by {inv_author.mention} was **denied**.")
-        await audit_ch.send(embed=embed)
+
+        self.cursor.execute(f"SELECT ch_id_audit FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
+        result_1 = self.cursor.fetchone()
+        if result_1 is None:
+            return
+        else:
+            audit_ch = self.bot.get_channel(id=int(result_1[0]))
+            await audit_ch.send(embed=embed) 
 
 
 def setup(bot):

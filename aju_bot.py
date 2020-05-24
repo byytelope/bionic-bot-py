@@ -1,38 +1,46 @@
 import discord
 import random
 import os
-# import psycopg2
+import psycopg2
 from web_scraper import web_scrape
 from discord.ext import commands
 
-bot = commands.Bot(command_prefix=".")
+bot = commands.Bot(command_prefix=".", owner_id=367686193242177536)
 bot.remove_command('help')
 
 
 @bot.event
 async def on_ready():
     await bot.change_presence(status=discord.Status.online, activity=discord.Game("use .help for help"))
-    
-    # db = psycopg2.connect(
-    #     database="d5gmd9koh5vegt", 
-    #     user="htildhifgbegjh", 
-    #     password="b4b03250555235feb27acab0d9abbf0be289a0b08cc265478be37bcbd87c5c8c", 
-    #     host="ec2-52-202-22-140.compute-1.amazonaws.com", 
-    #     port="5432")
-    # cursor = db.cursor()
-    # cursor.execute('''
-    #     CREATE TABLE IF NOT EXISTS main (
-    #         guild_id TEXT PRIMARY KEY,
-    #         welc_text TEXT,
-    #         msg_id_reaction TEXT,
-    #         ch_id_welcome TEXT,
-    #         ch_id_audit TEXT,
-    #         ch_id_general TEXT,
-    #         ch_id_admin TEXT
-    #     );
-    # ''')
-    # db.commit()
-    # db.close()
+
+    db_database = os.environ['db_database']
+    db_user = os.environ['db_user']
+    db_password = os.environ['db_password']
+    db_host = os.environ['db_host']
+    db_port = os.environ['db_port']
+
+    db = psycopg2.connect(
+        database=db_database, 
+        user=db_user, 
+        password=db_password, 
+        host=db_host, 
+        port=db_port
+        )
+    cursor = db.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS main (
+            guild_id TEXT,
+            welc_text TEXT,
+            msg_id_reaction TEXT,
+            ch_id_welcome TEXT,
+            ch_id_audit TEXT,
+            ch_id_general TEXT,
+            ch_id_admin TEXT
+        );
+    ''')
+    db.commit()
+    cursor.close()
+    db.close()
     print("Bot be ready.")
 
 @bot.command(aliases=["csgo"])
@@ -52,6 +60,6 @@ bot.load_extension('cogs.Roles')
 bot.load_extension('cogs.Funny')
 bot.load_extension('cogs.AdminCommands')
 bot.load_extension('cogs.Welcome')
-# bot.load_extension('cogs.Set')
+bot.load_extension('cogs.Set')
 
 bot.run(os.environ['api_key'])

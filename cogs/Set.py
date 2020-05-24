@@ -1,18 +1,55 @@
 import discord
 import psycopg2
+import os
 from discord.ext import commands
 
 class Set(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+        db_database = os.environ['db_database']
+        db_user = os.environ['db_user']
+        db_password = os.environ['db_password']
+        db_host = os.environ['db_host']
+        db_port = os.environ['db_port']
+
         self.db = psycopg2.connect(
-            database="d5gmd9koh5vegt", 
-            user="htildhifgbegjh", 
-            password="b4b03250555235feb27acab0d9abbf0be289a0b08cc265478be37bcbd87c5c8c", 
-            host="ec2-52-202-22-140.compute-1.amazonaws.com", 
-            port="5432")
+            database=db_database, 
+            user=db_user, 
+            password=db_password, 
+            host=db_host, 
+            port=db_port
+            )
         self.cursor = self.db.cursor()
+    
+    @commands.command()
+    @commands.is_owner()
+    async def prtable(self, ctx):
+        self.cursor.execute(
+            "SELECT * FROM main;"
+        )
+        result = self.cursor.fetchall()
+        print(result)
+
+    @prtable.error
+    async def on_prtable_error(self, ctx, error):
+        if isinstance(error, commands.NotOwner):
+            owner = self.bot.get_user(367686193242177536)
+            await ctx.send(f"Sorry only {owner.mention} can use this command.")
+
+    @commands.command()
+    @commands.is_owner()
+    async def droptable(self, ctx):
+        self.cursor.execute(
+            "DROP TABLE IF EXISTS main;"
+        )
+        self.db.commit()
+
+    @droptable.error
+    async def on_droptable_error(self, ctx, error):
+        if isinstance(error, commands.NotOwner):
+            owner = self.bot.get_user(367686193242177536)
+            await ctx.send(f"Sorry only {owner.mention} can use this command.")
 
     @commands.group(invoke_without_command=True)
     async def set(self, ctx):
@@ -21,85 +58,295 @@ class Set(commands.Cog):
             colour = discord.Colour.blurple()
             )
         embed.set_footer(text=f'{ctx.guild}', icon_url=f'{ctx.guild.icon_url}')
+        embed.add_field(name='roleid', value='Set message id for role reactions.', inline=False)
         embed.add_field(name='welctext', value='Set welcome text.', inline=False)
         embed.add_field(name='welcch', value='Set welcome channel.', inline=False)
+        embed.add_field(name='auditch', value='Set audit channel.', inline=False)
+        embed.add_field(name='adminch', value='Set admin channel.', inline=False)
+        embed.add_field(name='generalch', value='Set general channel.', inline=False)
 
         await ctx.send(embed=embed)
+    
+    @set.command(aliases=['roleid'])
+    @commands.has_any_role('Chernobyl', 'Three Mile Island')
+    async def set_msg_id_role(self, ctx, *, role_id):
+        self.cursor.execute(f"SELECT msg_id_reaction FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
+        result = self.cursor.fetchone()
+
+        if result is None:
+            sql = (f"INSERT INTO main (guild_id, msg_id_reaction) VALUES ( ('{str(ctx.guild.id)}'), ('{str(role_id)}') )")
+            await ctx.send(f'Message for role reactions has been set.')
+
+            self.cursor.execute(f"SELECT ch_id_audit FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
+            result_1 = self.cursor.fetchone()
+            if result_1 is None:
+                return
+            else:
+                audit_ch = self.bot.get_channel(id=int(result_1[0]))
+
+                embed = discord.Embed(
+                title=f'**{ctx.author}**',
+                description=f'set message for role reactions',
+                colour=discord.Colour.blurple()
+                )
+                await audit_ch.send(embed=embed)
+
+        elif result is not None:
+            sql = (f"UPDATE main SET msg_id_reaction = ('{str(role_id)}') WHERE guild_id = ('{str(ctx.guild.id)}')")
+            await ctx.send(f'Message for role reactions has been changed.')
+
+            self.cursor.execute(f"SELECT ch_id_audit FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
+            result_1 = self.cursor.fetchone()
+            if result_1 is None:
+                return
+            else:
+                audit_ch = self.bot.get_channel(id=int(result_1[0]))
+
+                embed = discord.Embed(
+                title=f'**{ctx.author}**',
+                description=f'changed message for role reactions',
+                colour=discord.Colour.blurple()
+                )
+                await audit_ch.send(embed=embed)
+
+        self.cursor.execute(sql)
+        self.db.commit()
+
 
     @set.command(aliases=['welctext'])
     @commands.has_any_role('Chernobyl', 'Three Mile Island')
     async def set_welc_text(self, ctx, *, welc_text):
 
-        audit_ch = self.bot.get_channel(712599778868854794)
-
-        self.cursor.execute('SELECT welc_text FROM main WHERE guild_id = %s', (str(ctx.guild.id)))
+        self.cursor.execute(f"SELECT welc_text FROM main WHERE guild_id  = ('{str(ctx.guild.id)}')")
         result = self.cursor.fetchone()
 
         if result is None:
-            sql = ('INSERT INTO main (guild_id, welc_text) VALUES(%s, %s)', (str(ctx.guild.id), welc_text))
+            sql = (f"INSERT INTO main (guild_id, welc_text) VALUES ( ('{str(ctx.guild.id)}'), ('{welc_text}')")
             await ctx.send(f'''
                 Welcome text has been set to **"{welc_text}"**
                 ''')
 
-            embed = discord.Embed(
-            title=ctx.author,
-            description=f'set welcome channel to **"{welc_text}"**',
-            colour=discord.Colour.blurple()
-            )
-            await audit_ch.send(embed=embed)
+            self.cursor.execute(f"SELECT ch_id_audit FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
+            result_1 = self.cursor.fetchone()
+            if result_1 is None:
+                return
+            else:
+                audit_ch = self.bot.get_channel(id=int(result_1[0]))
+
+                embed = discord.Embed(
+                title=f'**{ctx.author}**',
+                description=f'set welcome text to **"{welc_text}"**',
+                colour=discord.Colour.blurple()
+                )
+                await audit_ch.send(embed=embed)
 
         elif result is not None:
-            sql = ('UPDATE main SET welc_text = %s WHERE guild_id = %s', (welc_text, str(ctx.guild.id)))
+            sql = (f"UPDATE main SET welc_text = ('{welc_text}') WHERE guild_id = ('{str(ctx.guild.id)}')") 
             await ctx.send(f'''
                 Welcome text has been changed to "{welc_text}"
                 ''')
 
-            embed = discord.Embed(
-            title=ctx.author,
-            description=f'changed welcome text to **"{welc_text}"**',
-            colour=discord.Colour.blurple()
-            )
-            await audit_ch.send(embed=embed)
-    
+            self.cursor.execute(f"SELECT ch_id_audit FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
+            result_1 = self.cursor.fetchone()
+            if result_1 is None:
+                return
+            else:
+                audit_ch = self.bot.get_channel(id=int(result_1[0]))
+
+                embed = discord.Embed(
+                title=f'**{ctx.author}**',
+                description=f'changed welcome text to **"{welc_text}"**',
+                colour=discord.Colour.blurple()
+                )
+                await audit_ch.send(embed=embed)
+        
         self.cursor.execute(sql)
         self.db.commit()
-        self.cursor.close()
-        self.db.close()
-
+        
     @set.command(aliases=['welcch'])
     @commands.has_any_role('Chernobyl', 'Three Mile Island')
     async def set_welc_ch(self, ctx, welc_ch: discord.TextChannel):
-        self.cursor.execute(f'SELECT ch_id_welc FROM main WHERE guild_id = %s', (str(ctx.guild.id)))
+
+        self.cursor.execute(f"SELECT ch_id_welcome FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
         result = self.cursor.fetchone()
 
-        audit_ch = self.bot.get_channel(712599778868854794)
-
         if result is None:
-            sql = ('INSERT INTO main (guild_id, ch_id_welc) VALUES(%s, %s)', (str(ctx.guild.id), welc_ch))
+            sql = (f"INSERT INTO main (guild_id, ch_id_welcome) VALUES ( ('{str(ctx.guild.id)}'), ('{welc_ch.id}') )")
             await ctx.send(f'Welcome channel has been set to {welc_ch.mention}')
+            
+            self.cursor.execute(f"SELECT ch_id_audit FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
+            result_1 = self.cursor.fetchone()
+            if result_1 is None:
+                return
+            else:
+                audit_ch = self.bot.get_channel(id=int(result_1[0]))
 
-            embed = discord.Embed(
-            title=ctx.author,
-            description=f'set welcome channel to {welc_ch.mention}',
-            colour=discord.Colour.blurple()
-            )
-            await audit_ch.send(embed=embed)
+                embed = discord.Embed(
+                title=f'**{ctx.author}**',
+                description=f'set welcome channel to {welc_ch.mention}',
+                colour=discord.Colour.blurple()
+                )
+                await audit_ch.send(embed=embed)
 
         elif result is not None:
-            sql = ('UPDATE main SET ch_id_welc = %s WHERE guild_id = %s', (welc_ch, str(ctx.guild.id)))
+            sql = (f"UPDATE main SET ch_id_welcome = ('{welc_ch.id}') WHERE guild_id = ('{str(ctx.guild.id)}')")
             await ctx.send(f'Welcome channel has been changed to {welc_ch.mention}')
 
-            embed = discord.Embed(
-            title=ctx.author,
-            description=f'changed welcome channel to {welc_ch.mention}',
-            colour=discord.Colour.blurple()
-            )
-            await audit_ch.send(embed=embed)
+            self.cursor.execute(f"SELECT ch_id_audit FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
+            result_1 = self.cursor.fetchone()
+            if result_1 is None:
+                return
+            else:
+                audit_ch = self.bot.get_channel(id=int(result_1[0]))
+
+                embed = discord.Embed(
+                title=f'**{ctx.author}**',
+                description=f'changed welcome channel to {welc_ch.mention}',
+                colour=discord.Colour.blurple()
+                )
+                await audit_ch.send(embed=embed)
+
+        self.cursor.execute(sql)
+        self.db.commit()  
+    
+           
+    @set.command(aliases=['auditch'])
+    @commands.has_any_role('Chernobyl', 'Three Mile Island')
+    async def set_audit_ch(self, ctx, audit_ch: discord.TextChannel):
+
+        self.cursor.execute(f"SELECT ch_id_audit FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
+        result = self.cursor.fetchone()
+
+        if result is None:
+            sql = (f"INSERT INTO main (guild_id, ch_id_audit) VALUES ( ('{str(ctx.guild.id)}'), ('{audit_ch.id}') )")
+            await ctx.send(f'Audit channel has been set to {audit_ch.mention}')
+
+            self.cursor.execute(f"SELECT ch_id_audit FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
+            result_1 = self.cursor.fetchone()
+            if result_1 is None:
+                return
+            else:
+                audit_ch = self.bot.get_channel(id=int(result_1[0]))
+
+                embed = discord.Embed(
+                title=f'**{ctx.author}**',
+                description=f'set audit channel to {audit_ch.mention}',
+                colour=discord.Colour.blurple()
+                )
+                await audit_ch.send(embed=embed)
+
+        elif result is not None:
+            sql = (f"UPDATE main SET ch_id_audit = ('{audit_ch.id}') WHERE guild_id = ('{str(ctx.guild.id)}')")
+            await ctx.send(f'Audit channel has been changed to {audit_ch.mention}')
+
+            self.cursor.execute(f"SELECT ch_id_audit FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
+            result_1 = self.cursor.fetchone()
+            if result_1 is None:
+                return
+            else:
+                audit_ch = self.bot.get_channel(id=int(result_1[0]))
+
+                embed = discord.Embed(
+                title=f'**{ctx.author}**',
+                description=f'changed audit channel to {audit_ch.mention}',
+                colour=discord.Colour.blurple()
+                )
+                await audit_ch.send(embed=embed)
 
         self.cursor.execute(sql)
         self.db.commit()
-        self.cursor.close()
-        self.db.close()
+
+    @set.command(aliases=['adminch'])
+    @commands.has_any_role('Chernobyl', 'Three Mile Island')
+    async def set_admin_ch(self, ctx, admin_ch: discord.TextChannel):
+
+        self.cursor.execute(f"SELECT ch_id_admin FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
+        result = self.cursor.fetchone()
+
+        if result is None:
+            sql = (f"INSERT INTO main (guild_id, ch_id_admin) VALUES ( ('{str(ctx.guild.id)}'), ('{admin_ch.id}') )")
+            await ctx.send(f'Admin channel has been set to {admin_ch.mention}')
+
+            self.cursor.execute(f"SELECT ch_id_audit FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
+            result_1 = self.cursor.fetchone()
+            if result_1 is None:
+                return
+            else:
+                audit_ch = self.bot.get_channel(id=int(result_1[0]))
+
+                embed = discord.Embed(
+                title=f'**{ctx.author}**',
+                description=f'set admin channel to {admin_ch.mention}',
+                colour=discord.Colour.blurple()
+                )
+                await audit_ch.send(embed=embed)
+
+        elif result is not None:
+            sql = (f"UPDATE main SET ch_id_admin = ('{admin_ch.id}') WHERE guild_id = ('{str(ctx.guild.id)}')")
+            await ctx.send(f'Admin channel has been changed to {admin_ch.mention}')
+
+            self.cursor.execute(f"SELECT ch_id_audit FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
+            result_1 = self.cursor.fetchone()
+            if result_1 is None:
+                return
+            else:
+                audit_ch = self.bot.get_channel(id=int(result_1[0]))
+
+                embed = discord.Embed(
+                title=f'**{ctx.author}**',
+                description=f'changed admin channel to {admin_ch.mention}',
+                colour=discord.Colour.blurple()
+                )
+                await audit_ch.send(embed=embed)
+
+        self.cursor.execute(sql)
+        self.db.commit()
+
+    @set.command(aliases=['generalch'])
+    @commands.has_any_role('Chernobyl', 'Three Mile Island')
+    async def set_general_ch(self, ctx, general_ch: discord.TextChannel):
+
+        self.cursor.execute(f"SELECT ch_id_general FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
+        result = self.cursor.fetchone()
+
+        if result is None:
+            sql = (f"INSERT INTO main (guild_id, ch_id_general) VALUES ( ('{str(ctx.guild.id)}'), ('{general_ch.id}') )")
+            await ctx.send(f'General channel has been set to {general_ch.mention}')
+
+            self.cursor.execute(f"SELECT ch_id_audit FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
+            result_1 = self.cursor.fetchone()
+            if result_1 is None:
+                return
+            else:
+                audit_ch = self.bot.get_channel(id=int(result_1[0]))
+
+                embed = discord.Embed(
+                title=f'**{ctx.author}**',
+                description=f'set general channel to {general_ch.mention}',
+                colour=discord.Colour.blurple()
+                )
+                await audit_ch.send(embed=embed)
+
+        elif result is not None:
+            sql = (f"UPDATE main SET ch_id_general = ('{general_ch.id}') WHERE guild_id = ('{str(ctx.guild.id)}')")
+            await ctx.send(f'General channel has been changed to {general_ch.mention}')
+
+            self.cursor.execute(f"SELECT ch_id_audit FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
+            result_1 = self.cursor.fetchone()
+            if result_1 is None:
+                return
+            else:
+                audit_ch = self.bot.get_channel(id=int(result_1[0]))
+
+                embed = discord.Embed(
+                title=f'**{ctx.author}**',
+                description=f'changed general channel to {general_ch.mention}',
+                colour=discord.Colour.blurple()
+                )
+                await audit_ch.send(embed=embed)
+
+        self.cursor.execute(sql)
+        self.db.commit()
 
 
 def setup(bot):
