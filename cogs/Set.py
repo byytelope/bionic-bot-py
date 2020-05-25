@@ -1,6 +1,7 @@
 import discord
 import psycopg2
 import os
+import datetime
 from discord.ext import commands
 
 class Set(commands.Cog):
