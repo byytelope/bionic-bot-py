@@ -18,10 +18,10 @@ class AdminCommands(commands.Cog):
         db_port = os.environ['db_port']
 
         self.db = psycopg2.connect(
-            database=db_database, 
-            user=db_user, 
+            database=db_database,
+            user=db_user,
             password=db_password, 
-            host=db_host, 
+            host=db_host,
             port=db_port
             )
         self.cursor = self.db.cursor()
@@ -32,11 +32,11 @@ class AdminCommands(commands.Cog):
     async def cls(self, ctx, amount=3):
         embed = discord.Embed(
             title=f'**{ctx.author}**',
-            description=f'cleared **{amount}** message(s) in {ctx.channel.mention}',
+            description=f'cleared **{amount-1}** message(s) in {ctx.channel.mention}',
             colour=discord.Colour.blurple()
         )
         await ctx.channel.purge(limit=amount)
-        await ctx.channel.send(f"Aju {amount} message delete kollin.")
+        await ctx.channel.send(f"Aju {amount-1} message delete kollin.")
 
         self.cursor.execute(f"SELECT ch_id_audit FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
         result_1 = self.cursor.fetchone()
@@ -44,7 +44,7 @@ class AdminCommands(commands.Cog):
             return
         else:
             audit_ch = self.bot.get_channel(id=int(result_1[0]))
-            await audit_ch.send(embed=embed)     
+            await audit_ch.send(embed=embed)
 
     @cls.error
     async def on_cls_error(self, ctx, error):
@@ -72,7 +72,7 @@ class AdminCommands(commands.Cog):
             return
         else:
             audit_ch = self.bot.get_channel(id=int(result_1[0]))
-            await audit_ch.send(embed=embed) 
+            await audit_ch.send(embed=embed)
 
     @kick.error
     async def on_kick_error(self, ctx, error):
@@ -98,7 +98,7 @@ class AdminCommands(commands.Cog):
             admin_ch = self.bot.get_channel(id=int(result_1[0]))
             await ctx.channel.send(f'Requesting invite link from admins...')
             await admin_ch.send(f'{inv_author.mention} is requesting an invite link for {ctx.channel.mention}. Use **.confirm** <no. of uses> or **.deny**')
-    
+
     @commands.command()
     @commands.has_any_role('Chernobyl', 'Three Mile Island')
     async def confirm(self, ctx, i=5):
@@ -119,7 +119,7 @@ class AdminCommands(commands.Cog):
             return
         else:
             audit_ch = self.bot.get_channel(id=int(result_1[0]))
-            await audit_ch.send(embed=embed) 
+            await audit_ch.send(embed=embed)
 
     @commands.command()
     @commands.has_any_role('Chernobyl', 'Three Mile Island')

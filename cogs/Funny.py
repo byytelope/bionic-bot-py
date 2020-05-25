@@ -17,10 +17,10 @@ class Funny(commands.Cog):
         db_port = os.environ['db_port']
 
         self.db = psycopg2.connect(
-            database=db_database, 
-            user=db_user, 
-            password=db_password, 
-            host=db_host, 
+            database=db_database,
+            user=db_user,
+            password=db_password,
+            host=db_host,
             port=db_port
             )
         self.cursor = self.db.cursor()
@@ -58,7 +58,7 @@ class Funny(commands.Cog):
             await ctx.send('Thebai nihigaahe mi channel aki.')
         else:
             await ctx.send(f"{random.choice(spams)}")
- 
+
     @commands.command(aliases=["corona"])
     async def aju_number(self, ctx, value: str):
         await ctx.send(f"{covid19[value]} hei meehun.")

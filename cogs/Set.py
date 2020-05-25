@@ -14,10 +14,10 @@ class Set(commands.Cog):
         db_port = os.environ['db_port']
 
         self.db = psycopg2.connect(
-            database=db_database, 
-            user=db_user, 
-            password=db_password, 
-            host=db_host, 
+            database=db_database,
+            user=db_user,
+            password=db_password,
+            host=db_host,
             port=db_port
             )
         self.cursor = self.db.cursor()
@@ -159,10 +159,10 @@ class Set(commands.Cog):
                 colour=discord.Colour.blurple()
                 )
                 await audit_ch.send(embed=embed)
-        
+
         self.cursor.execute(sql)
         self.db.commit()
-        
+
     @set.command(aliases=['welcch'])
     @commands.has_any_role('Chernobyl', 'Three Mile Island')
     async def set_welc_ch(self, ctx, welc_ch: discord.TextChannel):
@@ -207,9 +207,8 @@ class Set(commands.Cog):
                 await audit_ch.send(embed=embed)
 
         self.cursor.execute(sql)
-        self.db.commit()  
-    
-           
+        self.db.commit()
+
     @set.command(aliases=['auditch'])
     @commands.has_any_role('Chernobyl', 'Three Mile Island')
     async def set_audit_ch(self, ctx, audit_ch: discord.TextChannel):

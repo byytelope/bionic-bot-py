@@ -29,4 +29,3 @@ def web_scrape(i):
     team_from_top = teams[i].find('img').get('title')
 
     return (f'{player} from {team_from_top}')
-

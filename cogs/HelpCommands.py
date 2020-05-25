@@ -17,10 +17,10 @@ class HelpCommands(commands.Cog):
         db_port = os.environ['db_port']
 
         self.db = psycopg2.connect(
-            database=db_database, 
-            user=db_user, 
-            password=db_password, 
-            host=db_host, 
+            database=db_database,
+            user=db_user,
+            password=db_password,
+            host=db_host,
             port=db_port
             )
         self.cursor = self.db.cursor()
@@ -30,7 +30,7 @@ class HelpCommands(commands.Cog):
 
         embed=discord.Embed(
             title='Hello am Aju',
-            description='Use **.help** and a command from below for more info.',
+            description='Use `.help` and a command from below for more info.',
             colour=discord.Colour.blurple()
         )
         embed.set_author(name='Aju', icon_url='https://cdn.discordapp.com/attachments/592639239683047424/711173474592489543/unknown.png')
@@ -40,8 +40,8 @@ class HelpCommands(commands.Cog):
         embed.add_field(name='spam', value="Don't.", inline=False)
         embed.add_field(name='csgo', value='HLTV rankings for all time best CS:GO players.', inline=False)
         embed.add_field(name='reqinv', value='Request an invite link.', inline=False)
-        embed.add_field(name='clear/cls (Admin role required)', value='Clear messages from a channel.', inline=False)
-        embed.add_field(name='set (cannot be used with .help)', value='Use .set for info on setting variables for your server.', inline=False)
+        embed.add_field(name='clear/cls **(Admin role required)**', value='Clear messages from a channel.', inline=False)
+        embed.add_field(name='set **(cannot be used with .help)**', value='Use `.set` for info on setting variables for your server.', inline=False)
         embed.set_footer(text=f'Help requested by: {ctx.author.name}')
 
         await ctx.send(embed=embed)
@@ -51,7 +51,7 @@ class HelpCommands(commands.Cog):
         embed=discord.Embed(
             colour=discord.Colour.blurple(),
             title='Talk to Aju',
-            description='Use **.aju** and say anything.'
+            description='Use `.aju` and say anything.'
         )
         await ctx.send(embed=embed)
 
@@ -60,7 +60,7 @@ class HelpCommands(commands.Cog):
         embed=discord.Embed(
             colour=discord.Colour.blurple(),
             title='Get realtime corona stats',
-            description='Use **.corona** and **confirmed** for the  number of confirmed cases or **deaths** for the  number of confirmed deaths.'
+            description='Use `.corona` and `confirmed` for the  number of confirmed cases or `deaths` for the  number of confirmed deaths.'
         )
         await ctx.send(embed=embed)
 
@@ -82,7 +82,7 @@ class HelpCommands(commands.Cog):
             embed=discord.Embed(
                 colour=discord.Colour.blurple(),
                 title='No.',
-                description='Will not work in general.'
+                description='Will not work in the general channel.'
             )
         else:
             general_ch = self.bot.get_channel(id=int(result_1[0]))
@@ -91,7 +91,7 @@ class HelpCommands(commands.Cog):
                 title='No.',
                 description=f'Will not work in {general_ch.mention}.'
             )
-        
+
         await ctx.send(embed=embed)
 
     @help.command(aliases=['csgo'])
@@ -99,7 +99,7 @@ class HelpCommands(commands.Cog):
         embed=discord.Embed(
             colour=discord.Colour.blurple(),
             title='ZyWoah',
-            description='Use **.csgo** and then a number (eg: .csgo 1 for the number 1 position).'
+            description='Use `.csgo` and then a number (eg: `.csgo 1` for the number 1 position).'
         )
         await ctx.send(embed=embed)
 
@@ -108,7 +108,7 @@ class HelpCommands(commands.Cog):
         embed=discord.Embed(
             colour=discord.Colour.blurple(),
             title='Request an invite link from the admins.',
-            description='.reqinv will send a request for an invite link to the admin channel of the guild. Only works if admin channel is setup in Aju.'
+            description='`.reqinv` will send a request for an invite link to the admin channel of the guild. Only works if admin channel is setup in Aju.'
         )
         await ctx.send(embed=embed)
 
@@ -117,7 +117,7 @@ class HelpCommands(commands.Cog):
         embed=discord.Embed(
             colour=discord.Colour.blurple(),
             title='Clear the bs',
-            description='Use **.cls** or **.clear** followed by a number to clear texts. If not specified, 2 texts will be cleared.'
+            description='Use `.cls` or `.clear` followed by a number to clear texts. If not specified, 2 texts will be cleared.'
         )
         await ctx.send(embed=embed)
 

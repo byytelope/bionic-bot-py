@@ -1,7 +1,7 @@
 import discord
+import psycopg2
 import random
 import os
-import psycopg2
 from web_scraper import web_scrape
 from discord.ext import commands
 
@@ -20,10 +20,10 @@ async def on_ready():
     db_port = os.environ['db_port']
 
     db = psycopg2.connect(
-        database=db_database, 
-        user=db_user, 
-        password=db_password, 
-        host=db_host, 
+        database=db_database,
+        user=db_user,
+        password=db_password,
+        host=db_host,
         port=db_port
         )
     cursor = db.cursor()

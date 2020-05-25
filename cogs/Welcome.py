@@ -17,14 +17,14 @@ class Welcome(commands.Cog):
         db_port = os.environ['db_port']
 
         self.db = psycopg2.connect(
-            database=db_database, 
-            user=db_user, 
-            password=db_password, 
-            host=db_host, 
+            database=db_database,
+            user=db_user,
+            password=db_password,
+            host=db_host,
             port=db_port
             )
         self.cursor = self.db.cursor()
-        
+
     @commands.Cog.listener()
     async def on_member_join(self, member):
         role = discord.utils.get(member.guild.roles, name=default_role)

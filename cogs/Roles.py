@@ -17,10 +17,10 @@ class Roles(commands.Cog):
         db_port = os.environ['db_port']
 
         self.db = psycopg2.connect(
-            database=db_database, 
-            user=db_user, 
-            password=db_password, 
-            host=db_host, 
+            database=db_database,
+            user=db_user,
+            password=db_password,
+            host=db_host,
             port=db_port
             )
         self.cursor = self.db.cursor()
@@ -73,4 +73,4 @@ class Roles(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(Roles(bot)) 
+    bot.add_cog(Roles(bot))
