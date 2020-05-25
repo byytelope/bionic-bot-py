@@ -27,16 +27,15 @@ class AdminCommands(commands.Cog):
         self.cursor = self.db.cursor()
 
     @commands.command(aliases=['clear'])
-    @commands.has_any_role('Chernobyl', 'Three Mile Island')
     @commands.has_permissions(manage_messages=True)
-    async def cls(self, ctx, amount=3):
+    async def cls(self, ctx, amount=2):
         embed = discord.Embed(
             title=f'**{ctx.author}**',
-            description=f'cleared **{amount-1}** message(s) in {ctx.channel.mention}',
-            colour=discord.Colour.blurple()
+            description=f'cleared `{amount}` message(s) in {ctx.channel.mention}',
+            colour=discord.Colour(0xe9acfd)
         )
-        await ctx.channel.purge(limit=amount)
-        await ctx.channel.send(f"Aju {amount-1} message delete kollin.")
+        await ctx.channel.purge(limit=amount+1)
+        await ctx.channel.send(f"Aju `{amount}` message delete kollin.")
 
         self.cursor.execute(f"SELECT ch_id_audit FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
         result_1 = self.cursor.fetchone()
@@ -55,16 +54,16 @@ class AdminCommands(commands.Cog):
             await ctx.send(random.choice(responses))
       
     @commands.command()
-    @commands.has_permissions(kick_members=True)
+    @commands.has_guild_permissions(kick_members=True)
     async def kick(self, ctx, user: discord.Member, *,reason=None):
         embed = discord.Embed(
             title=f'**{ctx.author}** kicked **{user}** from bionic.',
             description=reason,
-            colour=discord.Colour.blurple()
+            colour=discord.Colour(0xe9acfd)
             )
         
         await user.kick(reason=reason)
-        await ctx.send(f'Bye bye **{user.mention}**.')
+        await ctx.send(f'Bye bye {user.mention}.')
 
         self.cursor.execute(f"SELECT ch_id_audit FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
         result_1 = self.cursor.fetchone()
@@ -100,14 +99,14 @@ class AdminCommands(commands.Cog):
             await admin_ch.send(f'{inv_author.mention} is requesting an invite link for {ctx.channel.mention}. Use **.confirm** <no. of uses> or **.deny**')
 
     @commands.command()
-    @commands.has_any_role('Chernobyl', 'Three Mile Island')
+    @commands.has_guild_permissions(administrator=True)
     async def confirm(self, ctx, i=5):
         link = await ctx.channel.create_invite(max_age=86400, max_uses=i)
         dm = self.bot.get_user(inv_author.id)
         embed = discord.Embed(
             title=f'**{ctx.author}** confirmed an invite link request.',
             description=f'from **{inv_author}** for {auth_ch.mention}',
-            colour=discord.Colour.blurple()
+            colour=discord.Colour(0xe9acfd)
             )
 
         await dm.send(f'{link}')
@@ -122,12 +121,13 @@ class AdminCommands(commands.Cog):
             await audit_ch.send(embed=embed)
 
     @commands.command()
-    @commands.has_any_role('Chernobyl', 'Three Mile Island')
+    @commands.has_guild_permissions(administrator=True)
     async def deny(self, ctx):
         embed = discord.Embed(
             title=f'**{ctx.author}** denied an invite link request.',
             description=f'from **{inv_author}** for {auth_ch.mention}',
-            colour=discord.Colour.blurple())
+            colour=discord.Colour(0xe9acfd)
+        )
 
         await auth_ch.send(f"Invite link requested by {inv_author.mention} was **denied**.")
 

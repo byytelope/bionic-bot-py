@@ -31,10 +31,10 @@ class HelpCommands(commands.Cog):
         embed=discord.Embed(
             title='Hello am Aju',
             description='Use `.help` and a command from below for more info.',
-            colour=discord.Colour.blurple()
+            colour=discord.Colour(0xe9acfd)
         )
-        embed.set_author(name='Aju', icon_url='https://cdn.discordapp.com/attachments/592639239683047424/711173474592489543/unknown.png')
         embed.add_field(name='aju', value="Talk to Aju when you're bored.", inline=False)
+        embed.add_field(name='say', value="Make Aju say anything.", inline=False)
         embed.add_field(name='corona', value="Get realtime corona stats.", inline=False)
         embed.add_field(name='members', value='Aju counts the number of members in your server.', inline=False)
         embed.add_field(name='spam', value="Don't.", inline=False)
@@ -42,23 +42,32 @@ class HelpCommands(commands.Cog):
         embed.add_field(name='reqinv', value='Request an invite link.', inline=False)
         embed.add_field(name='clear/cls **(Admin role required)**', value='Clear messages from a channel.', inline=False)
         embed.add_field(name='set **(cannot be used with .help)**', value='Use `.set` for info on setting variables for your server.', inline=False)
-        embed.set_footer(text=f'Help requested by: {ctx.author.name}')
+        embed.set_footer(text=f'Help requested by: {ctx.author}', icon_url=ctx.author.avatar_url)
 
         await ctx.send(embed=embed)
 
     @help.command(aliases=['aju'])
     async def help_aju(self, ctx):
         embed=discord.Embed(
-            colour=discord.Colour.blurple(),
+            colour=discord.Colour(0xe9acfd),
             title='Talk to Aju',
             description='Use `.aju` and say anything.'
+        )
+        await ctx.send(embed=embed)
+        
+    @help.command(aliases=['say'])
+    async def help_say(self, ctx):
+        embed=discord.Embed(
+            colour=discord.Colour(0xe9acfd),
+            title='Echo',
+            description='Use `.say` and Aju will repeat anything after the command.'
         )
         await ctx.send(embed=embed)
 
     @help.command(aliases=['corona'])
     async def help_corona(self, ctx):
         embed=discord.Embed(
-            colour=discord.Colour.blurple(),
+            colour=discord.Colour(0xe9acfd),
             title='Get realtime corona stats',
             description='Use `.corona` and `confirmed` for the  number of confirmed cases or `deaths` for the  number of confirmed deaths.'
         )
@@ -67,7 +76,7 @@ class HelpCommands(commands.Cog):
     @help.command(aliases=['members'])
     async def help_members(self, ctx):
         embed=discord.Embed(
-            colour=discord.Colour.blurple(),
+            colour=discord.Colour(0xe9acfd),
             title='Get the total number of members in your guild',
             description='Pretty self explanatory.'
         )
@@ -80,14 +89,14 @@ class HelpCommands(commands.Cog):
         result_1 = self.cursor.fetchone()
         if result_1 is None:
             embed=discord.Embed(
-                colour=discord.Colour.blurple(),
+            colour=discord.Colour(0xe9acfd),
                 title='No.',
                 description='Will not work in the general channel.'
             )
         else:
             general_ch = self.bot.get_channel(id=int(result_1[0]))
             embed=discord.Embed(
-                colour=discord.Colour.blurple(),
+            colour=discord.Colour(0xe9acfd),
                 title='No.',
                 description=f'Will not work in {general_ch.mention}.'
             )
@@ -97,7 +106,7 @@ class HelpCommands(commands.Cog):
     @help.command(aliases=['csgo'])
     async def help_csgo(self, ctx):
         embed=discord.Embed(
-            colour=discord.Colour.blurple(),
+            colour=discord.Colour(0xe9acfd),
             title='ZyWoah',
             description='Use `.csgo` and then a number (eg: `.csgo 1` for the number 1 position).'
         )
@@ -106,7 +115,7 @@ class HelpCommands(commands.Cog):
     @help.command(aliases=['reqinv'])
     async def help_reqinv(self, ctx):
         embed=discord.Embed(
-            colour=discord.Colour.blurple(),
+            colour=discord.Colour(0xe9acfd),
             title='Request an invite link from the admins.',
             description='`.reqinv` will send a request for an invite link to the admin channel of the guild. Only works if admin channel is setup in Aju.'
         )

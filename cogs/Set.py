@@ -55,7 +55,7 @@ class Set(commands.Cog):
     async def set(self, ctx):
         embed = discord.Embed(
             title = 'set **<command>**',
-            colour = discord.Colour.blurple()
+            colour=discord.Colour(0xe9acfd)
             )
         embed.set_footer(text=f'{ctx.guild}', icon_url=f'{ctx.guild.icon_url}')
         embed.add_field(name='roleid', value='Set message id for role reactions.', inline=False)
@@ -87,7 +87,7 @@ class Set(commands.Cog):
                 embed = discord.Embed(
                 title=f'**{ctx.author}**',
                 description=f'set message for role reactions',
-                colour=discord.Colour.blurple()
+                colour=discord.Colour(0xe9acfd)
                 )
                 await audit_ch.send(embed=embed)
 
@@ -105,7 +105,7 @@ class Set(commands.Cog):
                 embed = discord.Embed(
                 title=f'**{ctx.author}**',
                 description=f'changed message for role reactions',
-                colour=discord.Colour.blurple()
+                colour=discord.Colour(0xe9acfd)
                 )
                 await audit_ch.send(embed=embed)
 
@@ -136,7 +136,7 @@ class Set(commands.Cog):
                 embed = discord.Embed(
                 title=f'**{ctx.author}**',
                 description=f'set welcome text to **"{welc_text}"**',
-                colour=discord.Colour.blurple()
+                colour=discord.Colour(0xe9acfd)
                 )
                 await audit_ch.send(embed=embed)
 
@@ -156,7 +156,7 @@ class Set(commands.Cog):
                 embed = discord.Embed(
                 title=f'**{ctx.author}**',
                 description=f'changed welcome text to **"{welc_text}"**',
-                colour=discord.Colour.blurple()
+                colour=discord.Colour(0xe9acfd)
                 )
                 await audit_ch.send(embed=embed)
 
@@ -184,7 +184,7 @@ class Set(commands.Cog):
                 embed = discord.Embed(
                 title=f'**{ctx.author}**',
                 description=f'set welcome channel to {welc_ch.mention}',
-                colour=discord.Colour.blurple()
+                colour=discord.Colour(0xe9acfd)
                 )
                 await audit_ch.send(embed=embed)
 
@@ -202,7 +202,7 @@ class Set(commands.Cog):
                 embed = discord.Embed(
                 title=f'**{ctx.author}**',
                 description=f'changed welcome channel to {welc_ch.mention}',
-                colour=discord.Colour.blurple()
+                colour=discord.Colour(0xe9acfd)
                 )
                 await audit_ch.send(embed=embed)
 
@@ -230,7 +230,7 @@ class Set(commands.Cog):
                 embed = discord.Embed(
                 title=f'**{ctx.author}**',
                 description=f'set audit channel to {audit_ch.mention}',
-                colour=discord.Colour.blurple()
+                colour=discord.Colour(0xe9acfd)
                 )
                 await audit_ch.send(embed=embed)
 
@@ -248,7 +248,7 @@ class Set(commands.Cog):
                 embed = discord.Embed(
                 title=f'**{ctx.author}**',
                 description=f'changed audit channel to {audit_ch.mention}',
-                colour=discord.Colour.blurple()
+                colour=discord.Colour(0xe9acfd)
                 )
                 await audit_ch.send(embed=embed)
 
@@ -276,7 +276,7 @@ class Set(commands.Cog):
                 embed = discord.Embed(
                 title=f'**{ctx.author}**',
                 description=f'set admin channel to {admin_ch.mention}',
-                colour=discord.Colour.blurple()
+                colour=discord.Colour(0xe9acfd)
                 )
                 await audit_ch.send(embed=embed)
 
@@ -294,7 +294,7 @@ class Set(commands.Cog):
                 embed = discord.Embed(
                 title=f'**{ctx.author}**',
                 description=f'changed admin channel to {admin_ch.mention}',
-                colour=discord.Colour.blurple()
+                colour=discord.Colour(0xe9acfd)
                 )
                 await audit_ch.send(embed=embed)
 
@@ -322,7 +322,7 @@ class Set(commands.Cog):
                 embed = discord.Embed(
                 title=f'**{ctx.author}**',
                 description=f'set general channel to {general_ch.mention}',
-                colour=discord.Colour.blurple()
+                colour=discord.Colour(0xe9acfd)
                 )
                 await audit_ch.send(embed=embed)
 
@@ -340,7 +340,7 @@ class Set(commands.Cog):
                 embed = discord.Embed(
                 title=f'**{ctx.author}**',
                 description=f'changed general channel to {general_ch.mention}',
-                colour=discord.Colour.blurple()
+                colour=discord.Colour(0xe9acfd)
                 )
                 await audit_ch.send(embed=embed)
 

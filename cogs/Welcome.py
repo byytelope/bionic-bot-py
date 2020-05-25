@@ -39,7 +39,7 @@ class Welcome(commands.Cog):
             self.cursor.execute(f"SELECT welc_text FROM main WHERE guild_id = ('{str(member.guild.id)}')")
             result_1 = self.cursor.fetchone()
 
-            embed = discord.Embed(description = f'{str(result_1[0])}', colour = discord.Colour.blurple())
+            embed = discord.Embed(description = f'{str(result_1[0])}', colour = discord.Colour(0xe9acfd))
             embed.set_author(name=f'{member.name}', icon_url=f'{member.avatar_url}')
             embed.set_thumbnail(url=f'{member.avatar_url}')
             embed.set_footer(text=f'{member.guild}', icon_url=f'{member.guild.icon_url}')
