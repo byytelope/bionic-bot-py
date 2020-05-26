@@ -53,6 +53,7 @@ class HelpCommands(commands.Cog):
             title='Talk to Aju',
             description='Use `.aju` and say anything.'
         )
+        embed.set_footer(text=f'Help requested by: {ctx.author}', icon_url=ctx.author.avatar_url)
         await ctx.send(embed=embed)
         
     @help.command(aliases=['say'])
@@ -62,6 +63,7 @@ class HelpCommands(commands.Cog):
             title='@eCho On',
             description='Use `.say` and Aju will RePEaT aNYTHINg AFtEr the coMmAnd.'
         )
+        embed.set_footer(text=f'Help requested by: {ctx.author}', icon_url=ctx.author.avatar_url)
         await ctx.send(embed=embed)
 
     @help.command(aliases=['corona'])
@@ -71,6 +73,7 @@ class HelpCommands(commands.Cog):
             title='Get realtime corona stats',
             description='Use `.corona` and `confirmed` for the  number of confirmed cases or `deaths` for the  number of confirmed deaths.'
         )
+        embed.set_footer(text=f'Help requested by: {ctx.author}', icon_url=ctx.author.avatar_url)
         await ctx.send(embed=embed)
 
     @help.command(aliases=['members'])
@@ -80,6 +83,7 @@ class HelpCommands(commands.Cog):
             title='Get the total number of members in your guild',
             description='Pretty self explanatory.'
         )
+        embed.set_footer(text=f'Help requested by: {ctx.author}', icon_url=ctx.author.avatar_url)
         await ctx.send(embed=embed)
 
     @help.command(aliases=['spam'])
@@ -100,7 +104,7 @@ class HelpCommands(commands.Cog):
                 title='No.',
                 description=f'Will not work in {general_ch.mention}.'
             )
-
+        embed.set_footer(text=f'Help requested by: {ctx.author}', icon_url=ctx.author.avatar_url)
         await ctx.send(embed=embed)
 
     @help.command(aliases=['csgo'])
@@ -110,6 +114,7 @@ class HelpCommands(commands.Cog):
             title='ZyWoah',
             description='Use `.csgo` and then a number (eg: `.csgo 1` for the number 1 position).'
         )
+        embed.set_footer(text=f'Help requested by: {ctx.author}', icon_url=ctx.author.avatar_url)
         await ctx.send(embed=embed)
 
     @help.command(aliases=['reqinv'])
@@ -119,6 +124,7 @@ class HelpCommands(commands.Cog):
             title='Request an invite link from the admins.',
             description='`.reqinv` will send a request for an invite link to the admin channel of the guild. Only works if admin channel is setup in Aju.'
         )
+        embed.set_footer(text=f'Help requested by: {ctx.author}', icon_url=ctx.author.avatar_url)
         await ctx.send(embed=embed)
 
     @help.command(aliases=['cls', 'clear'])
@@ -128,6 +134,7 @@ class HelpCommands(commands.Cog):
             title='Clear the bs',
             description='Use `.cls` or `.clear` followed by a number to clear texts. If not specified, 2 texts will be cleared.'
         )
+        embed.set_footer(text=f'Help requested by: {ctx.author}', icon_url=ctx.author.avatar_url)
         await ctx.send(embed=embed)
 
 

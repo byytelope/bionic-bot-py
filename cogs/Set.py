@@ -65,7 +65,7 @@ class Set(commands.Cog):
         embed.add_field(name='auditch', value='Set audit channel.', inline=False)
         embed.add_field(name='adminch', value='Set admin channel.', inline=False)
         embed.add_field(name='generalch', value='Set general channel.', inline=False)
-
+        embed.set_footer(text=f'Help requested by: {ctx.author}', icon_url=ctx.author.avatar_url)
         await ctx.send(embed=embed)
     
     @set.command(aliases=['roleid'])
@@ -86,10 +86,10 @@ class Set(commands.Cog):
                 audit_ch = self.bot.get_channel(id=int(result_1[0]))
 
                 embed = discord.Embed(
-                title=f'**{ctx.author}**',
                 description=f'set message for role reactions',
                 colour=discord.Colour(0xe9acfd)
                 )
+                embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
                 await audit_ch.send(embed=embed)
 
         elif result is not None:
@@ -104,10 +104,10 @@ class Set(commands.Cog):
                 audit_ch = self.bot.get_channel(id=int(result_1[0]))
 
                 embed = discord.Embed(
-                title=f'**{ctx.author}**',
                 description=f'changed message for role reactions',
                 colour=discord.Colour(0xe9acfd)
                 )
+                embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
                 await audit_ch.send(embed=embed)
 
         self.cursor.execute(sql)
@@ -135,10 +135,10 @@ class Set(commands.Cog):
                 audit_ch = self.bot.get_channel(id=int(result_1[0]))
 
                 embed = discord.Embed(
-                title=f'**{ctx.author}**',
                 description=f'set welcome text to **"{welc_text}"**',
                 colour=discord.Colour(0xe9acfd)
                 )
+                embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
                 await audit_ch.send(embed=embed)
 
         elif result is not None:
@@ -155,10 +155,10 @@ class Set(commands.Cog):
                 audit_ch = self.bot.get_channel(id=int(result_1[0]))
 
                 embed = discord.Embed(
-                title=f'**{ctx.author}**',
                 description=f'changed welcome text to **"{welc_text}"**',
                 colour=discord.Colour(0xe9acfd)
                 )
+                embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
                 await audit_ch.send(embed=embed)
 
         self.cursor.execute(sql)
@@ -183,10 +183,10 @@ class Set(commands.Cog):
                 audit_ch = self.bot.get_channel(id=int(result_1[0]))
 
                 embed = discord.Embed(
-                title=f'**{ctx.author}**',
                 description=f'set welcome channel to {welc_ch.mention}',
                 colour=discord.Colour(0xe9acfd)
                 )
+                embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
                 await audit_ch.send(embed=embed)
 
         elif result is not None:
@@ -201,10 +201,10 @@ class Set(commands.Cog):
                 audit_ch = self.bot.get_channel(id=int(result_1[0]))
 
                 embed = discord.Embed(
-                title=f'**{ctx.author}**',
                 description=f'changed welcome channel to {welc_ch.mention}',
                 colour=discord.Colour(0xe9acfd)
                 )
+                embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
                 await audit_ch.send(embed=embed)
 
         self.cursor.execute(sql)
@@ -229,10 +229,10 @@ class Set(commands.Cog):
                 audit_ch = self.bot.get_channel(id=int(result_1[0]))
 
                 embed = discord.Embed(
-                title=f'**{ctx.author}**',
                 description=f'set audit channel to {audit_ch.mention}',
                 colour=discord.Colour(0xe9acfd)
                 )
+                embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
                 await audit_ch.send(embed=embed)
 
         elif result is not None:
@@ -247,10 +247,10 @@ class Set(commands.Cog):
                 audit_ch = self.bot.get_channel(id=int(result_1[0]))
 
                 embed = discord.Embed(
-                title=f'**{ctx.author}**',
                 description=f'changed audit channel to {audit_ch.mention}',
                 colour=discord.Colour(0xe9acfd)
                 )
+                embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
                 await audit_ch.send(embed=embed)
 
         self.cursor.execute(sql)
@@ -275,10 +275,10 @@ class Set(commands.Cog):
                 audit_ch = self.bot.get_channel(id=int(result_1[0]))
 
                 embed = discord.Embed(
-                title=f'**{ctx.author}**',
                 description=f'set admin channel to {admin_ch.mention}',
                 colour=discord.Colour(0xe9acfd)
                 )
+                embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
                 await audit_ch.send(embed=embed)
 
         elif result is not None:
@@ -293,10 +293,10 @@ class Set(commands.Cog):
                 audit_ch = self.bot.get_channel(id=int(result_1[0]))
 
                 embed = discord.Embed(
-                title=f'**{ctx.author}**',
                 description=f'changed admin channel to {admin_ch.mention}',
                 colour=discord.Colour(0xe9acfd)
                 )
+                embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
                 await audit_ch.send(embed=embed)
 
         self.cursor.execute(sql)
@@ -321,10 +321,10 @@ class Set(commands.Cog):
                 audit_ch = self.bot.get_channel(id=int(result_1[0]))
 
                 embed = discord.Embed(
-                title=f'**{ctx.author}**',
                 description=f'set general channel to {general_ch.mention}',
                 colour=discord.Colour(0xe9acfd)
                 )
+                embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
                 await audit_ch.send(embed=embed)
 
         elif result is not None:
@@ -339,10 +339,10 @@ class Set(commands.Cog):
                 audit_ch = self.bot.get_channel(id=int(result_1[0]))
 
                 embed = discord.Embed(
-                title=f'**{ctx.author}**',
                 description=f'changed general channel to {general_ch.mention}',
                 colour=discord.Colour(0xe9acfd)
                 )
+                embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
                 await audit_ch.send(embed=embed)
 
         self.cursor.execute(sql)
