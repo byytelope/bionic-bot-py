@@ -39,8 +39,6 @@ async def on_ready():
         );
     ''')
     db.commit()
-    cursor.close()
-    db.close()
     print("Bot be ready.")
 
 @bot.command(aliases=["csgo"])
@@ -52,6 +50,17 @@ async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
         responses = ["They aju ah niegey command ah.",
                     "Aju ah egey ehthakaau keyfele."]
+        await ctx.send(random.choice(responses))
+
+@bot.event
+async def on_cls_error(ctx, error):
+    if isinstance(error, commands.MissingPermissions) or isinstance(error, commands.MissingAnyRole):
+        responses = [
+            'Adhi the command beynun vey varah ekalo bondo nivei.',
+            'Hoho kanthethi.',
+            'Nononono.',
+            'U cannot la.'
+                ]
         await ctx.send(random.choice(responses))
 
 

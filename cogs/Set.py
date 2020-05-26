@@ -60,7 +60,7 @@ class Set(commands.Cog):
             )
         embed.set_footer(text=f'{ctx.guild}', icon_url=f'{ctx.guild.icon_url}')
         embed.add_field(name='roleid', value='Set message id for role reactions.', inline=False)
-        embed.add_field(name='welctext', value='Set welcome text.', inline=False)
+        embed.add_field(name='welctext', value='Set welcome text. Available variables: `{mention}` (mentions member), `{user}` (member name without mentioning), `{guild}` (name of guild)', inline=False)
         embed.add_field(name='welcch', value='Set welcome channel.', inline=False)
         embed.add_field(name='auditch', value='Set audit channel.', inline=False)
         embed.add_field(name='adminch', value='Set admin channel.', inline=False)
@@ -69,7 +69,7 @@ class Set(commands.Cog):
         await ctx.send(embed=embed)
     
     @set.command(aliases=['roleid'])
-    @commands.has_any_role('Chernobyl', 'Three Mile Island')
+    @commands.has_guild_permissions(manage_guild=True)
     async def set_msg_id_role(self, ctx, *, role_id):
         self.cursor.execute(f"SELECT msg_id_reaction FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
         result = self.cursor.fetchone()
@@ -115,7 +115,7 @@ class Set(commands.Cog):
 
 
     @set.command(aliases=['welctext'])
-    @commands.has_any_role('Chernobyl', 'Three Mile Island')
+    @commands.has_guild_permissions(manage_guild=True)
     async def set_welc_text(self, ctx, *, welc_text):
 
         self.cursor.execute(f"SELECT welc_text FROM main WHERE guild_id  = ('{str(ctx.guild.id)}')")
@@ -165,7 +165,7 @@ class Set(commands.Cog):
         self.db.commit()
 
     @set.command(aliases=['welcch'])
-    @commands.has_any_role('Chernobyl', 'Three Mile Island')
+    @commands.has_guild_permissions(manage_guild=True)
     async def set_welc_ch(self, ctx, welc_ch: discord.TextChannel):
 
         self.cursor.execute(f"SELECT ch_id_welcome FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
@@ -211,7 +211,7 @@ class Set(commands.Cog):
         self.db.commit()
 
     @set.command(aliases=['auditch'])
-    @commands.has_any_role('Chernobyl', 'Three Mile Island')
+    @commands.has_guild_permissions(manage_guild=True)
     async def set_audit_ch(self, ctx, audit_ch: discord.TextChannel):
 
         self.cursor.execute(f"SELECT ch_id_audit FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
@@ -257,7 +257,7 @@ class Set(commands.Cog):
         self.db.commit()
 
     @set.command(aliases=['adminch'])
-    @commands.has_any_role('Chernobyl', 'Three Mile Island')
+    @commands.has_guild_permissions(manage_guild=True)
     async def set_admin_ch(self, ctx, admin_ch: discord.TextChannel):
 
         self.cursor.execute(f"SELECT ch_id_admin FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
@@ -303,7 +303,7 @@ class Set(commands.Cog):
         self.db.commit()
 
     @set.command(aliases=['generalch'])
-    @commands.has_any_role('Chernobyl', 'Three Mile Island')
+    @commands.has_guild_permissions(manage_guild=True)
     async def set_general_ch(self, ctx, general_ch: discord.TextChannel):
 
         self.cursor.execute(f"SELECT ch_id_general FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")

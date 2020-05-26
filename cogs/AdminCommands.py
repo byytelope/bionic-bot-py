@@ -45,14 +45,6 @@ class AdminCommands(commands.Cog):
         else:
             audit_ch = self.bot.get_channel(id=int(result_1[0]))
             await audit_ch.send(embed=embed)
-
-    @cls.error
-    async def on_cls_error(self, ctx, error):
-        if isinstance(error, commands.MissingPermissions) or isinstance(error, commands.MissingAnyRole):
-            responses = ['Adhi the command beynun vey varah ekalo bondo nivei.',
-                         'Hoho kanthethi.'
-                        ]
-            await ctx.send(random.choice(responses))
       
     @commands.command()
     @commands.has_guild_permissions(kick_members=True)
@@ -67,67 +59,53 @@ class AdminCommands(commands.Cog):
         await ctx.send(f'Bye bye {user.mention}.')
 
         self.cursor.execute(f"SELECT ch_id_audit FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
-        result_1 = self.cursor.fetchone()
-        if result_1 is None:
+        result = self.cursor.fetchone()
+        if result is None:
             return
         else:
-            audit_ch = self.bot.get_channel(id=int(result_1[0]))
+            audit_ch = self.bot.get_channel(id=int(result[0]))
             await audit_ch.send(embed=embed)
-
-    @kick.error
-    async def on_kick_error(self, ctx, error):
-        if isinstance(error, commands.MissingPermissions):
-            responses = ['Adhi the command beynun vey varah ekalo bondo nivei.',
-                            'Hoho kanthethi.'
-                        ]
-            await ctx.send(random.choice(responses))
 
     @commands.command(aliases=['reqinv'])
     async def req_invite(self, ctx):
-        admin_ch = self.bot.get_channel(712447089623171104)
         global inv_author
         inv_author = ctx.author
         global auth_ch
         auth_ch = ctx.channel
 
         self.cursor.execute(f"SELECT ch_id_admin FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
-        result_1 = self.cursor.fetchone()
-        if result_1 is None:
+        result = self.cursor.fetchone()
+        if result is None:
             ctx.send("Please set admin channel first. Use .set for more info.")
         else:        
-            admin_ch = self.bot.get_channel(id=int(result_1[0]))
+            admin_ch = self.bot.get_channel(id=int(result[0]))
             await ctx.channel.send(f'Requesting invite link from admins...')
-            await admin_ch.send(f'{inv_author.mention} is requesting an invite link for {ctx.channel.mention}. Use **.confirm** <no. of uses> or **.deny**')
+            await admin_ch.send(f'{inv_author.mention} is requesting an invite link for {ctx.channel.mention}. Use `.confirm` or `.deny`')
 
     @commands.command()
-    @commands.has_guild_permissions(administrator=True)
-    async def confirm(self, ctx, i=5):
-        link = await ctx.channel.create_invite(max_age=86400, max_uses=i)
+    @commands.has_guild_permissions(manage_guild=True)
+    async def confirm(self, ctx):
+        link = await ctx.channel.create_invite(max_age=86400, max_uses=5)
         dm = self.bot.get_user(inv_author.id)
+
         embed = discord.Embed(
             title=f'**{ctx.author}** confirmed an invite link request.',
             description=f'from **{inv_author}** for {auth_ch.mention}',
             colour=discord.Colour(0xe9acfd)
             )
-        self.cursor.execute(f"SELECT ch_id_audit FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
-        result_1 = self.cursor.fetchone()
-        if result_1 is None:
-            return
-        else:
-            audit_ch = self.bot.get_channel(id=int(result_1[0]))
-            await auth_ch.send(f'Invite link requested by {inv_author.mention} was **confirmed**. Pls check your dms for the link.')
-            await dm.send(f'{link}')
+        await auth_ch.send(f'Invite link requested by {inv_author.mention} was **confirmed**. Pls check your dms for the link.')
+        await dm.send(f'{link}')
 
         self.cursor.execute(f"SELECT ch_id_audit FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
-        result_1 = self.cursor.fetchone()
-        if result_1 is None:
+        result = self.cursor.fetchone()
+        if result is None:
             return
         else:
-            audit_ch = self.bot.get_channel(id=int(result_1[0]))
+            audit_ch = self.bot.get_channel(id=int(result[0]))
             await audit_ch.send(embed=embed)
 
     @commands.command()
-    @commands.has_guild_permissions(administrator=True)
+    @commands.has_guild_permissions(manage_guild=True)
     async def deny(self, ctx):
         embed = discord.Embed(
             title=f'**{ctx.author}** denied an invite link request.',
@@ -138,11 +116,11 @@ class AdminCommands(commands.Cog):
         await auth_ch.send(f"Invite link requested by {inv_author.mention} was **denied**.")
 
         self.cursor.execute(f"SELECT ch_id_audit FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
-        result_1 = self.cursor.fetchone()
-        if result_1 is None:
+        result = self.cursor.fetchone()
+        if result is None:
             return
         else:
-            audit_ch = self.bot.get_channel(id=int(result_1[0]))
+            audit_ch = self.bot.get_channel(id=int(result[0]))
             await audit_ch.send(embed=embed) 
 
 
