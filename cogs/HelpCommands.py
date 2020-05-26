@@ -34,7 +34,7 @@ class HelpCommands(commands.Cog):
             colour=discord.Colour(0xe9acfd)
         )
         embed.add_field(name='aju', value="Talk to Aju when you're bored.", inline=False)
-        embed.add_field(name='say', value="Make Aju say anything.", inline=False)
+        embed.add_field(name='say', value="MaKe ajU say AnYThinG.", inline=False)
         embed.add_field(name='corona', value="Get realtime corona stats.", inline=False)
         embed.add_field(name='members', value='Aju counts the number of members in your server.', inline=False)
         embed.add_field(name='spam', value="Don't.", inline=False)
@@ -59,8 +59,8 @@ class HelpCommands(commands.Cog):
     async def help_say(self, ctx):
         embed=discord.Embed(
             colour=discord.Colour(0xe9acfd),
-            title='Echo',
-            description='Use `.say` and Aju will repeat anything after the command.'
+            title='@eCho On',
+            description='Use `.say` and Aju will RePEaT aNYTHINg AFtEr the coMmAnd.'
         )
         await ctx.send(embed=embed)
 

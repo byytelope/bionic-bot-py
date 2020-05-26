@@ -31,7 +31,15 @@ class Funny(commands.Cog):
 
     @commands.command()
     async def say(self, ctx, *, echo):
-        await ctx.send(f'{echo}')
+        sponged = []
+        for char in echo:
+            r = random.randint(0,1)
+            if r:
+                sponged.append(char.upper())
+            else:
+                sponged.append(char.lower())
+        sponged_text = ''.join(sponged)
+        await ctx.send(f'{sponged_text}')
 
     @commands.command(aliases=["members"])
     async def aju_members(self, ctx, *, members):
