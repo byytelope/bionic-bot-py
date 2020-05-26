@@ -109,9 +109,14 @@ class AdminCommands(commands.Cog):
             description=f'from **{inv_author}** for {auth_ch.mention}',
             colour=discord.Colour(0xe9acfd)
             )
-
-        await dm.send(f'{link}')
-        await auth_ch.send(f'Invite link requested by {inv_author.mention} was **confirmed**. Pls check your dms for the link.')
+        self.cursor.execute(f"SELECT ch_id_audit FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
+        result_1 = self.cursor.fetchone()
+        if result_1 is None:
+            return
+        else:
+            audit_ch = self.bot.get_channel(id=int(result_1[0]))
+            await auth_ch.send(f'Invite link requested by {inv_author.mention} was **confirmed**. Pls check your dms for the link.')
+            await dm.send(f'{link}')
 
         self.cursor.execute(f"SELECT ch_id_audit FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
         result_1 = self.cursor.fetchone()
