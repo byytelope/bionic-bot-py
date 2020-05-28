@@ -51,7 +51,7 @@ async def on_ready():
 async def aju_csgo(ctx, num: int):
     await ctx.send(web_scrape(num-1))
 
-@bot.command(aliases=['.','..','...','....','.....','......','.......'])
+@bot.command(aliases=['.','..','...','....','.....','......','.......', '........'])
 async def ignore(ctx):
     pass
 
