@@ -46,8 +46,8 @@ class Funny(commands.Cog):
         await ctx.send(f'{sponged_text}')
 
     @commands.command()
-    async def members(self, ctx, *, members):
-        await ctx.send(f"There are {ctx.guild.member_count} corona-free people in bionic.")
+    async def members(self, ctx):
+        await ctx.send(f"There are `{ctx.guild.member_count:,}` **hopefully** corona-free people in {ctx.guild}.")
 
     @commands.command()
     async def spam(self, ctx):
@@ -79,9 +79,9 @@ class Funny(commands.Cog):
             result = covid19.getLocationByCountryCode(country_code)[0]['latest'][args]
 
         if result <= 10:
-            stmt = f"{result} thakah meehun."
+            stmt = f"`{result:,}` thakah meehun."
         else:
-            stmt = f"{result} hei meehun."
+            stmt = f"`{result:,}` hei meehun."
 
         await ctx.send(stmt)
 
