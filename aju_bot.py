@@ -27,10 +27,10 @@ async def on_ready():
             host=db_host,
             port=db_port
             )
-        print('db con succ')
+        print("Succesfully connected to database.")
     except psycopg2.OperationalError as e:
         print(e)
-        print('db con not succ')
+        print("Could'nt connect to database.")
 
     cursor = db.cursor()
     cursor.execute('''
@@ -45,7 +45,7 @@ async def on_ready():
         );
     ''')
     db.commit()
-    print("Bot be ready.")
+    print("Aju is ready.")
 
 @bot.command(aliases=["csgo"])
 async def aju_csgo(ctx, num: int):
@@ -66,19 +66,22 @@ async def on_command_error(ctx, error):
 async def on_cls_error(ctx, error):
     if isinstance(error, commands.MissingPermissions) or isinstance(error, commands.MissingAnyRole):
         responses = [
-            'Adhi the command beynun vey varah ekalo bondo nivei.',
-            'Hoho kanthethi.',
-            'Nononono.',
-            'U cannot la.'
+            "Adhi the command beynun vey varah ekalo bondo nivei.",
+            "Hoho kanthethi.",
+            "Nononono.",
+            "U cannot la."
                 ]
         await ctx.send(random.choice(responses))
 
 
-bot.load_extension('cogs.HelpCommands')
-bot.load_extension('cogs.Roles')
-bot.load_extension('cogs.Funny')
-bot.load_extension('cogs.AdminCommands')
-bot.load_extension('cogs.Welcome')
-bot.load_extension('cogs.Set')
+cogs = ['cogs.HelpCommands', 'cogs.Roles', 'cogs.Funny', 'cogs.AdminCommands', 'cogs.Welcome', 'cogs.Set']
+
+if __name__ == '__main__':
+    for cog in cogs:
+        try:
+            bot.load_extension(cog)
+            print(f"{cog.replace('cogs.', '')} loaded succfully.")
+        except Exception as e:
+            print(f"Could'nt load {cog.replace('cogs.', '')}")
 
 bot.run(os.environ['api_key'])

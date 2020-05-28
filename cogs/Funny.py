@@ -4,7 +4,7 @@ import psycopg2
 import os
 from discord.ext import commands
 
-covid19 = COVID19Py.COVID19("https://coronavirus-tracker-api.herokuapp.com").getLatest()
+covid19 = COVID19Py.COVID19()
 
 class Funny(commands.Cog):
     def __init__(self, bot):
@@ -24,15 +24,13 @@ class Funny(commands.Cog):
                 host=db_host,
                 port=db_port
                 )
-            print('db con succ')
         except psycopg2.OperationalError as e:
             print(e)
-            print('db con not succ')
 
         self.cursor = self.db.cursor()
     
-    @commands.command(aliases=["ping"])
-    async def aju_ping(self, ctx):
+    @commands.command()
+    async def ping(self, ctx):
         await ctx.send(f"{round(self.bot.latency * 1000)}ms in thiyaa aju ah libenei.")
 
     @commands.command()
@@ -47,12 +45,12 @@ class Funny(commands.Cog):
         sponged_text = ''.join(sponged)
         await ctx.send(f'{sponged_text}')
 
-    @commands.command(aliases=["members"])
-    async def aju_members(self, ctx, *, members):
+    @commands.command()
+    async def members(self, ctx, *, members):
         await ctx.send(f"There are {ctx.guild.member_count} corona-free people in bionic.")
 
-    @commands.command(aliases=["spam"])
-    async def aju_spam(self, ctx):
+    @commands.command()
+    async def spam(self, ctx):
         spams = ["I'm Rick Harrison, and this is my pawn shop. I work here with my old man and my son, Big Hoss. Everything in here has a story and a price. One thing I've learned after 21 years - you never know what is gonna come through that door.",
                 "So i was watching rick and morty right, and it was just a casual night and i was just watching rick and morty. Well, out of nowhere the funniest shit happened. Rick and Morty, Season 3, Episode 3, 56 seconds in. At the time, this was happening, The scientist guy, Rick, was nowhere to be found. Morty tried to look for him but all he found was just a mere little pickle on the desk. You know what happened? He heard ricks voice, somewhere around the room. Morty used a screwdriver to flip the pickle over and...you’ll never believe this, IT WAS RICK! HE WAS A PICKLE!! I kid you not, he’s called PICKLE RICK! PICKLE RICK!!! LMAO!!!! I was rolling on the floor laughing! My chest was in pain and i almost felt that i was going to suffocate!! Funniest shit i’d ever seen, i’ll tell you that. Im still laughing thinking about it. Awww man, you had to be there. It was just so funny.",
                 "Simp means Sucker Idolizing Mediocre Pussy. A man is only a simp if the girl he is after has a mediocre pussy, but pokimane’s pussy is a goddess pussy, at worst. I will continue to donate 50% of my paycheck to pokimane because I know that it’s not simping. Poki if you see this I love you please text me back.",
@@ -73,9 +71,19 @@ class Funny(commands.Cog):
         else:
             await ctx.send(f"{random.choice(spams)}")
 
-    @commands.command(aliases=["corona"])
-    async def aju_number(self, ctx, value: str):
-        await ctx.send(f"{covid19[value]} hei meehun.")
+    @commands.command()
+    async def corona(self, ctx, country_code, args:str):
+        if country_code == 'global':
+            result = covid19.getLatest()[args]
+        else:
+            result = covid19.getLocationByCountryCode(country_code)[0]['latest'][args]
+
+        if result <= 10:
+            stmt = f"{result} thakah meehun."
+        else:
+            stmt = f"{result} hei meehun."
+
+        await ctx.send(stmt)
 
     @commands.command(aliases=["aju"])
     async def aju_bot(self, ctx, *, hello):
@@ -106,8 +114,8 @@ class Funny(commands.Cog):
                         "Aju kiyan koh dhey vee?"]
             await ctx.send(random.choice(responses))
 
-    @aju_number.error
-    async def on_aju_number_error(self, ctx, error):
+    @corona.error
+    async def on_corona_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument) or isinstance(error, commands.UserInputError):
             responses = ["Corona cowcow?",
                         "Adhi ada neevene ey.",

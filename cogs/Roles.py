@@ -24,10 +24,8 @@ class Roles(commands.Cog):
                 host=db_host,
                 port=db_port
                 )
-            print('db con succ')
         except psycopg2.OperationalError as e:
             print(e)
-            print('db con not succ')
 
         self.cursor = self.db.cursor()
 

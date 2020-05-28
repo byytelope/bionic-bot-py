@@ -24,10 +24,8 @@ class HelpCommands(commands.Cog):
                 host=db_host,
                 port=db_port
                 )
-            print('db con succ')
         except psycopg2.OperationalError as e:
             print(e)
-            print('db con not succ')
 
         self.cursor = self.db.cursor()
     
@@ -77,7 +75,7 @@ class HelpCommands(commands.Cog):
         embed=discord.Embed(
             colour=discord.Colour(0xe9acfd),
             title='Get realtime corona stats',
-            description='Use `.corona` and `confirmed` for the  number of confirmed cases or `deaths` for the  number of confirmed deaths.'
+            description='Use `.corona global confirmed` for total confirmed cases globally. You can substitute in `deaths` instead of `confirmed` and a 2 letter country code in place of `global`.'
         )
         embed.set_footer(text=f'Help requested by: {ctx.author}', icon_url=ctx.author.avatar_url)
         await ctx.send(embed=embed)
