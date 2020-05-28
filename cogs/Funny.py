@@ -16,13 +16,19 @@ class Funny(commands.Cog):
         db_host = os.environ['db_host']
         db_port = os.environ['db_port']
 
-        self.db = psycopg2.connect(
-            database=db_database,
-            user=db_user,
-            password=db_password,
-            host=db_host,
-            port=db_port
-            )
+        try:
+            self.db = psycopg2.connect(
+                database=db_database,
+                user=db_user,
+                password=db_password, 
+                host=db_host,
+                port=db_port
+                )
+            print('db con succ')
+        except psycopg2.OperationalError as e:
+            print(e)
+            print('db con not succ')
+
         self.cursor = self.db.cursor()
     
     @commands.command(aliases=["ping"])

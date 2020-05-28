@@ -19,13 +19,19 @@ async def on_ready():
     db_host = os.environ['db_host']
     db_port = os.environ['db_port']
 
-    db = psycopg2.connect(
-        database=db_database,
-        user=db_user,
-        password=db_password,
-        host=db_host,
-        port=db_port
-        )
+    try:
+        db = psycopg2.connect(
+            database=db_database,
+            user=db_user,
+            password=db_password,
+            host=db_host,
+            port=db_port
+            )
+        print('db con succ')
+    except psycopg2.OperationalError as e:
+        print(e)
+        print('db con not succ')
+
     cursor = db.cursor()
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS main (
@@ -42,8 +48,12 @@ async def on_ready():
     print("Bot be ready.")
 
 @bot.command(aliases=["csgo"])
-async def aju_csgo(self, ctx, num: int):
+async def aju_csgo(ctx, num: int):
     await ctx.send(web_scrape(num-1))
+
+@bot.command(aliases=['.','..','...','....','.....','......','.......'])
+async def ignore(ctx):
+    pass
 
 @bot.event
 async def on_command_error(ctx, error):
