@@ -64,7 +64,7 @@ class Set(commands.Cog):
             )
         embed.set_footer(text=f'{ctx.guild}', icon_url=f'{ctx.guild.icon_url}')
         embed.add_field(name='roleid', value='Set message id for role reactions.', inline=False)
-        embed.add_field(name='welctext', value='Set welcome text. Available variables: `{mention}` (mentions member), `{user}` (member name without mentioning), `{guild}` (name of guild)', inline=False)
+        embed.add_field(name='welctext', value='Set welcome text. Available variables: \n`{mention}` (mentions member), \n`{user}` (member name without mentioning), \n`{guild}` (name of guild)', inline=False)
         embed.add_field(name='welcch', value='Set welcome channel.', inline=False)
         embed.add_field(name='auditch', value='Set audit channel.', inline=False)
         embed.add_field(name='adminch', value='Set admin channel.', inline=False)
