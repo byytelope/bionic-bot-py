@@ -43,9 +43,16 @@ class Welcome(commands.Cog):
             self.cursor.execute(f"SELECT welc_text FROM main WHERE guild_id = ('{str(member.guild.id)}')")
             result_1 = self.cursor.fetchone()
             welc_ch = self.bot.get_channel(id=int(result[0]))
-
             msg = str(result_1[0]).format(mention=member.mention, user=member.name, guild=member.guild)
-            await welc_ch.send(msg)
+
+            embed = discord.Embed(
+                title=f'Welcome to {member.guild}!',
+                description=msg,
+                colour=discord.Colour(0xe9acfd)
+            )
+            embed.set_thumbnail(url=member.avatar_url)
+            embed.set_footer(text=member.guild, icon_url=member.guild.icon_url)
+            await welc_ch.send(embed=embed)
 
 
 def setup(bot):

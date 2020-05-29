@@ -129,7 +129,7 @@ class AdminCommands(commands.Cog):
             return
         else:
             audit_ch = self.bot.get_channel(id=int(result[0]))
-            await audit_ch.send(embed=embed) 
+            await audit_ch.send(embed=embed)
 
 
 def setup(bot):
