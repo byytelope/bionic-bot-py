@@ -52,7 +52,7 @@ class AdminCommands(commands.Cog):
       
     @commands.command()
     @commands.has_guild_permissions(kick_members=True)
-    async def kick(self, ctx, user: discord.Member, *,reason=None):
+    async def kick(self, ctx, user:discord.Member, *,reason=None):
         embed = discord.Embed(
             title=f'kicked **{user}** from {ctx.guild}.',
             description=reason,

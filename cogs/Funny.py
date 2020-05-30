@@ -1,3 +1,4 @@
+import discord
 import random
 import COVID19Py
 import psycopg2
@@ -84,6 +85,22 @@ class Funny(commands.Cog):
             stmt = f"`{result:,}` hei meehun."
 
         await ctx.send(stmt)
+
+    @commands.command()
+    async def avatar(self, ctx, user:str):
+        users = ctx.guild.members
+        for u in users:
+            if u.display_name.lower() == user.lower():
+                member = u
+
+        embed = discord.Embed(
+            title=f'{member}\'s avatar',
+            url=f'{member.avatar_url}',
+            colour=discord.Colour(0xe9acfd)
+        )
+        embed.set_image(url=member.avatar_url)
+        await ctx.send(embed=embed)
+
 
     @commands.command(aliases=["aju"])
     async def aju_bot(self, ctx, *, hello):
