@@ -87,21 +87,24 @@ class Funny(commands.Cog):
         await ctx.send(stmt)
 
     @commands.command()
-    async def avatar(self, ctx, *, member:discord.Member):
-        # users = ctx.guild.members
-        # for u in users:
-        #     if u.display_name.lower() == user.lower():
-        #         continue
-        # else:
-        #     member = u
+    async def avatar(self, ctx, *, user):
+        users = ctx.guild.members
 
-        embed = discord.Embed(
-            title=f'{member}\'s avatar',
-            url=f'{member.avatar_url}',
-            colour=discord.Colour(0xe9acfd)
-        )
-        embed.set_image(url=member.avatar_url)
-        await ctx.send(embed=embed)
+        for u in users:
+            if user.lower() in u.display_name.lower():
+                member = u
+
+                embed = discord.Embed(
+                    title=f'{member}\'s avatar',
+                    url=f'{member.avatar_url}',
+                    colour=discord.Colour(0xe9acfd)
+                )
+                embed.set_image(url=member.avatar_url)
+
+                await ctx.send(embed=embed)
+                break
+        else:
+            await ctx.send('Aju ah themeehaa nifenene.')
 
     @commands.command(aliases=["aju"])
     async def aju_bot(self, ctx, *, hello):
