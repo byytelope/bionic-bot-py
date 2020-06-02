@@ -44,6 +44,7 @@ class HelpCommands(commands.Cog):
         embed.add_field(name='spam', value="Don't.", inline=False)
         embed.add_field(name='csgo', value='HLTV rankings for all time best CS:GO players.', inline=False)
         embed.add_field(name='reqinv', value='Request an invite link.', inline=False)
+        embed.add_field(name='avatar', value='Get a user\'s avatar.', inline=False)
         embed.add_field(name='clear/cls **(Admin role required)**', value='Clear messages from a channel.', inline=False)
         embed.add_field(name='set **(cannot be used with .help)**', value='Use `.set` for info on setting variables for your server.', inline=False)
         embed.set_footer(text=f'Help requested by: {ctx.author}', icon_url=ctx.author.avatar_url)
@@ -127,6 +128,16 @@ class HelpCommands(commands.Cog):
             colour=discord.Colour(0xe9acfd),
             title='Request an invite link from the admins.',
             description='`.reqinv` will send a request for an invite link to the admin channel of the guild. Only works if admin channel is setup in Aju.'
+        )
+        embed.set_footer(text=f'Help requested by: {ctx.author}', icon_url=ctx.author.avatar_url)
+        await ctx.send(embed=embed)
+
+    @help.command(aliases=['avatar'])
+    async def help_avatar(self, ctx):
+        embed=discord.Embed(
+            colour=discord.Colour(0xe9acfd),
+            title='Get the avatar of a user.',
+            description='Only gets avatars of users from the guild you call Aju in.'
         )
         embed.set_footer(text=f'Help requested by: {ctx.author}', icon_url=ctx.author.avatar_url)
         await ctx.send(embed=embed)
