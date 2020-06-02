@@ -27,7 +27,7 @@ async def on_ready():
             host=db_host,
             port=db_port
             )
-        print("Succesfully connected to database.")
+        print("Successfully connected to database.")
     except psycopg2.OperationalError as e:
         print(e)
         print("Could'nt connect to database.")

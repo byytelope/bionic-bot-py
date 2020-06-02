@@ -34,13 +34,12 @@ class AdminCommands(commands.Cog):
     @commands.command(aliases=['clear'])
     @commands.has_permissions(manage_messages=True)
     async def cls(self, ctx, amount=2):
+
         embed = discord.Embed(
             description=f'cleared `{amount}` message(s) in {ctx.channel.mention}',
             colour=discord.Colour(0xe9acfd)
         )
         embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
-        await ctx.channel.purge(limit=amount+1)
-        await ctx.channel.send(f"Aju `{amount}` message delete kollin.")
 
         self.cursor.execute(f"SELECT ch_id_audit FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
         result_1 = self.cursor.fetchone()
@@ -49,6 +48,9 @@ class AdminCommands(commands.Cog):
         else:
             audit_ch = self.bot.get_channel(id=int(result_1[0]))
             await audit_ch.send(embed=embed)
+
+        await ctx.channel.purge(limit=amount+1)
+        await ctx.channel.send(f"Aju `{amount}` message delete kollin.")
       
     @commands.command()
     @commands.has_guild_permissions(kick_members=True)

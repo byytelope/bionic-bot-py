@@ -91,7 +91,9 @@ class Funny(commands.Cog):
         # users = ctx.guild.members
         # for u in users:
         #     if u.display_name.lower() == user.lower():
-        #         member = u
+        #         continue
+        # else:
+        #     member = u
 
         embed = discord.Embed(
             title=f'{member}\'s avatar',
