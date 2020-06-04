@@ -35,10 +35,16 @@ class AdminCommands(commands.Cog):
     @commands.has_permissions(manage_messages=True)
     async def cls(self, ctx, amount=2):
 
-        embed = discord.Embed(
-            description=f'cleared `{amount}` message(s) in {ctx.channel.mention}',
-            colour=discord.Colour(0xe9acfd)
-        )
+        if amount == 1:
+            embed = discord.Embed(
+                description=f'cleared `{amount}` message in {ctx.channel.mention}',
+                colour=discord.Colour(0xe9acfd)
+            )
+        else:
+            embed = discord.Embed(
+                description=f'cleared `{amount}` messages in {ctx.channel.mention}',
+                colour=discord.Colour(0xe9acfd)
+            )
         embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
 
         self.cursor.execute(f"SELECT ch_id_audit FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
