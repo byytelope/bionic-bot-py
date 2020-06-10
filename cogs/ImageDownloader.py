@@ -12,9 +12,9 @@ class ImageDownloader(commands.Cog):
     async def img(self, ctx, *, key):
         await ctx.send("Aju photo ah hoadhaathaan...")
         response = google_images_download.googleimagesdownload()
-        args = {'keywords':key, 'limit':1, 'print_urls':True, 'no_directory':True, 'output_directory':'aju-bot-py\\img_cache', 'format':"jpg"}
+        args = {'keywords':key, 'limit':1, 'print_urls':True, 'no_directory':True, 'output_directory':'img_cache', 'format':"jpg"}
 
-        source_name = glob.glob("aju-bot-py\\img_cache\\*.jpg")[0]
+        source_name = glob.glob("img_cache\\*.jpg")[0]
         path, fullname = os.path.split(source_name)
 
         if fullname == "image.jpg":
@@ -26,7 +26,7 @@ class ImageDownloader(commands.Cog):
 
         # path = output[0][args['keywords']][0]
 
-        source_name = glob.glob("aju-bot-py\\img_cache\\*.jpg")[0]
+        source_name = glob.glob("img_cache\\*.jpg")[0]
         path, fullname = os.path.split(source_name)
         basename, ext = os.path.splitext(fullname)
         target_name = os.path.join(path, f'image{ext}')
@@ -34,7 +34,7 @@ class ImageDownloader(commands.Cog):
 
         print(f"Renamed {basename}{ext} to image{ext}.")
 
-        file = discord.File("aju-bot-py\\img_cache\\image.jpg", filename="image.jpg")
+        file = discord.File("img_cache\\image.jpg", filename="image.jpg")
         embed = discord.Embed(
             title=key,
             colour=discord.Colour(0xe9acfd)
