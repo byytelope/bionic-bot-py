@@ -4,3 +4,4 @@ beautifulsoup4
 COVID19Py
 html5lib
 psycopg2
+google_images_download
