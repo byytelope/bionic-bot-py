@@ -132,3 +132,4 @@ dmypy.json
 .pyre/
 
 *.sqlite
+img_cache/*

@@ -122,28 +122,28 @@ class Funny(commands.Cog):
                     "I rike to uhh eat duh sticky rais."]
         await ctx.send(f"{random.choice(responses)}")
 
-    @aju_bot.error
-    async def on_aju_bot_error(self, ctx, error):
-        if isinstance(error, commands.MissingRequiredArgument):
-            responses = ["Wot?",
-                        "Eyn?",
-                        "O?",
-                        "Oo?",
-                        "Sup?",
-                        "Hm????",
-                        "P L E A S E  C O M P L E T E  T H E  S E N T E N C E .",
-                        "Aju kiyan koh dhey vee?"]
-            await ctx.send(random.choice(responses))
+    # @aju_bot.error
+    # async def on_aju_bot_error(self, ctx, error):
+    #     if isinstance(error, commands.MissingRequiredArgument):
+    #         responses = ["Wot?",
+    #                     "Eyn?",
+    #                     "O?",
+    #                     "Oo?",
+    #                     "Sup?",
+    #                     "Hm????",
+    #                     "P L E A S E  C O M P L E T E  T H E  S E N T E N C E .",
+    #                     "Aju kiyan koh dhey vee?"]
+    #         await ctx.send(random.choice(responses))
 
-    @corona.error
-    async def on_corona_error(self, ctx, error):
-        if isinstance(error, commands.MissingRequiredArgument) or isinstance(error, commands.UserInputError):
-            responses = ["Corona cowcow?",
-                        "Adhi ada neevene ey.",
-                        "Thankeda baaraa benafele.",
-                        "Corona wot?",
-                        "Thehen ekani benagen keraah vee kamah aju ah egei?"]
-            await ctx.send(random.choice(responses))
+    # @corona.error
+    # async def on_corona_error(self, ctx, error):
+    #     if isinstance(error, commands.MissingRequiredArgument) or isinstance(error, commands.UserInputError):
+    #         responses = ["Corona cowcow?",
+    #                     "Adhi ada neevene ey.",
+    #                     "Thankeda baaraa benafele.",
+    #                     "Corona wot?",
+    #                     "Thehen ekani benagen keraah vee kamah aju ah egei?"]
+    #         await ctx.send(random.choice(responses))
 
 
 def setup(bot):
