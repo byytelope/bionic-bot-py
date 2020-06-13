@@ -55,23 +55,23 @@ async def aju_csgo(ctx, num: int):
 async def ignore(ctx):
     pass
 
-# @bot.event
-# async def on_command_error(ctx, error):
-#     if isinstance(error, commands.CommandNotFound):
-#         responses = ["They aju ah niegey command ah.",
-#                     "Aju ah egey ehthakaau keyfele."]
-#         await ctx.send(random.choice(responses))
+@bot.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.CommandNotFound):
+        responses = ["They aju ah niegey command ah.",
+                    "Aju ah egey ehthakaau keyfele."]
+        await ctx.send(random.choice(responses))
 
-# @bot.event
-# async def on_cls_error(ctx, error):
-#     if isinstance(error, commands.MissingPermissions) or isinstance(error, commands.MissingAnyRole):
-#         responses = [
-#             "Adhi the command beynun vey varah ekalo bondo nivei.",
-#             "Hoho kanthethi.",
-#             "Nononono.",
-#             "U cannot la."
-#                 ]
-#         await ctx.send(random.choice(responses))
+@bot.event
+async def on_cls_error(ctx, error):
+    if isinstance(error, commands.MissingPermissions) or isinstance(error, commands.MissingAnyRole):
+        responses = [
+            "Adhi the command beynun vey varah ekalo bondo nivei.",
+            "Hoho kanthethi.",
+            "Nononono.",
+            "U cannot la."
+                ]
+        await ctx.send(random.choice(responses))
 
 
 cogs = ['cogs.HelpCommands', 'cogs.Roles', 'cogs.Funny', 'cogs.AdminCommands', 'cogs.Welcome', 'cogs.Set', 'cogs.ImageDownloader']
