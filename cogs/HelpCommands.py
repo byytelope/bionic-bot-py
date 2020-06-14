@@ -45,6 +45,7 @@ class HelpCommands(commands.Cog):
         embed.add_field(name='csgo', value='HLTV rankings for all time best CS:GO players.', inline=False)
         embed.add_field(name='reqinv', value='Request an invite link.', inline=False)
         embed.add_field(name='avatar', value='Get a user\'s avatar.', inline=False)
+        embed.add_field(name='img', value='Search Google for images.', inline=False)
         embed.add_field(name='clear/cls **(Admin role required)**', value='Clear messages from a channel.', inline=False)
         embed.add_field(name='set **(cannot be used with .help)**', value='Use `.set` for info on setting variables for your server.', inline=False)
         embed.set_footer(text=f'Help requested by: {ctx.author}', icon_url=ctx.author.avatar_url)
@@ -138,6 +139,16 @@ class HelpCommands(commands.Cog):
             colour=discord.Colour(0xe9acfd),
             title='Get the avatar of a user.',
             description='Only gets avatars of users from the guild you call Aju in.'
+        )
+        embed.set_footer(text=f'Help requested by: {ctx.author}', icon_url=ctx.author.avatar_url)
+        await ctx.send(embed=embed)
+    
+    @help.command(aliases=['img'])
+    async def help_img(self, ctx):
+        embed=discord.Embed(
+            colour=discord.Colour(0xe9acfd),
+            title='Search for an image on Google.',
+            description='Use `.img` followed by a search term. **eg:`.img funny`**'
         )
         embed.set_footer(text=f'Help requested by: {ctx.author}', icon_url=ctx.author.avatar_url)
         await ctx.send(embed=embed)
