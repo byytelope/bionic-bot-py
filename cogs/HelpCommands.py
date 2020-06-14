@@ -148,7 +148,7 @@ class HelpCommands(commands.Cog):
         embed=discord.Embed(
             colour=discord.Colour(0xe9acfd),
             title='Search for an image on Google.',
-            description='Use `.img` followed by a search term. **eg:`.img funny`**'
+            description='Use `.img` followed by an optional file format, then search term. eg: `.img gif funny` **gifs may take ~ a minute to send**'
         )
         embed.set_footer(text=f'Help requested by: {ctx.author}', icon_url=ctx.author.avatar_url)
         await ctx.send(embed=embed)

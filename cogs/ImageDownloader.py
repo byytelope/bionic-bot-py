@@ -10,20 +10,19 @@ class ImageDownloader(commands.Cog):
         self.bot = bot
 
     @commands.command()
-    async def img(self, ctx, *, key):
+    async def img(self, ctx, format="jpg", *, key):
         await ctx.send("Aju photo ah hoadhaathaan...")
 
         out_dir = Path("img_cache")
-        src_path = Path("img_cache/*.jpg")
-        disc_file_path = Path("img_cache/image.jpg")
+        src_path = Path("img_cache/*")
 
         response = GoogleImagesSearch(os.environ['img_search_api_key'], os.environ['img_search_web_id'])
-        args = {'q':key, 'num':1, 'fileType':"jpg"}
+        args = {'q':key, 'num':1, 'fileType':format}
 
         source_name = glob.glob(f"{src_path}")
         if source_name:
             path, fullname = os.path.split(f"{source_name[0]}")
-            if fullname == "image.jpg":
+            if "image" in fullname:
                 os.remove(f"{source_name[0]}")
                 print("Image deleted.")
         else:
@@ -43,13 +42,21 @@ class ImageDownloader(commands.Cog):
         else:
             print("Image not found.")
 
-        file = discord.File(disc_file_path, filename="image.jpg")
         embed = discord.Embed(
             title=key,
             colour=discord.Colour(0xe9acfd)
         )
-        embed.set_image(url="attachment://image.jpg")
         embed.set_footer(text=f'Image requested by: {ctx.author}', icon_url=ctx.author.avatar_url)
+        if ext == ".jpg":
+            embed.set_image(url="attachment://image.jpg")
+            file = discord.File("img_cache/image.jpg", filename="image.jpg")
+        elif ext == ".png":
+            embed.set_image(url="attachment://image.png")
+            file = discord.File("img_cache/image.png", filename="image.png")
+        elif ext == ".gif":
+            embed.set_image(url="attachment://image.gif")
+            file = discord.File("img_cache/image.gif", filename="image.gif")
+
         await ctx.send(file=file, embed=embed)
 
 
