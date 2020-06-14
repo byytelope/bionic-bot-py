@@ -2,7 +2,7 @@ import discord
 import glob
 import os
 from discord.ext import commands
-from google_images_download import google_images_download
+from google_images_search import GoogleImagesSearch
 from pathlib import Path
 
 class ImageDownloader(commands.Cog):
@@ -13,12 +13,12 @@ class ImageDownloader(commands.Cog):
     async def img(self, ctx, *, key):
         await ctx.send("Aju photo ah hoadhaathaan...")
 
-        out_dir = Path('cogs/img_cache')
-        src_path = Path("cogs/img_cache/*.jpg")
-        disc_file_path = Path("cogs/img_cache/image.jpg")
+        out_dir = Path("img_cache")
+        src_path = Path("img_cache/*.jpg")
+        disc_file_path = Path("img_cache/image.jpg")
 
-        response = google_images_download.googleimagesdownload()
-        args = {'keywords':key, 'limit':1, 'print_urls':True, 'no_directory':True, 'output_directory':out_dir, 'format':"jpg"}
+        response = GoogleImagesSearch(os.environ['img_search_api_key'], os.environ['img_search_web_id'])
+        args = {'q':key, 'num':1, 'fileType':"jpg"}
 
         source_name = glob.glob(f"{src_path}")
         if source_name:
@@ -29,8 +29,7 @@ class ImageDownloader(commands.Cog):
         else:
             pass
 
-        output = response.download(args)
-        print(output)
+        response.search(search_params=args, path_to_dir=out_dir)
 
         # path = output[0][args['keywords']][0]
 
@@ -39,7 +38,7 @@ class ImageDownloader(commands.Cog):
             path, fullname = os.path.split(f"{source_name[0]}")
             basename, ext = os.path.splitext(fullname)
             target_name = os.path.join(path, f'image{ext}')
-            os.rename(source_name, target_name)
+            os.rename(source_name[0], target_name)
             print(f"Renamed {basename}{ext} to image{ext}.")
         else:
             print("Image not found.")
