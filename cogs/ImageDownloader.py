@@ -24,7 +24,7 @@ class ImageDownloader(commands.Cog):
         if source_name:
             path, fullname = os.path.split(f"{source_name[0]}")
             if fullname == "image.jpg":
-                os.remove(f"{source_name}")
+                os.remove(f"{source_name[0]}")
                 print("Image deleted.")
         else:
             pass
