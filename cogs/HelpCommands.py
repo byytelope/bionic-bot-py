@@ -46,6 +46,7 @@ class HelpCommands(commands.Cog):
         embed.add_field(name='reqinv', value='Request an invite link.', inline=False)
         embed.add_field(name='avatar', value='Get a user\'s avatar.', inline=False)
         embed.add_field(name='img', value='Search Google for images.', inline=False)
+        embed.add_field(name='gif', value='Search Google for gifs.', inline=False)
         embed.add_field(name='clear/cls **(Admin role required)**', value='Clear messages from a channel.', inline=False)
         embed.add_field(name='set **(cannot be used with .help)**', value='Use `.set` for info on setting variables for your server.', inline=False)
         embed.set_footer(text=f'Help requested by: {ctx.author}', icon_url=ctx.author.avatar_url)
@@ -148,7 +149,17 @@ class HelpCommands(commands.Cog):
         embed=discord.Embed(
             colour=discord.Colour(0xe9acfd),
             title='Search for an image on Google.',
-            description='Use `.img` followed by an optional file format, then search term. eg: `.img gif funny` **gifs may take ~ a minute to send**'
+            description='Use `.img` followed by a search term. eg: `.img funny vine compilation`'
+        )
+        embed.set_footer(text=f'Help requested by: {ctx.author}', icon_url=ctx.author.avatar_url)
+        await ctx.send(embed=embed)
+
+    @help.command(aliases=['gif'])
+    async def help_gif(self, ctx):
+        embed=discord.Embed(
+            colour=discord.Colour(0xe9acfd),
+            title='Search for a gif on Google.',
+            description='Use `.gif` followed by a search term. eg: `.gif funny lele pons vines` **may take ~ a minute to send sometimes**'
         )
         embed.set_footer(text=f'Help requested by: {ctx.author}', icon_url=ctx.author.avatar_url)
         await ctx.send(embed=embed)
