@@ -1,7 +1,7 @@
 import youtube_dl
-import os
 import discord
 import shutil
+import os
 from discord.ext import commands
 
 class Music(commands.Cog):
