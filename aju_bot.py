@@ -74,7 +74,7 @@ async def on_cls_error(ctx, error):
         await ctx.send(random.choice(responses))
 
 
-cogs = ['cogs.HelpCommands', 'cogs.Roles', 'cogs.Funny', 'cogs.AdminCommands', 'cogs.Welcome', 'cogs.Set', 'cogs.ImageDownloader']
+cogs = ['cogs.HelpCommands', 'cogs.Roles', 'cogs.Funny', 'cogs.AdminCommands', 'cogs.Welcome', 'cogs.Set', 'cogs.ImageDownloader', 'cogs.Music']
 
 if __name__ == '__main__':
     for cog in cogs:
@@ -82,6 +82,7 @@ if __name__ == '__main__':
             bot.load_extension(cog)
             print(f"{cog.replace('cogs.', '')} loaded succfully.")
         except Exception as e:
-            print(f"Could'nt load {cog.replace('cogs.', '')}")
+            print(f"Could'nt load {cog.replace('cogs.', '')}\n")
+            print(e)
 
 bot.run(os.environ['api_key'])
