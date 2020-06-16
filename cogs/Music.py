@@ -52,7 +52,7 @@ class Music(commands.Cog):
                 try:
                     file_1 = os.listdir(q_dir)[0]
                 except:
-                    print("Queue empty.")
+                    print("Queue is empty.")
                     self.queues.clear()
                     return
                 main_path = os.path.dirname(os.path.realpath(__file__))
