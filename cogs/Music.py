@@ -127,7 +127,7 @@ class Music(commands.Cog):
 
         name_split = name.rsplit("-", 2)
         await ctx.send(f"Playing: {name_split[0]}")
-        print(f"Playing song {name_split}")
+        print(f"Playing song {name_split[0]}")
 
     @commands.command(aliases=['pa'])
     async def pause(self, ctx):
