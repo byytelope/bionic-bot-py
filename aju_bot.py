@@ -30,7 +30,7 @@ async def on_ready():
         print("Successfully connected to database.")
     except psycopg2.OperationalError as e:
         print(e)
-        print("Could'nt connect to database.")
+        print("Couldn't connect to database.")
 
     cursor = db.cursor()
     cursor.execute('''
@@ -82,7 +82,7 @@ if __name__ == '__main__':
             bot.load_extension(cog)
             print(f"{cog.replace('cogs.', '')} loaded succfully.")
         except Exception as e:
-            print(f"Could'nt load {cog.replace('cogs.', '')}\n")
+            print(f"Couldn't load {cog.replace('cogs.', '')}\n")
             print(e)
 
 bot.run(os.environ['api_key'])

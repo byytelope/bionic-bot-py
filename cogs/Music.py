@@ -22,6 +22,7 @@ class Music(commands.Cog):
 
         else:
             voice = await channel.connect()
+            await ctx.send(f"Joined {channel}")
 
     @commands.command(aliases=['l'])
     async def leave(self, ctx):
