@@ -32,7 +32,6 @@ class Music(commands.Cog):
 
     @commands.command(aliases=['p'])
     async def play(self, ctx, url:str):
-
         global voice
         channel = ctx.message.author.voice.channel
         voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
