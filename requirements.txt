@@ -5,3 +5,4 @@ COVID19Py
 html5lib
 psycopg2
 Google-Images-Search
+youtube_dl
