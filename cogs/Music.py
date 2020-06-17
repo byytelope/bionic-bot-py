@@ -96,21 +96,23 @@ class Music(commands.Cog):
         else:
             voice = await channel.connect()
 
-        if url.startswith("https") or url.startswith("www"):
-            async with ctx.typing():
-                player = await YTDLSource.from_url(url, loop=self.bot.loop, stream=True)
-                ctx.voice_client.play(player, after=lambda e: print('Player error: %s' % e) if e else None)
-        else:
-            url_parsed = YTDLSource.from_query(url)
-            async with ctx.typing():
-                player = await YTDLSource.from_url(url_parsed, loop=self.bot.loop, stream=True)
-                ctx.voice_client.play(player, after=lambda e: print('Player error: %s' % e) if e else None)
-
         embed = discord.Embed(
             colour=discord.Colour(0xe9acfd)
         )
-        embed.add_field(name=f"Now playing:", value=f"[{player.title}]({url})")
         embed.set_footer(text=f"Requested by: {ctx.author}", icon_url=ctx.author.avatar_url)
+
+        if url.startswith("https:") or url.startswith("www."):
+            async with ctx.typing():
+                player = await YTDLSource.from_url(url, loop=self.bot.loop, stream=True)
+                ctx.voice_client.play(player, after=lambda e: print('Player error: %s' % e) if e else None)
+                embed.add_field(name=f"Now playing:", value=f"[{player.title}]({url})")
+        else:
+            async with ctx.typing():
+                url_parsed = await YTDLSource.from_query(url)
+                player = await YTDLSource.from_url(url_parsed, loop=self.bot.loop, stream=True)
+                ctx.voice_client.play(player, after=lambda e: print('Player error: %s' % e) if e else None)
+                embed.add_field(name=f"Now playing:", value=f"[{player.title}]({url_parsed})")
+
         await ctx.send(embed=embed)
 
     @commands.command(aliases=['ps'])
@@ -119,8 +121,8 @@ class Music(commands.Cog):
 
         if voice and voice.is_playing():
             voice.pause()
-            print("Paused ⏸.")
-            await ctx.send("Paused music.")
+            print("Paused music.")
+            await ctx.send("Paused ⏸")
         else:
             print("Failed pause no music playing.")
             await ctx.send("Nothing playing.")
@@ -131,8 +133,8 @@ class Music(commands.Cog):
 
         if voice and voice.is_paused():
             voice.resume()
-            print("Resumed ▶.")
-            await ctx.send("Resumed music.")
+            print("Resumed music.")
+            await ctx.send("Resumed ▶")
         else:
             print("Music not paused.")
             await ctx.send("Nothing paused.")
