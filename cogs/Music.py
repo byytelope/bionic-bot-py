@@ -47,19 +47,17 @@ class YTDLSource(discord.PCMVolumeTransformer):
         return cls(discord.FFmpegPCMAudio(filename, **ffmpeg_options), data=data)
 
     @staticmethod
-    async def from_query(query):
-        query_string = await urllib.parse.urlencode({
+    def from_query(query):
+        query_string = urllib.parse.urlencode({
             'search_query': query
         })
-        htm_content = await urllib.request.urlopen(
+        htm_content = urllib.request.urlopen(
             f"https://www.youtube.com/results?{query_string}"
         )
-        search_results = await re.findall('href=\"\\/watch\\?v=(.{11})', htm_content.read().decode())
+        search_results = re.findall('href=\"\\/watch\\?v=(.{11})', htm_content.read().decode())
         return f"https://www.youtube.com/watch?v={search_results[0]}"
 
 class Music(commands.Cog):
-
-    queues = {}
 
     def __init__(self, bot):
         self.bot = bot
@@ -78,7 +76,7 @@ class Music(commands.Cog):
             await ctx.send(f"Joined {channel}")
 
     @commands.command(aliases=['dc'])
-    async def leave(self, ctx):
+    async def stop(self, ctx):
         voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
 
         if voice and voice.is_connected():
@@ -108,12 +106,12 @@ class Music(commands.Cog):
                 embed.add_field(name=f"Now playing:", value=f"[{player.title}]({url})")
         else:
             async with ctx.typing():
-                url_parsed = await YTDLSource.from_query(url)
+                url_parsed = YTDLSource.from_query(url)
                 player = await YTDLSource.from_url(url_parsed, loop=self.bot.loop, stream=True)
                 ctx.voice_client.play(player, after=lambda e: print('Player error: %s' % e) if e else None)
                 embed.add_field(name=f"Now playing:", value=f"[{player.title}]({url_parsed})")
 
-        await ctx.send(embed=embed)
+        await ctx.send(embed=embed, delete_after=15)
 
     @commands.command(aliases=['ps'])
     async def pause(self, ctx):
@@ -153,7 +151,7 @@ class Music(commands.Cog):
             print("No music playing.")
             await ctx.send("Nothing playing.")
 
-    @commands.command()
+    @commands.command(aliases=['v', 'vol'])
     async def volume(self, ctx, volume: int):
         if ctx.voice_client is None:
             return await ctx.send("Not connected to a voice channel.")
@@ -164,6 +162,16 @@ class Music(commands.Cog):
     # @commands.command(aliases=['q'])
     # async def queue(self, ctx, url:str):
 
+    @play.before_invoke
+    async def ensure_voice(self, ctx):
+        if ctx.voice_client is None:
+            if ctx.author.voice:
+                await ctx.author.voice.channel.connect()
+            else:
+                await ctx.send("You are not connected to a voice channel.")
+                raise commands.CommandError("Author not connected to a voice channel.")
+        elif ctx.voice_client.is_playing():
+            ctx.voice_client.stop()
 
 
 def setup(bot):

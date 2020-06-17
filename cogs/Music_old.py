@@ -2,11 +2,62 @@ import youtube_dl
 import discord
 import shutil
 import os
+import asyncio
+import urllib.parse, urllib.request, re
 from discord.ext import commands
 
-class Music(commands.Cog):
+ytdl_format_options = {
+    'format': 'bestaudio/best',
+    'outtmpl': '%(extractor)s-%(id)s-%(title)s.%(ext)s',
+    'restrictfilenames': True,
+    'noplaylist': True,
+    'nocheckcertificate': True,
+    'ignoreerrors': False,
+    'logtostderr': False,
+    'quiet': True,
+    'no_warnings': True,
+    'default_search': 'auto',
+    'source_address': '0.0.0.0'
+}
 
-    queues = {}
+ffmpeg_options = {
+    'options': '-vn'
+}
+
+ytdl = youtube_dl.YoutubeDL(ytdl_format_options)
+
+class YTDLSource(discord.PCMVolumeTransformer):
+    def __init__(self, source, *, data, volume=0.5):
+        super().__init__(source, volume)
+
+        self.data = data
+
+        self.title = data.get('title')
+        self.url = data.get('url')
+
+    @classmethod
+    async def from_url(cls, url, *, loop=None, stream=False):
+        loop = loop or asyncio.get_event_loop()
+        data = await loop.run_in_executor(None, lambda: ytdl.extract_info(url, download=not stream))
+
+        if 'entries' in data:
+            data = data['entries'][0]
+
+        filename = data['url'] if stream else ytdl.prepare_filename(data)
+        return cls(discord.FFmpegPCMAudio(filename, **ffmpeg_options), data=data)
+
+    @staticmethod
+    def from_query(query):
+        query_string = urllib.parse.urlencode({
+            'search_query': query
+        })
+        htm_content = urllib.request.urlopen(
+            f"https://www.youtube.com/results?{query_string}"
+        )
+        search_results = re.findall('href=\"\\/watch\\?v=(.{11})', htm_content.read().decode())
+        return f"https://www.youtube.com/watch?v={search_results[0]}"
+
+class Music(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
@@ -24,15 +75,15 @@ class Music(commands.Cog):
             voice = await channel.connect()
             await ctx.send(f"Joined {channel}")
 
-    @commands.command(aliases=['l'])
-    async def leave(self, ctx):
+    @commands.command(aliases=['dc'])
+    async def stop(self, ctx):
         voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
 
         if voice and voice.is_connected():
             await voice.disconnect()
 
     @commands.command(aliases=['p'])
-    async def play(self, ctx, url:str):
+    async def play(self, ctx, *, url:str):
         global voice
         channel = ctx.message.author.voice.channel
         voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
@@ -43,100 +94,33 @@ class Music(commands.Cog):
         else:
             voice = await channel.connect()
 
-        def check_queue():
-            queue_infile = os.path.isdir("./Queue")
-            if queue_infile:
-                q_dir = os.path.abspath(os.path.realpath("Queue"))
-                length = len(os.listdir(q_dir))
-                still_q = length - 1
-                try:
-                    file_1 = os.listdir(q_dir)[0]
-                except:
-                    print("Queue is empty.")
-                    self.queues.clear()
-                    return
-                main_path = os.path.dirname(os.path.realpath(__file__))
-                song_path = os.path.dirname(f"{os.path.realpath('Queue')}/{file_1}")
+        embed = discord.Embed(
+            colour=discord.Colour(0xe9acfd)
+        )
+        embed.set_footer(text=f"Requested by: {ctx.author}", icon_url=ctx.author.avatar_url)
 
-                if length != 0:
-                    print(f"Now playing: {still_q}")
-                    song_there = os.path.isfile("song.mp3")
-                    if song_there:
-                        os.remove("song.mp3")
-                    shutil.move(song_path, main_path)
-                    for file in os.listdir("./"):
-                        if file.endswith(".mp3"):
-                            os.rename(file, "song.mp3")
+        if url.startswith("https:") or url.startswith("www."):
+            async with ctx.typing():
+                player = await YTDLSource.from_url(url, loop=self.bot.loop, stream=True)
+                ctx.voice_client.play(player, after=lambda e: print('Player error: %s' % e) if e else None)
+                embed.add_field(name=f"Now playing:", value=f"[{player.title}]({url})")
+        else:
+            async with ctx.typing():
+                url_parsed = YTDLSource.from_query(url)
+                player = await YTDLSource.from_url(url_parsed, loop=self.bot.loop, stream=True)
+                ctx.voice_client.play(player, after=lambda e: print('Player error: %s' % e) if e else None)
+                embed.add_field(name=f"Now playing:", value=f"[{player.title}]({url_parsed})")
 
-                    voice.play(discord.FFmpegPCMAudio("song.mp3"), after=lambda e: check_queue())
-                    voice.source = discord.PCMVolumeTransformer(voice.source)
-                    voice.source.volume = 0.07
-                else:
-                    self.queues.clear()
-                    return
+        await ctx.send(embed=embed, delete_after=15)
 
-            else:
-                    self.queues.clear()
-                    print("No queued.")
-
-        song_there = os.path.isfile("song.mp3")
-        try:
-            if song_there:
-                os.remove("song.mp3")
-                self.queues.clear()
-                print("Removed old song file.")
-        except PermissionError:
-            print("Song is playing so cannot be deleted la.")
-            await ctx.send("A song is already playing.")
-            return
-        
-        queue_infile = os.path.isdir("./Queue")
-        try:
-            queue_folder = "./Queue"
-            if queue_infile:
-                print("Removed old queue folder.")
-                shutil.rmtree(queue_folder)
-        except:
-            print("No old queue folder found.")
-
-        voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
-
-        ydl_args = {
-            'format': 'bestaudio/best',
-            'quiet': True,
-            'postprocessors': [{
-                'key': "FFmpegExtractAudio",
-                'preferredcodec': "mp3",
-                'preferredquality': "192",
-            }],
-        }
-
-        with youtube_dl.YoutubeDL(ydl_args) as ydl:
-            print("Downloading audio.")
-            ydl.download([url])
-
-        for file in os.listdir("./"):
-            if file.endswith(".mp3"):
-                name = file
-                print(f"Renamed {file}")
-                os.rename(file, "song.mp3")
-
-        voice.play(discord.FFmpegPCMAudio("song.mp3"), after=lambda e: check_queue())
-        voice.source = discord.PCMVolumeTransformer(voice.source)
-        voice.source.volume = 0.07
-
-        name_split = name.rsplit("-", 2)
-        await ctx.send(f"Playing: {name_split[0]}")
-        print(f"Playing song {name_split[0]}")
-
-    @commands.command(aliases=['pa'])
+    @commands.command(aliases=['ps'])
     async def pause(self, ctx):
         voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
 
         if voice and voice.is_playing():
             voice.pause()
             print("Paused music.")
-            await ctx.send("Paused music.")
+            await ctx.send("Paused ⏸")
         else:
             print("Failed pause no music playing.")
             await ctx.send("Nothing playing.")
@@ -148,16 +132,16 @@ class Music(commands.Cog):
         if voice and voice.is_paused():
             voice.resume()
             print("Resumed music.")
-            await ctx.send("Paused music.")
+            await ctx.send("Resumed ▶")
         else:
             print("Music not paused.")
-            await ctx.send("Music not paused.")
+            await ctx.send("Nothing paused.")
 
     @commands.command(aliases=['s'])
     async def skip(self, ctx):
         voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
 
-        self.queues.clear()
+        # self.queues.clear()
 
         if voice and voice.is_playing():
             voice.stop()
@@ -165,43 +149,29 @@ class Music(commands.Cog):
             await ctx.send("Skipped current track.")
         else:
             print("No music playing.")
-            await ctx.send("No music playing.")
-    
-    @commands.command(aliases=['q'])
-    async def queue(self, ctx, url:str):
-        queue_infile = os.path.isdir("./Queue")
-        if not queue_infile:
-            os.mkdir("Queue")
-        q_dir = os.path.abspath(os.path.realpath("Queue"))
-        q_num = len(os.listdir(q_dir))
-        q_num += 1
-        add_queue = True        
-        while add_queue:
-            if q_num in self.queues:
-                q_num += 1
+            await ctx.send("Nothing playing.")
+
+    @commands.command(aliases=['v', 'vol'])
+    async def volume(self, ctx, volume: int):
+        if ctx.voice_client is None:
+            return await ctx.send("Not connected to a voice channel.")
+
+        ctx.voice_client.source.volume = volume / 100
+        await ctx.send(f"Changed volume to {volume}%")
+
+    # @commands.command(aliases=['q'])
+    # async def queue(self, ctx, url:str):
+
+    @play.before_invoke
+    async def ensure_voice(self, ctx):
+        if ctx.voice_client is None:
+            if ctx.author.voice:
+                await ctx.author.voice.channel.connect()
             else:
-                add_queue = False
-                self.queues[q_num] = q_num
-
-        q_path = os.path.dirname(f"{os.path.realpath('Queue')}/song{q_num}.%(ext)s")
-
-        ydl_args = {
-            'format': 'bestaudio/best',
-            'quiet': True,
-            'outtmpl': q_path,
-            'postprocessors': [{
-                'key': "FFmpegExtractAudio",
-                'preferredcodec': "mp3",
-                'preferredquality': "192",
-            }],
-        }
-
-        with youtube_dl.YoutubeDL(ydl_args) as ydl:
-            print("Downloading audio.")
-            ydl.download([url])
-        
-        await ctx.send(f"Added {q_num} to the queue.")
-        print("Song added to queue.")
+                await ctx.send("You are not connected to a voice channel.")
+                raise commands.CommandError("Author not connected to a voice channel.")
+        elif ctx.voice_client.is_playing():
+            ctx.voice_client.stop()
 
 
 def setup(bot):
