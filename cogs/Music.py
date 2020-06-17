@@ -48,13 +48,13 @@ class YTDLSource(discord.PCMVolumeTransformer):
 
     @staticmethod
     async def from_query(query):
-        query_string = urllib.parse.urlencode({
+        query_string = await urllib.parse.urlencode({
             'search_query': query
         })
-        htm_content = urllib.request.urlopen(
+        htm_content = await urllib.request.urlopen(
             f"https://www.youtube.com/results?{query_string}"
         )
-        search_results = re.findall('href=\"\\/watch\\?v=(.{11})', htm_content.read().decode())
+        search_results = await re.findall('href=\"\\/watch\\?v=(.{11})', htm_content.read().decode())
         return f"https://www.youtube.com/watch?v={search_results[0]}"
 
 class Music(commands.Cog):
