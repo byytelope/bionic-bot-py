@@ -3,6 +3,7 @@ import discord
 import shutil
 import os
 import asyncio
+import urllib.parse, urllib.request, re
 from discord.ext import commands
 
 ytdl_format_options = {
@@ -45,6 +46,16 @@ class YTDLSource(discord.PCMVolumeTransformer):
         filename = data['url'] if stream else ytdl.prepare_filename(data)
         return cls(discord.FFmpegPCMAudio(filename, **ffmpeg_options), data=data)
 
+    @staticmethod
+    async def from_query(query):
+        query_string = urllib.parse.urlencode({
+            'search_query': query
+        })
+        htm_content = urllib.request.urlopen(
+            f"https://www.youtube.com/results?{query_string}"
+        )
+        search_results = re.findall('href=\"\\/watch\\?v=(.{11})', htm_content.read().decode())
+        return f"https://www.youtube.com/watch?v={search_results[0]}"
 
 class Music(commands.Cog):
 
@@ -85,9 +96,15 @@ class Music(commands.Cog):
         else:
             voice = await channel.connect()
 
-        async with ctx.typing():
-            player = await YTDLSource.from_url(url, loop=self.bot.loop, stream=True)
-            ctx.voice_client.play(player, after=lambda e: print('Player error: %s' % e) if e else None)
+        if url.startswith("https") or url.startswith("www"):
+            async with ctx.typing():
+                player = await YTDLSource.from_url(url, loop=self.bot.loop, stream=True)
+                ctx.voice_client.play(player, after=lambda e: print('Player error: %s' % e) if e else None)
+        else:
+            url_parsed = YTDLSource.from_query(url)
+            async with ctx.typing():
+                player = await YTDLSource.from_url(url_parsed, loop=self.bot.loop, stream=True)
+                ctx.voice_client.play(player, after=lambda e: print('Player error: %s' % e) if e else None)
 
         embed = discord.Embed(
             colour=discord.Colour(0xe9acfd)
