@@ -134,4 +134,3 @@ dmypy.json
 
 *.sqlite
 img_cache/*
-song.mp3
