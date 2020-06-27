@@ -102,7 +102,7 @@ cogs = [
     "cogs.music",
     "cogs.roles",
     "cogs.set",
-    "cogs.welcome",
+    "cogs.welcome"
 ]
 
 if __name__ == "__main__":
