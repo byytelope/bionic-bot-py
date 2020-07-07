@@ -1,7 +1,9 @@
 import asyncio
 import discord
 import urllib.parse, urllib.request, re
+import json
 import youtube_dl
+from youtubesearchpython import searchYoutube
 from discord.ext import commands
 
 ytdl_format_options = {
@@ -27,6 +29,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
     """
     Source for ytdl
     """
+
     def __init__(self, source, *, data, volume=0.5):
         super().__init__(source, volume)
 
@@ -38,9 +41,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
     @classmethod
     async def from_url(cls, url, *, loop=None, stream=False):
         loop = loop or asyncio.get_event_loop()
-        data = await loop.run_in_executor(
-            None, lambda: ytdl.extract_info(url, download=not stream)
-        )
+        data = await loop.run_in_executor(None, lambda: ytdl.extract_info(url, download=not stream))
 
         if "entries" in data:
             data = data["entries"][0]
@@ -50,20 +51,17 @@ class YTDLSource(discord.PCMVolumeTransformer):
 
     @staticmethod
     def from_query(query):
-        query_string = urllib.parse.urlencode({"search_query": query})
-        htm_content = urllib.request.urlopen(
-            f"https://www.youtube.com/results?{query_string}"
-        )
-        search_results = re.findall(
-            'href="\\/watch\\?v=(.{11})', htm_content.read().decode()
-        )
-        return f"https://www.youtube.com/watch?v={search_results[0]}"
+        yt_response = searchYoutube(query, offset=1, mode="json", max_results=1)
+        result = json.loads(yt_response.result())
+        yt_link = result["search_result"][0]["link"]
+        return yt_link
 
 
 class Music(commands.Cog):
     """
     Main music class
     """
+
     def __init__(self, bot):
         self.bot = bot
 
@@ -100,29 +98,19 @@ class Music(commands.Cog):
             voice = await channel.connect()
 
         embed = discord.Embed(colour=discord.Colour(0xE9ACFD))
-        embed.set_footer(
-            text=f"Requested by: {ctx.author}", icon_url=ctx.author.avatar_url
-        )
+        embed.set_footer(text=f"Requested by: {ctx.author}", icon_url=ctx.author.avatar_url)
 
         if url.startswith("https:") or url.startswith("www."):
             async with ctx.typing():
                 player = await YTDLSource.from_url(url, loop=self.bot.loop, stream=True)
-                ctx.voice_client.play(
-                    player, after=lambda e: print("Player error: %s" % e) if e else None
-                )
+                ctx.voice_client.play(player, after=lambda e: print("Player error: %s" % e) if e else None)
                 embed.add_field(name="Now playing:", value=f"[{player.title}]({url})")
         else:
             async with ctx.typing():
                 url_parsed = YTDLSource.from_query(url)
-                player = await YTDLSource.from_url(
-                    url_parsed, loop=self.bot.loop, stream=True
-                )
-                ctx.voice_client.play(
-                    player, after=lambda e: print("Player error: %s" % e) if e else None
-                )
-                embed.add_field(
-                    name="Now playing:", value=f"[{player.title}]({url_parsed})"
-                )
+                player = await YTDLSource.from_url(url_parsed, loop=self.bot.loop, stream=True)
+                ctx.voice_client.play(player, after=lambda e: print("Player error: %s" % e) if e else None)
+                embed.add_field(name="Now playing:", value=f"[{player.title}]({url_parsed})")
 
         await ctx.send(embed=embed, delete_after=15)
 

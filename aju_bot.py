@@ -11,9 +11,7 @@ bot.remove_command("help")
 
 @bot.event
 async def on_ready():
-    await bot.change_presence(
-        status=discord.Status.online, activity=discord.Game("use .help for help")
-    )
+    await bot.change_presence(status=discord.Status.online, activity=discord.Game("use .help for help"))
 
     db_database = os.environ["db_database"]
     db_user = os.environ["db_user"]
@@ -22,13 +20,7 @@ async def on_ready():
     db_port = os.environ["db_port"]
 
     try:
-        db = psycopg2.connect(
-            database=db_database,
-            user=db_user,
-            password=db_password,
-            host=db_host,
-            port=db_port,
-        )
+        db = psycopg2.connect(database=db_database, user=db_user, password=db_password, host=db_host, port=db_port,)
         print("Successfully connected to database.")
     except psycopg2.OperationalError as db_error:
         print(db_error)
@@ -58,21 +50,13 @@ async def aju_csgo(ctx, num: int):
 
 
 @bot.command(
-    aliases=[
-        ".",
-        "..",
-        "...",
-        "....",
-        ".....",
-        "......",
-        ".......",
-        "........",
-        ".........",
-        "..........",
-    ]
+    aliases=[".", "..", "...", "....", ".....", "......", ".......", "........", ".........", "..........",]
 )
 async def ignore():
-    pass
+    try:
+        pass
+    except Exception:
+        pass
 
 
 @bot.event
@@ -102,7 +86,7 @@ cogs = [
     "cogs.music",
     "cogs.roles",
     "cogs.set",
-    "cogs.welcome"
+    "cogs.welcome",
 ]
 
 if __name__ == "__main__":
