@@ -134,4 +134,5 @@ dmypy.json
 
 *.sqlite
 img_cache/*
-music_test.py
+*_test.py
+*_old.py

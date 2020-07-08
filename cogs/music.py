@@ -1,6 +1,5 @@
 import asyncio
 import discord
-import urllib.parse, urllib.request, re
 import json
 import youtube_dl
 from youtubesearchpython import searchYoutube
@@ -20,7 +19,7 @@ ytdl_format_options = {
     "source_address": "0.0.0.0",
 }
 
-ffmpeg_options = {"before-options": "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 4", "options": "-vn"}
+ffmpeg_options = {"options": "-vn -reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 4"}
 
 ytdl = youtube_dl.YoutubeDL(ytdl_format_options)
 
