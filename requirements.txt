@@ -8,3 +8,4 @@ Google-Images-Search
 youtube_dl
 PyNaCl
 youtube-search-python
+validator-collection

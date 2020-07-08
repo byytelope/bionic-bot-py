@@ -2,10 +2,11 @@ import asyncio
 import discord
 import json
 import youtube_dl
-from youtubesearchpython import searchYoutube
 from discord.ext import commands
+from validator_collection import checkers
+from youtubesearchpython import searchYoutube
 
-ytdl_format_options = {
+YTDL_OPTIONS = {
     "format": "bestaudio/best",
     "outtmpl": "%(extractor)s-%(id)s-%(title)s.%(ext)s",
     "restrictfilenames": True,
@@ -19,9 +20,9 @@ ytdl_format_options = {
     "source_address": "0.0.0.0",
 }
 
-ffmpeg_options = {"options": "-vn -reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 4"}
+FFMPEG_OPTIONS = {"options": "-vn -reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 4"}
 
-ytdl = youtube_dl.YoutubeDL(ytdl_format_options)
+ytdl = youtube_dl.YoutubeDL(YTDL_OPTIONS)
 
 
 class YTDLSource(discord.PCMVolumeTransformer):
@@ -29,12 +30,13 @@ class YTDLSource(discord.PCMVolumeTransformer):
     Source for ytdl
     """
 
-    def __init__(self, source, *, data, volume=0.5):
+    def __init__(self, source: discord.FFmpegPCMAudio, *, data: dict, volume: float = 1.0):
         super().__init__(source, volume)
 
         self.data = data
-
         self.title = data.get("title")
+        self.thumbnail = data.get("thumbnail")
+        self.duration = self.parse_duration(int(data.get("duration")))
         self.url = data.get("url")
 
     @classmethod
@@ -46,7 +48,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
             data = data["entries"][0]
 
         filename = data["url"] if stream else ytdl.prepare_filename(data)
-        return cls(discord.FFmpegPCMAudio(filename, **ffmpeg_options), data=data)
+        return cls(discord.FFmpegPCMAudio(filename, **FFMPEG_OPTIONS), data=data)
 
     @staticmethod
     def from_query(query):
@@ -54,6 +56,24 @@ class YTDLSource(discord.PCMVolumeTransformer):
         result = json.loads(yt_response.result())
         yt_link = result["search_result"][0]["link"]
         return yt_link
+
+    @staticmethod
+    def parse_duration(duration: int):
+        minutes, seconds = divmod(duration, 60)
+        hours, minutes = divmod(minutes, 60)
+        days, hours = divmod(hours, 24)
+
+        duration = []
+        if days > 0:
+            duration.append(f"{days} days")
+        if hours > 0:
+            duration.append(f"{hours} hours")
+        if minutes > 0:
+            duration.append(f"{minutes} minutes")
+        if seconds > 0:
+            duration.append(f"{seconds} seconds")
+
+        return ", ".join(duration)
 
 
 class Music(commands.Cog):
@@ -96,22 +116,27 @@ class Music(commands.Cog):
         else:
             voice = await channel.connect()
 
-        embed = discord.Embed(colour=discord.Colour(0xE9ACFD))
-        embed.set_footer(text=f"Requested by: {ctx.author}", icon_url=ctx.author.avatar_url)
+        embed = discord.Embed(colour=discord.Colour(0xE9ACFD)).set_footer(
+            text=f"Requested by: {ctx.author}", icon_url=ctx.author.avatar_url
+        )
 
-        if url.startswith("https:") or url.startswith("www."):
+        if checkers.is_url(url):
             async with ctx.typing():
                 player = await YTDLSource.from_url(url, loop=self.bot.loop, stream=True)
                 ctx.voice_client.play(player, after=lambda e: print("Player error: %s" % e) if e else None)
-                embed.add_field(name="Now playing:", value=f"[{player.title}]({url})")
+                embed.add_field(name="Now playing:", value=f"[{player.title}]({url})", inline=False)
+                embed.add_field(name="Duration", value=player.duration, inline=False)
+                embed.set_thumbnail(url=player.thumbnail)
         else:
             async with ctx.typing():
                 url_parsed = YTDLSource.from_query(url)
                 player = await YTDLSource.from_url(url_parsed, loop=self.bot.loop, stream=True)
                 ctx.voice_client.play(player, after=lambda e: print("Player error: %s" % e) if e else None)
-                embed.add_field(name="Now playing:", value=f"[{player.title}]({url_parsed})")
+                embed.add_field(name="Now playing:", value=f"[{player.title}]({url_parsed})", inline=False)
+                embed.add_field(name="Duration", value=player.duration, inline=False)
+                embed.set_thumbnail(url=player.thumbnail)
 
-        await ctx.send(embed=embed, delete_after=15)
+        await ctx.send(embed=embed)
 
     @commands.command(aliases=["ps"])
     async def pause(self, ctx):
@@ -158,6 +183,16 @@ class Music(commands.Cog):
 
         ctx.voice_client.source.volume = volume / 100
         await ctx.send(f"Changed volume to {volume}%")
+
+    @commands.command(aliases=["l"])
+    async def loop(self, ctx):
+        voice = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
+
+        if not voice.is_playing:
+            return await ctx.send("Nothing being played at the moment.")
+
+        voice.loop = not voice.loop
+        await ctx.message.add_reaction("✅")
 
     # @commands.command(aliases=['q'])
     # async def queue(self, ctx, url:str):
