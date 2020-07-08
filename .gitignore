@@ -135,4 +135,3 @@ dmypy.json
 *.sqlite
 img_cache/*
 *_test.py
-*_old.py

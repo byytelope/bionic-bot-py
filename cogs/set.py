@@ -38,11 +38,11 @@ class Set(commands.Cog):
         result = self.cursor.fetchall()
         print(result)
 
-    @prtable.error
-    async def on_prtable_error(self, ctx, error):
-        if isinstance(error, commands.NotOwner):
-            owner = self.bot.get_user(367686193242177536)
-            await ctx.send(f"Sorry only {owner.mention} can use this command.")
+    # @prtable.error
+    # async def on_prtable_error(self, ctx, error):
+    #     if isinstance(error, commands.NotOwner):
+    #         owner = self.bot.get_user(367686193242177536)
+    #         await ctx.send(f"Sorry only {owner.mention} can use this command.")
 
     @commands.command()
     @commands.is_owner()
@@ -50,11 +50,11 @@ class Set(commands.Cog):
         self.cursor.execute("DROP TABLE IF EXISTS main;")
         self.db.commit()
 
-    @droptable.error
-    async def on_droptable_error(self, ctx, error):
-        if isinstance(error, commands.NotOwner):
-            owner = self.bot.get_user(367686193242177536)
-            await ctx.send(f"Sorry only {owner.mention} can use this command.")
+    # @droptable.error
+    # async def on_droptable_error(self, ctx, error):
+    #     if isinstance(error, commands.NotOwner):
+    #         owner = self.bot.get_user(367686193242177536)
+    #         await ctx.send(f"Sorry only {owner.mention} can use this command.")
 
     @commands.group(invoke_without_command=True)
     async def set(self, ctx):
