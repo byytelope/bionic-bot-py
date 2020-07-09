@@ -39,7 +39,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
         "source_address": "0.0.0.0",
     }
 
-    FFMPEG_OPTIONS = {"options": "-vn -reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 4"}
+    FFMPEG_OPTIONS = {"options": "-vn -reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5"}
 
     ytdl = youtube_dl.YoutubeDL(YTDL_OPTIONS)
 
@@ -320,11 +320,12 @@ class Music(commands.Cog):
 
     @commands.command(name="skip", aliases=["s"])
     async def _skip(self, ctx: commands.Context):
-        if not ctx.voice_state.is_playing:
-            return await ctx.send("Not playing any music right now...")
+        # if not ctx.voice_state.is_playing:
+        #     return await ctx.send("Not playing any music right now...")
 
-        await ctx.message.add_reaction("⏭")
-        ctx.voice_state.skip()
+        # await ctx.message.add_reaction("⏭")
+        # ctx.voice_state.skip()
+        pass
 
     @commands.command(name="volume", aliases=["v", "vol"])
     async def _volume(self, ctx: commands.Context, volume: int):
@@ -340,19 +341,21 @@ class Music(commands.Cog):
 
     @commands.command(name="loop", aliases=["l"])
     async def _loop(self, ctx: commands.Context):
-        if not ctx.voice_state.is_playing:
-            return await ctx.send("Nothing being played at the moment.")
+        # if not ctx.voice_state.is_playing:
+        #     return await ctx.send("Nothing being played at the moment.")
 
-        ctx.voice_state.loop = not ctx.voice_state.loop
-        await ctx.message.add_reaction("🔂")
+        # ctx.voice_state.loop = not ctx.voice_state.loop
+        # await ctx.message.add_reaction("🔂")
+        pass
 
     @commands.command(name="shuffle", aliases=["shuf"])
     async def _shuffle(self, ctx: commands.Context):
-        if len(ctx.voice_state.songs) == 0:
-            return await ctx.send("No songs in queue.")
+        # if len(ctx.voice_state.songs) == 0:
+        #     return await ctx.send("No songs in queue.")
 
-        ctx.voice_state.songs.shuffle()
-        await ctx.message.add_reaction("🔀")
+        # ctx.voice_state.songs.shuffle()
+        # await ctx.message.add_reaction("🔀")
+        pass
 
     @commands.command(name="queue", aliases=["q"])
     async def _queue(self, ctx: commands.Context, page: int = 1):
