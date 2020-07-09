@@ -24,11 +24,7 @@ class Funny(commands.Cog):
 
         try:
             self.db = psycopg2.connect(
-                database=db_database,
-                user=db_user,
-                password=db_password,
-                host=db_host,
-                port=db_port,
+                database=db_database, user=db_user, password=db_password, host=db_host, port=db_port,
             )
         except psycopg2.OperationalError as db_error:
             print(db_error)
@@ -53,9 +49,7 @@ class Funny(commands.Cog):
 
     @commands.command()
     async def members(self, ctx):
-        await ctx.send(
-            f"There are `{ctx.guild.member_count:,}` **hopefully** corona-free people in {ctx.guild}."
-        )
+        await ctx.send(f"There are `{ctx.guild.member_count:,}` **hopefully** corona-free people in {ctx.guild}.")
 
     @commands.command()
     async def spam(self, ctx):
@@ -73,9 +67,7 @@ class Funny(commands.Cog):
             "I cannot FUCKING believe that Japanese-American musician Joji of 88rising is in actuality the popular Japanese-American YouTuber Joji Miller also know as Filthy Frank who was popular for his satirical content who has used a derogatory racial slur in his 2017 album ‘Pink Season’. I cannot believe this. I'm literally shaking. This can't be happening. My mom came into my room to bring me a plate of chicken nuggets and I literally screamed at her and hit the plate of chicken nuggets out of her hand. She started yelling and swearing at me and I slammed the door on her. I’m so distressed right now I don’t know what to do. I didn’t mean to do that to my mom but I’m literally in shock from the what happened today. I feel like I’m going to explode. This can’t be happening. I’m having a fucking breakdown. I don’t want to believe the world is so corrupt. I want a future to believe in. I cannot fucking deal with this right now. It wasn’t supposed to be like this. This is so fucked. I’m literally shaking right now... There’s no way Joji would do this... This can’t be real...",
         ]
 
-        self.cursor.execute(
-            f"SELECT ch_id_general FROM main WHERE guild_id = ('{str(ctx.guild.id)}')"
-        )
+        self.cursor.execute(f"SELECT ch_id_general FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
         result = self.cursor.fetchone()
 
         if ctx.channel.id == int(result[0]):
@@ -106,9 +98,7 @@ class Funny(commands.Cog):
                 member = u
 
                 embed = discord.Embed(
-                    title=f"{member}'s avatar",
-                    url=f"{member.avatar_url}",
-                    colour=discord.Colour(0xE9ACFD),
+                    title=f"{member}'s avatar", url=f"{member.avatar_url}", colour=discord.Colour(0xE9ACFD),
                 )
                 embed.set_image(url=member.avatar_url)
 
@@ -135,32 +125,32 @@ class Funny(commands.Cog):
         ]
         await ctx.send(f"{random.choice(responses)}")
 
-    # @aju_bot.error
-    # async def on_aju_bot_error(self, ctx, error):
-    #     if isinstance(error, commands.MissingRequiredArgument):
-    #         responses = [
-    #             "Wot?",
-    #             "Eyn?",
-    #             "O?",
-    #             "Oo?",
-    #             "Sup?",
-    #             "Hm????",
-    #             "P L E A S E  C O M P L E T E  T H E  S E N T E N C E .",
-    #             "Aju kiyan koh dhey vee?",
-    #         ]
-    #         await ctx.send(random.choice(responses))
+    @aju_bot.error
+    async def on_aju_bot_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            responses = [
+                "Wot?",
+                "Eyn?",
+                "O?",
+                "Oo?",
+                "Sup?",
+                "Hm????",
+                "P L E A S E  C O M P L E T E  T H E  S E N T E N C E .",
+                "Aju kiyan koh dhey vee?",
+            ]
+            await ctx.send(random.choice(responses))
 
-    # @corona.error
-    # async def on_corona_error(self, ctx, error):
-    #     if isinstance(error, commands.MissingRequiredArgument, commands.UserInputError):
-    #         responses = [
-    #             "Corona cowcow?",
-    #             "Adhi ada neevene ey.",
-    #             "Thankeda baaraa benafele.",
-    #             "Corona wot?",
-    #             "Thehen ekani benagen keraah vee kamah aju ah egei?",
-    #         ]
-    #         await ctx.send(random.choice(responses))
+    @corona.error
+    async def on_corona_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument, commands.UserInputError):
+            responses = [
+                "Corona cowcow?",
+                "Adhi ada neevene ey.",
+                "Thankeda baaraa benafele.",
+                "Corona wot?",
+                "Thehen ekani benagen keraah vee kamah aju ah egei?",
+            ]
+            await ctx.send(random.choice(responses))
 
 
 def setup(bot):
