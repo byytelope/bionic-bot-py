@@ -275,7 +275,7 @@ class Music(commands.Cog):
 
         ctx.voice_state.voice = await channel.connect()
 
-    @commands.command(name="stop", aliases=["dc"])
+    @commands.command(name="stop", aliases=["dc", "disconnect", "leave"])
     async def _stop(self, ctx: commands.Context):
         if not ctx.voice_state.voice:
             return await ctx.send("Not connected to any voice channel.")
@@ -320,12 +320,11 @@ class Music(commands.Cog):
 
     @commands.command(name="skip", aliases=["s"])
     async def _skip(self, ctx: commands.Context):
-        # if not ctx.voice_state.is_playing:
-        #     return await ctx.send("Not playing any music right now...")
+        if not ctx.voice_state.is_playing:
+            return await ctx.send("Not playing any music right now...")
 
-        # await ctx.message.add_reaction("⏭")
-        # ctx.voice_state.skip()
-        pass
+        await ctx.message.add_reaction("⏭")
+        ctx.voice_state.skip()
 
     @commands.command(name="volume", aliases=["v", "vol"])
     async def _volume(self, ctx: commands.Context, volume: int):
@@ -341,21 +340,19 @@ class Music(commands.Cog):
 
     @commands.command(name="loop", aliases=["l"])
     async def _loop(self, ctx: commands.Context):
-        # if not ctx.voice_state.is_playing:
-        #     return await ctx.send("Nothing being played at the moment.")
+        if not ctx.voice_state.is_playing:
+            return await ctx.send("Nothing being played at the moment.")
 
-        # ctx.voice_state.loop = not ctx.voice_state.loop
-        # await ctx.message.add_reaction("🔂")
-        pass
+        ctx.voice_state.loop = not ctx.voice_state.loop
+        await ctx.message.add_reaction("🔂")
 
     @commands.command(name="shuffle", aliases=["shuf"])
     async def _shuffle(self, ctx: commands.Context):
-        # if len(ctx.voice_state.songs) == 0:
-        #     return await ctx.send("No songs in queue.")
+        if len(ctx.voice_state.songs) == 0:
+            return await ctx.send("No songs in queue.")
 
-        # ctx.voice_state.songs.shuffle()
-        # await ctx.message.add_reaction("🔀")
-        pass
+        ctx.voice_state.songs.shuffle()
+        await ctx.message.add_reaction("🔀")
 
     @commands.command(name="queue", aliases=["q"])
     async def _queue(self, ctx: commands.Context, page: int = 1):
@@ -377,20 +374,17 @@ class Music(commands.Cog):
         )
         await ctx.send(embed=embed)
 
-    @commands.command(name="now", aliases=["current", "playing", "now_playing"])
+    @commands.command(name="now", aliases=["current", "playing", "nowplaying"])
     async def _now(self, ctx: commands.Context):
         await ctx.send(embed=ctx.voice_state.current.create_embed(), delete_after=60)
 
-    @commands.command(name="remove", aliases=["rem"])
+    @commands.command(name="remove", aliases=["rem", "delete"])
     async def _remove(self, ctx: commands.Context, index: int):
         if len(ctx.voice_state.songs) == 0:
             return await ctx.send("Empty queue.")
 
         ctx.voice_state.songs.remove(index - 1)
         await ctx.message.add_reaction("✅")
-
-    # @commands.command(aliases=['q'])
-    # async def queue(self, ctx, url:str):
 
     @_join.before_invoke
     @_play.before_invoke
