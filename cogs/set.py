@@ -66,6 +66,7 @@ class Set(commands.Cog):
         embed.add_field(name="auditch", value="Set audit channel.", inline=False)
         embed.add_field(name="adminch", value="Set admin channel.", inline=False)
         embed.add_field(name="generalch", value="Set general channel.", inline=False)
+        embed.add_field(name="defaultrole", value="Set the default role given to new users.", inline=False)
         embed.set_footer(text=f"Help requested by: {ctx.author}", icon_url=ctx.author.avatar_url)
         await ctx.send(embed=embed)
 
