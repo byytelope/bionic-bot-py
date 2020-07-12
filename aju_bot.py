@@ -33,6 +33,7 @@ async def on_ready():
             guild_id TEXT,
             welc_text TEXT,
             msg_id_reaction TEXT,
+            role_id_default TEXT,
             ch_id_welcome TEXT,
             ch_id_audit TEXT,
             ch_id_general TEXT,

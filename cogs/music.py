@@ -4,6 +4,7 @@ import functools
 import itertools
 import math
 import random
+from discord.channel import VoiceChannel
 import youtube_dl
 
 from async_timeout import timeout
@@ -48,6 +49,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
         self.requester = ctx.author
         self.channel = ctx.channel
         self.data = data
+        self.song_progress = 0
         self.title = data.get("title")
         self.thumbnail = data.get("thumbnail")
         self.duration = self.parse_duration(int(data.get("duration")))
@@ -191,6 +193,14 @@ class VoiceState:
     @property
     def is_playing(self):
         return self.voice and self.current
+
+    # @property
+    # def progress(self):
+    #     if self.source:
+    #         return self.source.song_progress
+    #     else:
+    #         raise VoiceError("No song playing...")
+    #         return 0
 
     async def audio_player_task(self):
         while True:
@@ -385,6 +395,11 @@ class Music(commands.Cog):
 
         ctx.voice_state.songs.remove(index - 1)
         await ctx.message.add_reaction("✅")
+
+    # @commands.command(name="progress", aliases=["prog"])
+    # async def _progress(self, ctx: commands.Context):
+    #     progress = ctx.voice_state.progress()
+    #     await ctx.send(progress)
 
     @_join.before_invoke
     @_play.before_invoke

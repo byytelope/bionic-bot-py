@@ -29,7 +29,7 @@ class Set(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
-    async def prtable(self):
+    async def prtable(self, ctx):
         self.cursor.execute("SELECT * FROM main;")
         result = self.cursor.fetchall()
         print(result)
@@ -334,6 +334,47 @@ class Set(commands.Cog):
                 embed = discord.Embed(
                     description=f"changed general channel to {general_ch.mention}", colour=discord.Colour(0xE9ACFD),
                 )
+                embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
+                await audit_ch.send(embed=embed)
+
+        self.cursor.execute(sql)
+        self.db.commit()
+
+    @set.command(aliases=["defaultrole"])
+    @commands.has_guild_permissions(manage_guild=True)
+    async def set_role_id_default(self, ctx, *, role_id):
+        self.cursor.execute(f"SELECT role_id_default FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
+        result = self.cursor.fetchone()
+
+        if result is None:
+            sql = (
+                f"INSERT INTO main (guild_id, role_id_default) VALUES ( ('{str(ctx.guild.id)}'), ('{str(role_id)}') )"
+            )
+            await ctx.send("Default role has been set.")
+
+            self.cursor.execute(f"SELECT ch_id_audit FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
+            result_1 = self.cursor.fetchone()
+            if result_1 is None:
+                return
+            else:
+                audit_ch = self.bot.get_channel(id=int(result_1[0]))
+
+                embed = discord.Embed(description="set default role", colour=discord.Colour(0xE9ACFD),)
+                embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
+                await audit_ch.send(embed=embed)
+
+        elif result is not None:
+            sql = f"UPDATE main SET role_id_default = ('{str(role_id)}') WHERE guild_id = ('{str(ctx.guild.id)}')"
+            await ctx.send("Default role has been changed.")
+
+            self.cursor.execute(f"SELECT ch_id_audit FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
+            result_1 = self.cursor.fetchone()
+            if result_1 is None:
+                return
+            else:
+                audit_ch = self.bot.get_channel(id=int(result_1[0]))
+
+                embed = discord.Embed(description="changed default role", colour=discord.Colour(0xE9ACFD),)
                 embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
                 await audit_ch.send(embed=embed)
 
