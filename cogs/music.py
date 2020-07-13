@@ -38,6 +38,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
         "no_warnings": True,
         "default_search": "auto",
         "source_address": "0.0.0.0",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.85 Safari/537.36",
     }
 
     FFMPEG_OPTIONS = {"options": "-vn -reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5"}
