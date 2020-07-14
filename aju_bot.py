@@ -81,6 +81,7 @@ async def on_cls_error(ctx, error):
 
 cogs = [
     "cogs.admin",
+    "fb_spam",
     "cogs.funny",
     "cogs.help",
     "cogs.image_downloader",
