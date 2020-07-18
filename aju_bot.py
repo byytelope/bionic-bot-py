@@ -1,8 +1,10 @@
 import os
 import random
+
 import discord
 import psycopg2
 from discord.ext import commands
+
 from web_scraper import web_scrape
 
 bot = commands.Bot(command_prefix=".", owner_id=367686193242177536)
@@ -69,7 +71,7 @@ async def on_command_error(ctx, error):
 
 @bot.event
 async def on_cls_error(ctx, error):
-    if isinstance(error, commands.MissingPermissions, commands.MissingAnyRole):
+    if isinstance(error, (commands.MissingPermissions, commands.MissingAnyRole)):
         responses = [
             "Adhi the command beynun vey varah ekalo bondo nivei.",
             "Hoho kanthethi.",

@@ -1,4 +1,5 @@
 import os
+
 import discord
 import psycopg2
 from discord.ext import commands
@@ -20,11 +21,7 @@ class AdminCommands(commands.Cog):
 
         try:
             self.db = psycopg2.connect(
-                database=db_database,
-                user=db_user,
-                password=db_password,
-                host=db_host,
-                port=db_port,
+                database=db_database, user=db_user, password=db_password, host=db_host, port=db_port,
             )
         except psycopg2.OperationalError as error:
             print(error)
@@ -37,19 +34,15 @@ class AdminCommands(commands.Cog):
 
         if amount == 1:
             embed = discord.Embed(
-                description=f"cleared `{amount}` message in {ctx.channel.mention}",
-                colour=discord.Colour(0xE9ACFD),
+                description=f"cleared `{amount}` message in {ctx.channel.mention}", colour=discord.Colour(0xE9ACFD),
             )
         else:
             embed = discord.Embed(
-                description=f"cleared `{amount}` messages in {ctx.channel.mention}",
-                colour=discord.Colour(0xE9ACFD),
+                description=f"cleared `{amount}` messages in {ctx.channel.mention}", colour=discord.Colour(0xE9ACFD),
             )
         embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
 
-        self.cursor.execute(
-            f"SELECT ch_id_audit FROM main WHERE guild_id = ('{str(ctx.guild.id)}')"
-        )
+        self.cursor.execute(f"SELECT ch_id_audit FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
         result_1 = self.cursor.fetchone()
         if result_1 is None:
             return
@@ -64,18 +57,14 @@ class AdminCommands(commands.Cog):
     @commands.has_guild_permissions(kick_members=True)
     async def kick(self, ctx, user: discord.Member, *, reason=None):
         embed = discord.Embed(
-            title=f"kicked **{user}** from {ctx.guild}.",
-            description=reason,
-            colour=discord.Colour(0xE9ACFD),
+            title=f"kicked **{user}** from {ctx.guild}.", description=reason, colour=discord.Colour(0xE9ACFD),
         )
         embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
 
         await user.kick(reason=reason)
         await ctx.send(f"Bye bye {user.mention}.")
 
-        self.cursor.execute(
-            f"SELECT ch_id_audit FROM main WHERE guild_id = ('{str(ctx.guild.id)}')"
-        )
+        self.cursor.execute(f"SELECT ch_id_audit FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
         result = self.cursor.fetchone()
         if result is None:
             return
@@ -90,9 +79,7 @@ class AdminCommands(commands.Cog):
         global auth_ch
         auth_ch = ctx.channel
 
-        self.cursor.execute(
-            f"SELECT ch_id_admin FROM main WHERE guild_id = ('{str(ctx.guild.id)}')"
-        )
+        self.cursor.execute(f"SELECT ch_id_admin FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
         result = self.cursor.fetchone()
         if result is None:
             ctx.send("Please set admin channel first. Use `.set` for more info.")
@@ -121,9 +108,7 @@ class AdminCommands(commands.Cog):
         )
         await dm.send(f"{link}")
 
-        self.cursor.execute(
-            f"SELECT ch_id_audit FROM main WHERE guild_id = ('{str(ctx.guild.id)}')"
-        )
+        self.cursor.execute(f"SELECT ch_id_audit FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
         result = self.cursor.fetchone()
         if result is None:
             return
@@ -141,13 +126,9 @@ class AdminCommands(commands.Cog):
         )
         embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
 
-        await auth_ch.send(
-            f"Invite link requested by {inv_author.mention} was **denied**."
-        )
+        await auth_ch.send(f"Invite link requested by {inv_author.mention} was **denied**.")
 
-        self.cursor.execute(
-            f"SELECT ch_id_audit FROM main WHERE guild_id = ('{str(ctx.guild.id)}')"
-        )
+        self.cursor.execute(f"SELECT ch_id_audit FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
         result = self.cursor.fetchone()
         if result is None:
             return

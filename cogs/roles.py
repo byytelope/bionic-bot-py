@@ -1,4 +1,5 @@
 import os
+
 import discord
 import psycopg2
 from discord.ext import commands
@@ -20,11 +21,7 @@ class Roles(commands.Cog):
 
         try:
             self.db = psycopg2.connect(
-                database=db_database,
-                user=db_user,
-                password=db_password,
-                host=db_host,
-                port=db_port,
+                database=db_database, user=db_user, password=db_password, host=db_host, port=db_port,
             )
         except psycopg2.OperationalError as db_error:
             print(db_error)
@@ -35,9 +32,7 @@ class Roles(commands.Cog):
     async def on_raw_reaction_add(self, payload):
         message_id = payload.message_id
 
-        self.cursor.execute(
-            f"SELECT msg_id_reaction FROM main WHERE guild_id = ('{str(payload.guild_id)}')"
-        )
+        self.cursor.execute(f"SELECT msg_id_reaction FROM main WHERE guild_id = ('{str(payload.guild_id)}')")
         result = self.cursor.fetchone()
 
         if message_id == int(result[0]):
@@ -47,9 +42,7 @@ class Roles(commands.Cog):
             role = discord.utils.get(guild.roles, name=payload.emoji.name)
 
             if role is not None:
-                member = discord.utils.find(
-                    lambda ree: ree.id == payload.user_id, guild.members
-                )
+                member = discord.utils.find(lambda ree: ree.id == payload.user_id, guild.members)
                 if member is not None:
                     await member.add_roles(role)
                     print(f"Added {role} to {member}")
@@ -62,23 +55,17 @@ class Roles(commands.Cog):
     async def on_raw_reaction_remove(self, payload):
         message_id = payload.message_id
 
-        self.cursor.execute(
-            f"SELECT msg_id_reaction FROM main WHERE guild_id = ('{str(payload.guild_id)}')"
-        )
+        self.cursor.execute(f"SELECT msg_id_reaction FROM main WHERE guild_id = ('{str(payload.guild_id)}')")
         result = self.cursor.fetchone()
 
         if message_id == int(result[0]):
             guild_id = payload.guild_id
-            guild = discord.utils.find(
-                lambda bruh: bruh.id == guild_id, self.bot.guilds
-            )
+            guild = discord.utils.find(lambda bruh: bruh.id == guild_id, self.bot.guilds)
 
             role = discord.utils.get(guild.roles, name=payload.emoji.name)
 
             if role is not None:
-                member = discord.utils.find(
-                    lambda ree: ree.id == payload.user_id, guild.members
-                )
+                member = discord.utils.find(lambda ree: ree.id == payload.user_id, guild.members)
                 if member is not None:
                     await member.remove_roles(role)
                     print(f"Removed {role} from {member}")

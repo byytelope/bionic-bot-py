@@ -1,5 +1,6 @@
 import os
 import random
+
 import COVID19Py
 import discord
 import psycopg2
@@ -142,7 +143,7 @@ class Funny(commands.Cog):
 
     @corona.error
     async def on_corona_error(self, ctx, error):
-        if isinstance(error, commands.MissingRequiredArgument, commands.UserInputError):
+        if isinstance(error, (commands.MissingRequiredArgument, commands.UserInputError)):
             responses = [
                 "Corona cowcow?",
                 "Adhi ada neevene ey.",
