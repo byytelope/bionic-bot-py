@@ -1,12 +1,16 @@
 import os
 import random
+from urllib.error import HTTPError
 
 import COVID19Py
 import discord
 import psycopg2
 from discord.ext import commands
 
-covid19 = COVID19Py.COVID19()
+try:
+    covid19 = COVID19Py.COVID19()
+except HTTPError as e:
+    print(e, "No response from jhu site.")
 
 
 class Funny(commands.Cog):
