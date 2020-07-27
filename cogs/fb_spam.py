@@ -1,6 +1,5 @@
 import os
 
-import discord
 from discord.ext import commands
 from fbchat import Client, Message
 from fbchat.models import *

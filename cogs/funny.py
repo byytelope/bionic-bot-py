@@ -1,5 +1,7 @@
 import os
 import random
+import sys
+from os import path
 from urllib.error import HTTPError
 
 import COVID19Py
@@ -7,7 +9,9 @@ import discord
 import psycopg2
 from discord.ext import commands
 
-from ..not_cogs.web_scraper import web_scrape
+sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
+from not_cogs.web_scraper import web_scrape
+
 
 try:
     covid19 = COVID19Py.COVID19()
