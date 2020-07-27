@@ -7,6 +7,8 @@ import discord
 import psycopg2
 from discord.ext import commands
 
+from ..not_cogs.web_scraper import web_scrape
+
 try:
     covid19 = COVID19Py.COVID19()
 except HTTPError as e:
@@ -93,6 +95,12 @@ class Funny(commands.Cog):
             stmt = f"`{result:,}` hei meehun."
 
         await ctx.send(stmt)
+
+    
+
+    @commands.command(name="csgo")
+    async def aju_csgo(ctx, num: int):
+        await ctx.send(web_scrape(num - 1))
 
     @commands.command()
     async def avatar(self, ctx, *, user):

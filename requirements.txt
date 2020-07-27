@@ -3,7 +3,7 @@ requests
 beautifulsoup4
 COVID19Py
 html5lib
-psycopg2
+psycopg2-binary
 Google-Images-Search
 youtube_dl
 PyNaCl

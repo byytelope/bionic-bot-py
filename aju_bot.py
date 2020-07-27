@@ -5,8 +5,6 @@ import discord
 import psycopg2
 from discord.ext import commands
 
-from web_scraper import web_scrape
-
 bot = commands.Bot(command_prefix=".", owner_id=367686193242177536)
 bot.remove_command("help")
 
@@ -45,11 +43,6 @@ async def on_ready():
     )
     db.commit()
     print("Aju is ready.")
-
-
-@bot.command(aliases=["csgo"])
-async def aju_csgo(ctx, num: int):
-    await ctx.send(web_scrape(num - 1))
 
 
 @bot.command(
