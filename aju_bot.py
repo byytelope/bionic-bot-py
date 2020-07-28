@@ -4,9 +4,6 @@ import random
 import discord
 import psycopg2
 from discord.ext import commands
-from dotenv import load_dotenv
-
-load_dotenv()
 
 bot = commands.Bot(command_prefix=".", owner_id=367686193242177536)
 bot.remove_command("help")
