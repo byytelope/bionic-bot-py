@@ -83,6 +83,7 @@ cogs = [
     "cogs.music",
     "cogs.roles",
     "cogs.set",
+    "cogs.stats",
     "cogs.welcome",
 ]
 

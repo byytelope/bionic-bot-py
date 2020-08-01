@@ -1,22 +1,9 @@
 import os
 import random
-import sys
-from os import path
-from urllib.error import HTTPError
 
-import COVID19Py
 import discord
 import psycopg2
 from discord.ext import commands
-
-sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-from not_cogs.web_scraper import web_scrape
-
-
-try:
-    covid19 = COVID19Py.COVID19()
-except HTTPError as e:
-    print(e, "No response from jhu site.")
 
 
 class Funny(commands.Cog):
@@ -43,10 +30,6 @@ class Funny(commands.Cog):
         self.cursor = self.db.cursor()
 
     @commands.command()
-    async def ping(self, ctx):
-        await ctx.send(f"{round(self.bot.latency * 1000)}ms in thiyaa aju ah libenei.")
-
-    @commands.command()
     async def say(self, ctx, *, echo):
         sponged = []
         for char in echo:
@@ -57,10 +40,6 @@ class Funny(commands.Cog):
                 sponged.append(char.lower())
         sponged_text = "".join(sponged)
         await ctx.send(f"{sponged_text}")
-
-    @commands.command()
-    async def members(self, ctx):
-        await ctx.send(f"There are `{ctx.guild.member_count:,}` **hopefully** corona-free people in {ctx.guild}.")
 
     @commands.command()
     async def spam(self, ctx):
@@ -85,26 +64,6 @@ class Funny(commands.Cog):
             await ctx.send("Thebai nihigaahe mi channel aki.")
         else:
             await ctx.send(f"{random.choice(spams)}")
-
-    @commands.command()
-    async def corona(self, ctx, country_code, args: str):
-        if country_code == "global":
-            result = covid19.getLatest()[args]
-        else:
-            result = covid19.getLocationByCountryCode(country_code)[0]["latest"][args]
-
-        if result <= 10:
-            stmt = f"`{result:,}` thakah meehun."
-        else:
-            stmt = f"`{result:,}` hei meehun."
-
-        await ctx.send(stmt)
-
-    
-
-    @commands.command(name="csgo")
-    async def aju_csgo(ctx, num: int):
-        await ctx.send(web_scrape(num - 1))
 
     @commands.command()
     async def avatar(self, ctx, *, user):
@@ -154,18 +113,6 @@ class Funny(commands.Cog):
                 "Hm????",
                 "P L E A S E  C O M P L E T E  T H E  S E N T E N C E .",
                 "Aju kiyan koh dhey vee?",
-            ]
-            await ctx.send(random.choice(responses))
-
-    @corona.error
-    async def on_corona_error(self, ctx, error):
-        if isinstance(error, (commands.MissingRequiredArgument, commands.UserInputError)):
-            responses = [
-                "Corona cowcow?",
-                "Adhi ada neevene ey.",
-                "Thankeda baaraa benafele.",
-                "Corona wot?",
-                "Thehen ekani benagen keraah vee kamah aju ah egei?",
             ]
             await ctx.send(random.choice(responses))
 

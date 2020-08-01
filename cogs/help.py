@@ -85,7 +85,7 @@ class HelpCommands(commands.Cog):
         embed = discord.Embed(
             colour=discord.Colour(0xE9ACFD),
             title="Get realtime corona stats",
-            description="Use `.corona global confirmed` for total confirmed cases globally. You can substitute in `deaths` instead of `confirmed` and a 2 letter country code in place of `global`.",
+            description="Use `.corona global confirmed` for total confirmed cases globally. You can substitute in `deaths`, `recovered` and `active` instead of `confirmed` and any country in place of `global`.",
         )
         embed.set_footer(text=f"Help requested by: {ctx.author}", icon_url=ctx.author.avatar_url)
         await ctx.send(embed=embed)
