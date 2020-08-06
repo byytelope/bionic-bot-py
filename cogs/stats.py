@@ -57,9 +57,9 @@ class Stats(commands.Cog):
             stmt = random.choice(stmts)
         else:
             if result <= 10:
-                stmt = f"{result} thakah meehun."
+                stmt = f"{result:,d} thakah meehun."
             else:
-                stmt = f"{result} hei meehun."
+                stmt = f"{result:,d} hei meehun."
         await ctx.send(stmt)
 
     @corona.error
