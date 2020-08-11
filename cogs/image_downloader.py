@@ -12,18 +12,18 @@ class ImageDownloader(commands.Cog):
     Class for dowloading images
     """
 
-    def __init__(self, bot):
+    def __init__(self, bot: commands.Bot):
         self.bot = bot
 
     @commands.command()
-    async def img(self, ctx, *, key):
+    async def img(self, ctx: commands.Context, *, query: str):
         await ctx.send("Aju photo ah hoadhaathaan...")
 
         out_dir = Path("img_cache")
         src_path = Path("img_cache/*")
 
         response = GoogleImagesSearch(os.environ["img_search_api_key"], os.environ["img_search_web_id"])
-        args = {"q": key, "num": 1, "fileType": "jpg|png"}
+        args = {"q": query, "num": 1, "fileType": "jpg|png"}
 
         source_name = glob.glob(f"{src_path}")
         if source_name:
@@ -46,7 +46,7 @@ class ImageDownloader(commands.Cog):
         else:
             print("File not found.")
 
-        embed = discord.Embed(title=key, colour=discord.Colour(0xE9ACFD))
+        embed = discord.Embed(title=query, colour=discord.Colour(0xE9ACFD))
         embed.set_footer(text=f"Image requested by: {ctx.author}", icon_url=ctx.author.avatar_url)
         if ext == ".jpg":
             embed.set_image(url="attachment://image.jpg")
@@ -61,14 +61,14 @@ class ImageDownloader(commands.Cog):
         await ctx.send(file=file, embed=embed)
 
     @commands.command()
-    async def gif(self, ctx, *, key):
+    async def gif(self, ctx: commands.Context, *, query: str):
         await ctx.send("Aju gif ah hoadhaathaan...")
 
         out_dir = Path("img_cache")
         src_path = Path("img_cache/*")
 
         response = GoogleImagesSearch(os.environ["img_search_api_key"], os.environ["img_search_web_id"])
-        args = {"q": key, "num": 1, "fileType": "gif"}
+        args = {"q": query, "num": 1, "fileType": "gif"}
 
         source_name = glob.glob(f"{src_path}")
         if source_name:
@@ -94,7 +94,7 @@ class ImageDownloader(commands.Cog):
         else:
             print("File not found.")
 
-        embed = discord.Embed(title=key, colour=discord.Colour(0xE9ACFD))
+        embed = discord.Embed(title=query, colour=discord.Colour(0xE9ACFD))
         embed.set_footer(text=f"Gif requested by: {ctx.author}", icon_url=ctx.author.avatar_url)
         embed.set_image(url="attachment://image.gif")
         file = discord.File("img_cache/image.gif", filename="image.gif")

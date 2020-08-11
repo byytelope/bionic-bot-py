@@ -16,7 +16,7 @@ class Stats(commands.Cog):
         self.bot = bot
 
     @commands.command()
-    async def ping(self, ctx):
+    async def ping(self, ctx: commands.Context):
         await ctx.send(f"{round(self.bot.latency * 1000)}ms in thiyaa aju ah libenei.")
 
     @commands.command()

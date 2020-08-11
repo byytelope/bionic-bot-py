@@ -10,7 +10,7 @@ class AdminCommands(commands.Cog):
     Admin commands for admins
     """
 
-    def __init__(self, bot):
+    def __init__(self, bot: commands.Bot):
         self.bot = bot
 
         db_database = os.environ["db_database"]
@@ -30,7 +30,7 @@ class AdminCommands(commands.Cog):
 
     @commands.command(aliases=["clear"])
     @commands.has_permissions(manage_messages=True)
-    async def cls(self, ctx, amount=2):
+    async def cls(self, ctx: commands.Context, amount: int = 2):
 
         if amount == 1:
             embed = discord.Embed(
@@ -55,7 +55,7 @@ class AdminCommands(commands.Cog):
 
     @commands.command()
     @commands.has_guild_permissions(kick_members=True)
-    async def kick(self, ctx, user: discord.Member, *, reason=None):
+    async def kick(self, ctx: commands.Context, user: discord.Member, *, reason: str = ""):
         embed = discord.Embed(
             title=f"kicked **{user}** from {ctx.guild}.", description=reason, colour=discord.Colour(0xE9ACFD),
         )
@@ -73,7 +73,7 @@ class AdminCommands(commands.Cog):
             await audit_ch.send(embed=embed)
 
     @commands.command(aliases=["reqinv"])
-    async def req_invite(self, ctx):
+    async def req_invite(self, ctx: commands.Context):
         global inv_author
         inv_author = ctx.author
         global auth_ch
@@ -92,7 +92,7 @@ class AdminCommands(commands.Cog):
 
     @commands.command()
     @commands.has_guild_permissions(manage_guild=True)
-    async def confirm(self, ctx):
+    async def confirm(self, ctx: commands.Context):
         link = await ctx.channel.create_invite(max_age=86400, max_uses=5)
         dm = self.bot.get_user(inv_author.id)
 
@@ -118,7 +118,7 @@ class AdminCommands(commands.Cog):
 
     @commands.command()
     @commands.has_guild_permissions(manage_guild=True)
-    async def deny(self, ctx):
+    async def deny(self, ctx: commands.Context):
         embed = discord.Embed(
             title="**denied** an invite link request.",
             description=f"from **{inv_author}** for {auth_ch.mention}",

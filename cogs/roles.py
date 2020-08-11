@@ -10,7 +10,7 @@ class Roles(commands.Cog):
     Reaction roles and init role
     """
 
-    def __init__(self, bot):
+    def __init__(self, bot: commands.Bot):
         self.bot = bot
 
         db_database = os.environ["db_database"]
@@ -29,7 +29,7 @@ class Roles(commands.Cog):
         self.cursor = self.db.cursor()
 
     @commands.Cog.listener()
-    async def on_raw_reaction_add(self, payload):
+    async def on_raw_reaction_add(self, payload: discord.RawReactionActionEvent):
         message_id = payload.message_id
 
         self.cursor.execute(f"SELECT msg_id_reaction FROM main WHERE guild_id = ('{str(payload.guild_id)}')")
@@ -52,7 +52,7 @@ class Roles(commands.Cog):
                 print("Role not found.")
 
     @commands.Cog.listener()
-    async def on_raw_reaction_remove(self, payload):
+    async def on_raw_reaction_remove(self, payload: discord.RawReactionActionEvent):
         message_id = payload.message_id
 
         self.cursor.execute(f"SELECT msg_id_reaction FROM main WHERE guild_id = ('{str(payload.guild_id)}')")

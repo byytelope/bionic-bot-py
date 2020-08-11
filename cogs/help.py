@@ -10,7 +10,7 @@ class HelpCommands(commands.Cog):
     Help commands
     """
 
-    def __init__(self, bot):
+    def __init__(self, bot: commands.Bot):
         self.bot = bot
 
         db_database = os.environ["db_database"]
@@ -29,7 +29,7 @@ class HelpCommands(commands.Cog):
         self.cursor = self.db.cursor()
 
     @commands.group(invoke_without_command=True)
-    async def help(self, ctx):
+    async def help(self, ctx: commands.Context):
 
         embed = discord.Embed(
             title="Hello am Aju",
@@ -63,7 +63,7 @@ class HelpCommands(commands.Cog):
         await ctx.send(embed=embed)
 
     @help.command(aliases=["aju"])
-    async def help_aju(self, ctx):
+    async def help_aju(self, ctx: commands.Context):
         embed = discord.Embed(
             colour=discord.Colour(0xE9ACFD), title="Talk to Aju", description="Use `.aju` and say anything.",
         )
@@ -71,7 +71,7 @@ class HelpCommands(commands.Cog):
         await ctx.send(embed=embed)
 
     @help.command(aliases=["say"])
-    async def help_say(self, ctx):
+    async def help_say(self, ctx: commands.Context):
         embed = discord.Embed(
             colour=discord.Colour(0xE9ACFD),
             title="@eCho On",
@@ -81,7 +81,7 @@ class HelpCommands(commands.Cog):
         await ctx.send(embed=embed)
 
     @help.command(aliases=["corona"])
-    async def help_corona(self, ctx):
+    async def help_corona(self, ctx: commands.Context):
         embed = discord.Embed(
             colour=discord.Colour(0xE9ACFD),
             title="Get realtime corona stats",
@@ -91,7 +91,7 @@ class HelpCommands(commands.Cog):
         await ctx.send(embed=embed)
 
     @help.command(aliases=["members"])
-    async def help_members(self, ctx):
+    async def help_members(self, ctx: commands.Context):
         embed = discord.Embed(
             colour=discord.Colour(0xE9ACFD),
             title="Get the total number of members in your guild",
@@ -101,7 +101,7 @@ class HelpCommands(commands.Cog):
         await ctx.send(embed=embed)
 
     @help.command(aliases=["spam"])
-    async def help_spam(self, ctx):
+    async def help_spam(self, ctx: commands.Context):
 
         self.cursor.execute(f"SELECT ch_id_general FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
         result_1 = self.cursor.fetchone()
@@ -118,7 +118,7 @@ class HelpCommands(commands.Cog):
         await ctx.send(embed=embed)
 
     @help.command(aliases=["csgo"])
-    async def help_csgo(self, ctx):
+    async def help_csgo(self, ctx: commands.Context):
         embed = discord.Embed(
             colour=discord.Colour(0xE9ACFD),
             title="ZyWoah",
@@ -128,7 +128,7 @@ class HelpCommands(commands.Cog):
         await ctx.send(embed=embed)
 
     @help.command(aliases=["reqinv"])
-    async def help_reqinv(self, ctx):
+    async def help_reqinv(self, ctx: commands.Context):
         embed = discord.Embed(
             colour=discord.Colour(0xE9ACFD),
             title="Request an invite link from the admins.",
@@ -138,7 +138,7 @@ class HelpCommands(commands.Cog):
         await ctx.send(embed=embed)
 
     @help.command(aliases=["avatar"])
-    async def help_avatar(self, ctx):
+    async def help_avatar(self, ctx: commands.Context):
         embed = discord.Embed(
             colour=discord.Colour(0xE9ACFD),
             title="Get the avatar of a user.",
@@ -148,7 +148,7 @@ class HelpCommands(commands.Cog):
         await ctx.send(embed=embed)
 
     @help.command(aliases=["img"])
-    async def help_img(self, ctx):
+    async def help_img(self, ctx: commands.Context):
         embed = discord.Embed(
             colour=discord.Colour(0xE9ACFD),
             title="Search for an image on Google.",
@@ -158,7 +158,7 @@ class HelpCommands(commands.Cog):
         await ctx.send(embed=embed)
 
     @help.command(aliases=["gif"])
-    async def help_gif(self, ctx):
+    async def help_gif(self, ctx: commands.Context):
         embed = discord.Embed(
             colour=discord.Colour(0xE9ACFD),
             title="Search for a gif on Google.",
@@ -168,7 +168,7 @@ class HelpCommands(commands.Cog):
         await ctx.send(embed=embed)
 
     @help.command(aliases=["cls", "clear"])
-    async def help_cls(self, ctx):
+    async def help_cls(self, ctx: commands.Context):
         embed = discord.Embed(
             colour=discord.Colour.blurple(),
             title="Clear the bs",

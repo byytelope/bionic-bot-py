@@ -10,7 +10,7 @@ class Set(commands.Cog):
     Class for setting guild specific vars
     """
 
-    def __init__(self, bot):
+    def __init__(self, bot: commands.Bot):
         self.bot = bot
 
         db_database = os.environ["db_database"]
@@ -30,13 +30,13 @@ class Set(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
-    async def prtable(self, ctx):
+    async def prtable(self, ctx: commands.Context):
         self.cursor.execute("SELECT * FROM main;")
         result = self.cursor.fetchall()
         print(result)
 
     @prtable.error
-    async def on_prtable_error(self, ctx, error):
+    async def on_prtable_error(self, ctx: commands.Context, error: commands.errors):
         if isinstance(error, commands.NotOwner):
             owner = self.bot.get_user(367686193242177536)
             await ctx.send(f"Sorry only {owner.mention} can use this command.")
@@ -48,13 +48,13 @@ class Set(commands.Cog):
         self.db.commit()
 
     @droptable.error
-    async def on_droptable_error(self, ctx, error):
+    async def on_droptable_error(self, ctx: commands.Context, error: commands.errors):
         if isinstance(error, commands.NotOwner):
             owner = self.bot.get_user(367686193242177536)
             await ctx.send(f"Sorry only {owner.mention} can use this command.")
 
     @commands.group(invoke_without_command=True)
-    async def set(self, ctx):
+    async def set(self, ctx: commands.Context):
         embed = discord.Embed(title="set **<command>**", colour=discord.Colour(0xE9ACFD))
         embed.set_footer(text=f"{ctx.guild}", icon_url=f"{ctx.guild.icon_url}")
         embed.add_field(name="roleid", value="Set message id for role reactions.", inline=False)
@@ -73,7 +73,7 @@ class Set(commands.Cog):
 
     @set.command(aliases=["roleid"])
     @commands.has_guild_permissions(manage_guild=True)
-    async def set_msg_id_role(self, ctx, *, role_id):
+    async def set_msg_id_role(self, ctx: commands.Context, *, role_id: int):
         self.cursor.execute(f"SELECT msg_id_reaction FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
         result = self.cursor.fetchone()
 
@@ -116,7 +116,7 @@ class Set(commands.Cog):
 
     @set.command(aliases=["welctext"])
     @commands.has_guild_permissions(manage_guild=True)
-    async def set_welc_text(self, ctx, *, welc_text):
+    async def set_welc_text(self, ctx: commands.Context, *, welc_text: str):
 
         self.cursor.execute(f"SELECT welc_text FROM main WHERE guild_id  = ('{str(ctx.guild.id)}')")
         result = self.cursor.fetchone()
@@ -168,7 +168,7 @@ class Set(commands.Cog):
 
     @set.command(aliases=["welcch"])
     @commands.has_guild_permissions(manage_guild=True)
-    async def set_welc_ch(self, ctx, welc_ch: discord.TextChannel):
+    async def set_welc_ch(self, ctx: commands.Context, welc_ch: discord.TextChannel):
 
         self.cursor.execute(f"SELECT ch_id_welcome FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
         result = self.cursor.fetchone()
@@ -212,7 +212,7 @@ class Set(commands.Cog):
 
     @set.command(aliases=["auditch"])
     @commands.has_guild_permissions(manage_guild=True)
-    async def set_audit_ch(self, ctx, audit_ch: discord.TextChannel):
+    async def set_audit_ch(self, ctx: commands.Context, audit_ch: discord.TextChannel):
 
         self.cursor.execute(f"SELECT ch_id_audit FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
         result = self.cursor.fetchone()
@@ -256,7 +256,7 @@ class Set(commands.Cog):
 
     @set.command(aliases=["adminch"])
     @commands.has_guild_permissions(manage_guild=True)
-    async def set_admin_ch(self, ctx, admin_ch: discord.TextChannel):
+    async def set_admin_ch(self, ctx: commands.Context, admin_ch: discord.TextChannel):
 
         self.cursor.execute(f"SELECT ch_id_admin FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
         result = self.cursor.fetchone()
@@ -300,7 +300,7 @@ class Set(commands.Cog):
 
     @set.command(aliases=["generalch"])
     @commands.has_guild_permissions(manage_guild=True)
-    async def set_general_ch(self, ctx, general_ch: discord.TextChannel):
+    async def set_general_ch(self, ctx: commands.Context, general_ch: discord.TextChannel):
 
         self.cursor.execute(f"SELECT ch_id_general FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
         result = self.cursor.fetchone()
@@ -344,7 +344,7 @@ class Set(commands.Cog):
 
     @set.command(aliases=["defaultrole"])
     @commands.has_guild_permissions(manage_guild=True)
-    async def set_role_id_default(self, ctx, *, role_id):
+    async def set_role_id_default(self, ctx: commands.Context, *, role_id: int):
         self.cursor.execute(f"SELECT role_id_default FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
         result = self.cursor.fetchone()
 

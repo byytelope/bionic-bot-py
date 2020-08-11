@@ -10,7 +10,7 @@ class Welcome(commands.Cog):
     Welcome actions
     """
 
-    def __init__(self, bot):
+    def __init__(self, bot: commands.Bot):
         self.bot = bot
 
         db_database = os.environ["db_database"]
@@ -29,7 +29,7 @@ class Welcome(commands.Cog):
         self.cursor = self.db.cursor()
 
     @commands.Cog.listener()
-    async def on_member_join(self, member):
+    async def on_member_join(self, member: discord.Member):
         self.cursor.execute(f"SELECT role_id_default FROM main WHERE guild_id = ('{str(member.guild.id)}')")
         result_2 = self.cursor.fetchone()
         if result_2 is None:
