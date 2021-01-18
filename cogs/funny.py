@@ -1,5 +1,6 @@
 import os
 import random
+from typing import Union
 
 import discord
 import psycopg2
@@ -69,25 +70,33 @@ class Funny(commands.Cog):
         else:
             await ctx.send(f"{random.choice(spams)}")
 
-    @commands.command()
-    async def avatar(self, ctx: commands.Context, *, user: str):
-        users = ctx.guild.members
-
-        for u in users:
-            if user.lower() in u.display_name.lower():
-                member = u
-
-                embed = discord.Embed(
-                    title=f"{member}'s avatar",
-                    url=f"{member.avatar_url}",
-                    colour=discord.Colour(0xE9ACFD),
-                )
-                embed.set_image(url=member.avatar_url)
-
-                await ctx.send(embed=embed)
-                break
+    @commands.command("avatar")
+    async def avatar(self, ctx: commands.Context, *, member: Union[discord.Member, str, int]):
+        if isinstance(member, discord.Member):
+            embed = discord.Embed(
+                title=f"{member}'s avatar",
+                url=f"{member.avatar_url}",
+                colour=discord.Colour(0xE9ACFD),
+            )
+            embed.set_image(url=member.avatar_url)
+            await ctx.channel.purge(limit=1)
+            await ctx.send(embed=embed)
         else:
-            await ctx.send("Aju ah themeehaa nifenene.")
+            members = ctx.guild.members
+            for m in members:
+                if member.lower() in m.display_name.lower():
+                    member = m
+                    embed = discord.Embed(
+                        title=f"{member}'s avatar",
+                        url=f"{member.avatar_url}",
+                        colour=discord.Colour(0xE9ACFD),
+                    )
+                    embed.set_image(url=member.avatar_url)
+                    await ctx.channel.purge(limit=1)
+                    await ctx.send(embed=embed)
+                    break
+            else:
+                await ctx.send("Aju ah themeehaa nifenene.")
 
     @commands.command(aliases=["aju"])
     async def aju_bot(self, ctx: commands.Context):

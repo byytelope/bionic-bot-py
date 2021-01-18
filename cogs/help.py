@@ -158,7 +158,7 @@ class HelpCommands(commands.Cog):
         embed = discord.Embed(
             colour=discord.Colour(0xE9ACFD),
             title="Get the avatar of a user.",
-            description="Only gets avatars of users from the guild you call Aju in.",
+            description="Use `.avatar *userID, server nickname or mention*` to get avatar.",
         )
         embed.set_footer(text=f"Help requested by: {ctx.author}", icon_url=ctx.author.avatar_url)
         await ctx.send(embed=embed)

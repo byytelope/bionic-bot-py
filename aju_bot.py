@@ -5,7 +5,10 @@ import discord
 import psycopg2
 from discord.ext import commands
 
-bot = commands.Bot(command_prefix=".", owner_id=367686193242177536)
+intents = discord.Intents.default()
+intents.members = True
+
+bot = commands.Bot(command_prefix=commands.when_mentioned_or("."), intents=intents, owner_id=367686193242177536)
 bot.remove_command("help")
 
 
@@ -51,6 +54,14 @@ async def on_ready():
     )
     db.commit()
     print("Aju is ready.")
+
+
+@bot.event
+async def on_message(message):
+    if bot.user.mentioned_in(message):
+        prefix = await bot.get_prefix(message)
+        await message.channel.send(f"Type {prefix[-1]}help for help.")
+    await bot.process_commands(message)
 
 
 @bot.command(
