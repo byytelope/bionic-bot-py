@@ -13,15 +13,19 @@ class HelpCommands(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
-        db_database = os.environ["db_database"]
-        db_user = os.environ["db_user"]
-        db_password = os.environ["db_password"]
-        db_host = os.environ["db_host"]
-        db_port = os.environ["db_port"]
+        db_database = os.environ["AJU_DB_DATABASE"]
+        db_user = os.environ["AJU_DB_USER"]
+        db_password = os.environ["AJU_DB_PASSWORD"]
+        db_host = os.environ["AJU_DB_HOST"]
+        db_port = os.environ["AJU_DB_PORT"]
 
         try:
             self.db = psycopg2.connect(
-                database=db_database, user=db_user, password=db_password, host=db_host, port=db_port,
+                database=db_database,
+                user=db_user,
+                password=db_password,
+                host=db_host,
+                port=db_port,
             )
         except psycopg2.OperationalError as e:
             print(e)
@@ -40,18 +44,24 @@ class HelpCommands(commands.Cog):
         embed.add_field(name="say", value="MaKe ajU say AnYThinG.", inline=False)
         embed.add_field(name="corona", value="Get realtime corona stats.", inline=False)
         embed.add_field(
-            name="members", value="Aju counts the number of members in your server.", inline=False,
+            name="members",
+            value="Aju counts the number of members in your server.",
+            inline=False,
         )
         embed.add_field(name="spam", value="Don't.", inline=False)
         embed.add_field(
-            name="csgo", value="HLTV rankings for all time best CS:GO players.", inline=False,
+            name="csgo",
+            value="HLTV rankings for all time best CS:GO players.",
+            inline=False,
         )
         embed.add_field(name="reqinv", value="Request an invite link.", inline=False)
         embed.add_field(name="avatar", value="Get a user's avatar.", inline=False)
         embed.add_field(name="img", value="Search Google for images.", inline=False)
         embed.add_field(name="gif", value="Search Google for gifs.", inline=False)
         embed.add_field(
-            name="clear/cls **(Admin role required)**", value="Clear messages from a channel.", inline=False,
+            name="clear/cls **(Admin role required)**",
+            value="Clear messages from a channel.",
+            inline=False,
         )
         embed.add_field(
             name="set **(cannot be used with .help)**",
@@ -65,7 +75,9 @@ class HelpCommands(commands.Cog):
     @help.command(aliases=["aju"])
     async def help_aju(self, ctx: commands.Context):
         embed = discord.Embed(
-            colour=discord.Colour(0xE9ACFD), title="Talk to Aju", description="Use `.aju` and say anything.",
+            colour=discord.Colour(0xE9ACFD),
+            title="Talk to Aju",
+            description="Use `.aju` and say anything.",
         )
         embed.set_footer(text=f"Help requested by: {ctx.author}", icon_url=ctx.author.avatar_url)
         await ctx.send(embed=embed)
@@ -107,12 +119,16 @@ class HelpCommands(commands.Cog):
         result_1 = self.cursor.fetchone()
         if result_1 is None:
             embed = discord.Embed(
-                colour=discord.Colour(0xE9ACFD), title="No.", description="Will not work in the general channel.",
+                colour=discord.Colour(0xE9ACFD),
+                title="No.",
+                description="Will not work in the general channel.",
             )
         else:
             general_ch = self.bot.get_channel(id=int(result_1[0]))
             embed = discord.Embed(
-                colour=discord.Colour(0xE9ACFD), title="No.", description=f"Will not work in {general_ch.mention}.",
+                colour=discord.Colour(0xE9ACFD),
+                title="No.",
+                description=f"Will not work in {general_ch.mention}.",
             )
         embed.set_footer(text=f"Help requested by: {ctx.author}", icon_url=ctx.author.avatar_url)
         await ctx.send(embed=embed)

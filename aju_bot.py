@@ -13,14 +13,22 @@ bot.remove_command("help")
 async def on_ready():
     await bot.change_presence(status=discord.Status.online, activity=discord.Game("use .help for help"))
 
-    db_database = os.environ["db_database"]
-    db_user = os.environ["db_user"]
-    db_password = os.environ["db_password"]
-    db_host = os.environ["db_host"]
-    db_port = os.environ["db_port"]
+    db_database = os.environ["AJU_DB_DATABASE"]
+    db_user = os.environ["AJU_DB_USER"]
+    db_password = os.environ["AJU_DB_PASSWORD"]
+    db_host = os.environ["AJU_DB_HOST"]
+    db_port = os.environ["AJU_DB_PORT"]
+
+    db = None
 
     try:
-        db = psycopg2.connect(database=db_database, user=db_user, password=db_password, host=db_host, port=db_port,)
+        db = psycopg2.connect(
+            database=db_database,
+            user=db_user,
+            password=db_password,
+            host=db_host,
+            port=db_port,
+        )
         print("Successfully connected to database.")
     except psycopg2.OperationalError as db_error:
         print(db_error)
@@ -46,7 +54,18 @@ async def on_ready():
 
 
 @bot.command(
-    aliases=[".", "..", "...", "....", ".....", "......", ".......", "........", ".........", "..........",]
+    aliases=[
+        ".",
+        "..",
+        "...",
+        "....",
+        ".....",
+        "......",
+        ".......",
+        "........",
+        ".........",
+        "..........",
+    ]
 )
 async def ignore():
     try:
@@ -76,7 +95,6 @@ async def on_cls_error(ctx, error):
 
 cogs = [
     "cogs.admin",
-    # "cogs.fb_spam",
     "cogs.funny",
     "cogs.help",
     "cogs.image_downloader",
@@ -96,4 +114,4 @@ if __name__ == "__main__":
             print(f"Couldn't load {cog.replace('cogs.', '')}\n")
             print(cog_error)
 
-bot.run(os.environ["api_key"])
+bot.run(os.environ["AJU_API_KEY"])

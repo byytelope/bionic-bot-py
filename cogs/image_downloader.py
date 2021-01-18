@@ -22,7 +22,7 @@ class ImageDownloader(commands.Cog):
         out_dir = Path("img_cache")
         src_path = Path("img_cache/*")
 
-        response = GoogleImagesSearch(os.environ["img_search_api_key"], os.environ["img_search_web_id"])
+        response = GoogleImagesSearch(os.environ["IMG_SEARCH_API_KEY"], os.environ["IMG_SEARCH_WEB_ID"])
         args = {"q": query, "num": 1, "fileType": "jpg|png"}
 
         source_name = glob.glob(f"{src_path}")
@@ -48,6 +48,10 @@ class ImageDownloader(commands.Cog):
 
         embed = discord.Embed(title=query, colour=discord.Colour(0xE9ACFD))
         embed.set_footer(text=f"Image requested by: {ctx.author}", icon_url=ctx.author.avatar_url)
+
+        ext = None
+        file = None
+
         if ext == ".jpg":
             embed.set_image(url="attachment://image.jpg")
             file = discord.File("img_cache/image.jpg", filename="image.jpg")
@@ -67,7 +71,7 @@ class ImageDownloader(commands.Cog):
         out_dir = Path("img_cache")
         src_path = Path("img_cache/*")
 
-        response = GoogleImagesSearch(os.environ["img_search_api_key"], os.environ["img_search_web_id"])
+        response = GoogleImagesSearch(os.environ["IMG_SEARCH_API_KEY"], os.environ["IMG_SEARCH_WEB_ID"])
         args = {"q": query, "num": 1, "fileType": "gif"}
 
         source_name = glob.glob(f"{src_path}")

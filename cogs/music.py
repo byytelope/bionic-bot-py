@@ -380,9 +380,10 @@ class Music(commands.Cog):
         for i, song in enumerate(ctx.voice_state.songs[start:end], start=start):
             queue += f"**{i+1}.** [**{song.source.title}**]({song.source.url})\n"
 
-        embed = discord.Embed(description=f"{queue}", colour=discord.Colour(0xE9ACFD),).set_footer(
-            text=f"Page {page} of {pages}"
-        )
+        embed = discord.Embed(
+            description=f"{queue}",
+            colour=discord.Colour(0xE9ACFD),
+        ).set_footer(text=f"Page {page} of {pages}")
         await ctx.send(embed=embed)
 
     @commands.command(name="now", aliases=["current", "playing", "nowplaying"])

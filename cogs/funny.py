@@ -14,15 +14,19 @@ class Funny(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
-        db_database = os.environ["db_database"]
-        db_user = os.environ["db_user"]
-        db_password = os.environ["db_password"]
-        db_host = os.environ["db_host"]
-        db_port = os.environ["db_port"]
+        db_database = os.environ["AJU_DB_DATABASE"]
+        db_user = os.environ["AJU_DB_USER"]
+        db_password = os.environ["AJU_DB_PASSWORD"]
+        db_host = os.environ["AJU_DB_HOST"]
+        db_port = os.environ["AJU_DB_PORT"]
 
         try:
             self.db = psycopg2.connect(
-                database=db_database, user=db_user, password=db_password, host=db_host, port=db_port,
+                database=db_database,
+                user=db_user,
+                password=db_password,
+                host=db_host,
+                port=db_port,
             )
         except psycopg2.OperationalError as db_error:
             print(db_error)
@@ -74,7 +78,9 @@ class Funny(commands.Cog):
                 member = u
 
                 embed = discord.Embed(
-                    title=f"{member}'s avatar", url=f"{member.avatar_url}", colour=discord.Colour(0xE9ACFD),
+                    title=f"{member}'s avatar",
+                    url=f"{member.avatar_url}",
+                    colour=discord.Colour(0xE9ACFD),
                 )
                 embed.set_image(url=member.avatar_url)
 

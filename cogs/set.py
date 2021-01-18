@@ -13,15 +13,19 @@ class Set(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
-        db_database = os.environ["db_database"]
-        db_user = os.environ["db_user"]
-        db_password = os.environ["db_password"]
-        db_host = os.environ["db_host"]
-        db_port = os.environ["db_port"]
+        db_database = os.environ["AJU_DB_DATABASE"]
+        db_user = os.environ["AJU_DB_USER"]
+        db_password = os.environ["AJU_DB_PASSWORD"]
+        db_host = os.environ["AJU_DB_HOST"]
+        db_port = os.environ["AJU_DB_PORT"]
 
         try:
             self.db = psycopg2.connect(
-                database=db_database, user=db_user, password=db_password, host=db_host, port=db_port,
+                database=db_database,
+                user=db_user,
+                password=db_password,
+                host=db_host,
+                port=db_port,
             )
         except psycopg2.OperationalError as db_error:
             print(db_error)
@@ -76,11 +80,10 @@ class Set(commands.Cog):
     async def set_msg_id_role(self, ctx: commands.Context, *, role_id: int):
         self.cursor.execute(f"SELECT msg_id_reaction FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
         result = self.cursor.fetchone()
+        sql = None
 
         if result is None:
-            sql = (
-                f"INSERT INTO main (guild_id, msg_id_reaction) VALUES ( ('{str(ctx.guild.id)}'), ('{str(role_id)}') )"
-            )
+            sql = f"INSERT INTO main (guild_id, msg_id_reaction) VALUES ( ('{str(ctx.guild.id)}'), ('{str(role_id)}') )"
             await ctx.send("Message for role reactions has been set.")
 
             self.cursor.execute(f"SELECT ch_id_audit FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
@@ -90,7 +93,10 @@ class Set(commands.Cog):
             else:
                 audit_ch = self.bot.get_channel(id=int(result_1[0]))
 
-                embed = discord.Embed(description="set message for role reactions", colour=discord.Colour(0xE9ACFD),)
+                embed = discord.Embed(
+                    description="set message for role reactions",
+                    colour=discord.Colour(0xE9ACFD),
+                )
                 embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
                 await audit_ch.send(embed=embed)
 
@@ -106,7 +112,8 @@ class Set(commands.Cog):
                 audit_ch = self.bot.get_channel(id=int(result_1[0]))
 
                 embed = discord.Embed(
-                    description="changed message for role reactions", colour=discord.Colour(0xE9ACFD),
+                    description="changed message for role reactions",
+                    colour=discord.Colour(0xE9ACFD),
                 )
                 embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
                 await audit_ch.send(embed=embed)
@@ -120,6 +127,7 @@ class Set(commands.Cog):
 
         self.cursor.execute(f"SELECT welc_text FROM main WHERE guild_id  = ('{str(ctx.guild.id)}')")
         result = self.cursor.fetchone()
+        sql = None
 
         if result is None:
             sql = f"INSERT INTO main (guild_id, welc_text) VALUES ( ('{str(ctx.guild.id)}'), ('{welc_text}')"
@@ -137,7 +145,8 @@ class Set(commands.Cog):
                 audit_ch = self.bot.get_channel(id=int(result_1[0]))
 
                 embed = discord.Embed(
-                    description=f'set welcome text to **"{welc_text}"**', colour=discord.Colour(0xE9ACFD),
+                    description=f'set welcome text to **"{welc_text}"**',
+                    colour=discord.Colour(0xE9ACFD),
                 )
                 embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
                 await audit_ch.send(embed=embed)
@@ -158,7 +167,8 @@ class Set(commands.Cog):
                 audit_ch = self.bot.get_channel(id=int(result_1[0]))
 
                 embed = discord.Embed(
-                    description=f'changed welcome text to **"{welc_text}"**', colour=discord.Colour(0xE9ACFD),
+                    description=f'changed welcome text to **"{welc_text}"**',
+                    colour=discord.Colour(0xE9ACFD),
                 )
                 embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
                 await audit_ch.send(embed=embed)
@@ -169,9 +179,9 @@ class Set(commands.Cog):
     @set.command(aliases=["welcch"])
     @commands.has_guild_permissions(manage_guild=True)
     async def set_welc_ch(self, ctx: commands.Context, welc_ch: discord.TextChannel):
-
         self.cursor.execute(f"SELECT ch_id_welcome FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
         result = self.cursor.fetchone()
+        sql = None
 
         if result is None:
             sql = f"INSERT INTO main (guild_id, ch_id_welcome) VALUES ( ('{str(ctx.guild.id)}'), ('{welc_ch.id}') )"
@@ -185,7 +195,8 @@ class Set(commands.Cog):
                 audit_ch = self.bot.get_channel(id=int(result_1[0]))
 
                 embed = discord.Embed(
-                    description=f"set welcome channel to {welc_ch.mention}", colour=discord.Colour(0xE9ACFD),
+                    description=f"set welcome channel to {welc_ch.mention}",
+                    colour=discord.Colour(0xE9ACFD),
                 )
                 embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
                 await audit_ch.send(embed=embed)
@@ -202,7 +213,8 @@ class Set(commands.Cog):
                 audit_ch = self.bot.get_channel(id=int(result_1[0]))
 
                 embed = discord.Embed(
-                    description=f"changed welcome channel to {welc_ch.mention}", colour=discord.Colour(0xE9ACFD),
+                    description=f"changed welcome channel to {welc_ch.mention}",
+                    colour=discord.Colour(0xE9ACFD),
                 )
                 embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
                 await audit_ch.send(embed=embed)
@@ -213,9 +225,9 @@ class Set(commands.Cog):
     @set.command(aliases=["auditch"])
     @commands.has_guild_permissions(manage_guild=True)
     async def set_audit_ch(self, ctx: commands.Context, audit_ch: discord.TextChannel):
-
         self.cursor.execute(f"SELECT ch_id_audit FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
         result = self.cursor.fetchone()
+        sql = None
 
         if result is None:
             sql = f"INSERT INTO main (guild_id, ch_id_audit) VALUES ( ('{str(ctx.guild.id)}'), ('{audit_ch.id}') )"
@@ -229,7 +241,8 @@ class Set(commands.Cog):
                 audit_ch = self.bot.get_channel(id=int(result_1[0]))
 
                 embed = discord.Embed(
-                    description=f"set audit channel to {audit_ch.mention}", colour=discord.Colour(0xE9ACFD),
+                    description=f"set audit channel to {audit_ch.mention}",
+                    colour=discord.Colour(0xE9ACFD),
                 )
                 embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
                 await audit_ch.send(embed=embed)
@@ -246,7 +259,8 @@ class Set(commands.Cog):
                 audit_ch = self.bot.get_channel(id=int(result_1[0]))
 
                 embed = discord.Embed(
-                    description=f"changed audit channel to {audit_ch.mention}", colour=discord.Colour(0xE9ACFD),
+                    description=f"changed audit channel to {audit_ch.mention}",
+                    colour=discord.Colour(0xE9ACFD),
                 )
                 embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
                 await audit_ch.send(embed=embed)
@@ -257,9 +271,9 @@ class Set(commands.Cog):
     @set.command(aliases=["adminch"])
     @commands.has_guild_permissions(manage_guild=True)
     async def set_admin_ch(self, ctx: commands.Context, admin_ch: discord.TextChannel):
-
         self.cursor.execute(f"SELECT ch_id_admin FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
         result = self.cursor.fetchone()
+        sql = None
 
         if result is None:
             sql = f"INSERT INTO main (guild_id, ch_id_admin) VALUES ( ('{str(ctx.guild.id)}'), ('{admin_ch.id}') )"
@@ -273,7 +287,8 @@ class Set(commands.Cog):
                 audit_ch = self.bot.get_channel(id=int(result_1[0]))
 
                 embed = discord.Embed(
-                    description=f"set admin channel to {admin_ch.mention}", colour=discord.Colour(0xE9ACFD),
+                    description=f"set admin channel to {admin_ch.mention}",
+                    colour=discord.Colour(0xE9ACFD),
                 )
                 embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
                 await audit_ch.send(embed=embed)
@@ -290,7 +305,8 @@ class Set(commands.Cog):
                 audit_ch = self.bot.get_channel(id=int(result_1[0]))
 
                 embed = discord.Embed(
-                    description=f"changed admin channel to {admin_ch.mention}", colour=discord.Colour(0xE9ACFD),
+                    description=f"changed admin channel to {admin_ch.mention}",
+                    colour=discord.Colour(0xE9ACFD),
                 )
                 embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
                 await audit_ch.send(embed=embed)
@@ -301,9 +317,9 @@ class Set(commands.Cog):
     @set.command(aliases=["generalch"])
     @commands.has_guild_permissions(manage_guild=True)
     async def set_general_ch(self, ctx: commands.Context, general_ch: discord.TextChannel):
-
         self.cursor.execute(f"SELECT ch_id_general FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
         result = self.cursor.fetchone()
+        sql = None
 
         if result is None:
             sql = f"INSERT INTO main (guild_id, ch_id_general) VALUES ( ('{str(ctx.guild.id)}'), ('{general_ch.id}') )"
@@ -317,7 +333,8 @@ class Set(commands.Cog):
                 audit_ch = self.bot.get_channel(id=int(result_1[0]))
 
                 embed = discord.Embed(
-                    description=f"set general channel to {general_ch.mention}", colour=discord.Colour(0xE9ACFD),
+                    description=f"set general channel to {general_ch.mention}",
+                    colour=discord.Colour(0xE9ACFD),
                 )
                 embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
                 await audit_ch.send(embed=embed)
@@ -334,7 +351,8 @@ class Set(commands.Cog):
                 audit_ch = self.bot.get_channel(id=int(result_1[0]))
 
                 embed = discord.Embed(
-                    description=f"changed general channel to {general_ch.mention}", colour=discord.Colour(0xE9ACFD),
+                    description=f"changed general channel to {general_ch.mention}",
+                    colour=discord.Colour(0xE9ACFD),
                 )
                 embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
                 await audit_ch.send(embed=embed)
@@ -347,11 +365,10 @@ class Set(commands.Cog):
     async def set_role_id_default(self, ctx: commands.Context, *, role_id: int):
         self.cursor.execute(f"SELECT role_id_default FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
         result = self.cursor.fetchone()
+        sql = None
 
         if result is None:
-            sql = (
-                f"INSERT INTO main (guild_id, role_id_default) VALUES ( ('{str(ctx.guild.id)}'), ('{str(role_id)}') )"
-            )
+            sql = f"INSERT INTO main (guild_id, role_id_default) VALUES ( ('{str(ctx.guild.id)}'), ('{str(role_id)}') )"
             await ctx.send("Default role has been set.")
 
             self.cursor.execute(f"SELECT ch_id_audit FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
@@ -361,7 +378,10 @@ class Set(commands.Cog):
             else:
                 audit_ch = self.bot.get_channel(id=int(result_1[0]))
 
-                embed = discord.Embed(description="set default role", colour=discord.Colour(0xE9ACFD),)
+                embed = discord.Embed(
+                    description="set default role",
+                    colour=discord.Colour(0xE9ACFD),
+                )
                 embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
                 await audit_ch.send(embed=embed)
 
@@ -376,7 +396,10 @@ class Set(commands.Cog):
             else:
                 audit_ch = self.bot.get_channel(id=int(result_1[0]))
 
-                embed = discord.Embed(description="changed default role", colour=discord.Colour(0xE9ACFD),)
+                embed = discord.Embed(
+                    description="changed default role",
+                    colour=discord.Colour(0xE9ACFD),
+                )
                 embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
                 await audit_ch.send(embed=embed)
 
