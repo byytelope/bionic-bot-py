@@ -13,7 +13,7 @@ bot.remove_command("help")
 
 
 @bot.event
-async def on_ready():
+async def on_ready() -> None:
     await bot.change_presence(status=discord.Status.online, activity=discord.Game("use .help for help"))
 
     db_database = os.environ["AJU_DB_DATABASE"]
@@ -57,7 +57,7 @@ async def on_ready():
 
 
 @bot.event
-async def on_message(message):
+async def on_message(message) -> None:
     if bot.user.mentioned_in(message):
         prefix = await bot.get_prefix(message)
         await message.channel.send(f"Type {prefix[-1]}help for help.")
@@ -78,7 +78,7 @@ async def on_message(message):
         "..........",
     ]
 )
-async def ignore():
+async def ignore() -> None:
     try:
         pass
     except Exception:
@@ -86,14 +86,14 @@ async def ignore():
 
 
 @bot.event
-async def on_command_error(ctx, error):
+async def on_command_error(ctx, error) -> None:
     if isinstance(error, commands.CommandNotFound):
         responses = ["They aju ah niegey command ah.", "Aju ah egey ehthakaau keyfele."]
         await ctx.send(random.choice(responses))
 
 
 @bot.event
-async def on_cls_error(ctx, error):
+async def on_cls_error(ctx, error) -> None:
     if isinstance(error, (commands.MissingPermissions, commands.MissingAnyRole)):
         responses = [
             "Adhi the command beynun vey varah ekalo bondo nivei.",
@@ -104,7 +104,7 @@ async def on_cls_error(ctx, error):
         await ctx.send(random.choice(responses))
 
 
-cogs = [
+cogs: list[str] = [
     "cogs.admin",
     "cogs.funny",
     "cogs.help",

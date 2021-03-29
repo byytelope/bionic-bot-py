@@ -11,8 +11,8 @@ soup = BeautifulSoup(url, "html5lib")
 player_table = soup.find("table", attrs={"class": "stats-table player-ratings-table"})
 player_table_data = player_table.tbody.find_all("tr")
 
-columns = []
-teams = []
+columns: list = []
+teams: list = []
 
 for row in player_table_data:
     columns.append(row.find("td"))
@@ -29,7 +29,7 @@ for team in player_table_data:
 # team = teams.find_all('a')
 
 
-def web_scrape(i):
+def web_scrape(i) -> str:
     player = columns[i].find("a").text
     team_from_top = teams[i].find("img").get("title")
 
