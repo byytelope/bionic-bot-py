@@ -6,7 +6,7 @@ from covid import Covid
 from discord.ext import commands
 
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-from not_cogs.web_scraper import web_scrape
+from utils.web_scraper import web_scrape
 
 covid = Covid()
 
