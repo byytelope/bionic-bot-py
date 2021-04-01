@@ -1,7 +1,4 @@
-import os
-
 import discord
-import psycopg2
 from discord.ext import commands
 
 
@@ -10,53 +7,31 @@ class Welcome(commands.Cog):
     Welcome actions
     """
 
-    def __init__(self, bot: commands.Bot):
+    def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
 
-        db_database = os.environ["AJU_DB_DATABASE"]
-        db_user = os.environ["AJU_DB_USER"]
-        db_password = os.environ["AJU_DB_PASSWORD"]
-        db_host = os.environ["AJU_DB_HOST"]
-        db_port = os.environ["AJU_DB_PORT"]
-
-        try:
-            self.db = psycopg2.connect(
-                database=db_database,
-                user=db_user,
-                password=db_password,
-                host=db_host,
-                port=db_port,
-            )
-        except psycopg2.OperationalError as db_error:
-            print(db_error)
-
-        self.cursor = self.db.cursor()
-
     @commands.Cog.listener()
-    async def on_member_join(self, member: discord.Member):
-        self.cursor.execute(f"SELECT role_id_default FROM main WHERE guild_id = ('{str(member.guild.id)}')")
-        result_2 = self.cursor.fetchone()
-        if result_2 is None:
-            return
-        else:
-            default_role = discord.utils.get(member.guild.roles, id=int(result_2[0]))
-            # role = discord.utils.get(member.guild.roles, name=default_role)
-            await member.add_roles(default_role)
-            print(f"{member} was given {default_role}")
+    async def on_member_join(self, member: discord.Member) -> None:
+        result = self.bot.config.find_one({"guild_id": member.guild.id, "role_id_default": {"$exists": True}})
+        result_1 = self.bot.config.find_one({"guild_id": member.guild.id, "ch_id_welcome": {"$exists": True}})
+        result_2 = self.bot.config.find_one({"guild_id": member.guild.id, "welc_text": {"$exists": True}})
 
-        self.cursor.execute(f"SELECT ch_id_welcome FROM main WHERE guild_id = ('{str(member.guild.id)}')")
-        result = self.cursor.fetchone()
         if result is None:
             return
         else:
-            self.cursor.execute(f"SELECT welc_text FROM main WHERE guild_id = ('{str(member.guild.id)}')")
-            result_1 = self.cursor.fetchone()
-            welc_ch = self.bot.get_channel(id=int(result[0]))
-            msg = str(result_1[0]).format(mention=member.mention, user=member.name, guild=member.guild)
+            default_role = discord.utils.get(iterable=member.guild.roles, id=result["role_id_default"])
+            await member.add_roles(default_role)
+            print(f"{member} was given {default_role}")
+
+        if result_1 is None:
+            return
+        else:
+            welc_ch = self.bot.get_channel(result_1["ch_id_welcome"])
+            msg: str = result_2["welc_text"] or "Hope you enjoy your stay {member}!"
 
             embed = discord.Embed(
                 title=f"Welcome to {member.guild}!",
-                description=msg,
+                description=msg.format(mention=member.mention, user=member.name, guild=member.guild),
                 colour=discord.Colour(0xE9ACFD),
             )
             embed.set_thumbnail(url=member.avatar_url)
@@ -64,5 +39,5 @@ class Welcome(commands.Cog):
             await welc_ch.send(embed=embed)
 
 
-def setup(bot):
+def setup(bot) -> None:
     bot.add_cog(Welcome(bot))

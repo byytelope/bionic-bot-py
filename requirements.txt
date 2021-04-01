@@ -2,9 +2,7 @@ discord
 requests
 beautifulsoup4
 html5lib
-psycopg2-binary
+pymongo
 Google-Images-Search
-youtube_dl
 PyNaCl
-fbchat
 covid

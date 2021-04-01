@@ -6,29 +6,29 @@ from covid import Covid
 from discord.ext import commands
 
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-from not_cogs.web_scraper import web_scrape
+from utils.web_scraper import web_scrape
 
 covid = Covid()
 
 
 class Stats(commands.Cog):
-    def __init__(self, bot: commands.Bot):
+    def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
 
     @commands.command()
-    async def ping(self, ctx: commands.Context):
+    async def ping(self, ctx: commands.Context) -> None:
         await ctx.send(f"{round(self.bot.latency * 1000)}ms in thiyaa aju ah libenei.")
 
     @commands.command()
-    async def members(self, ctx: commands.Context):
+    async def members(self, ctx: commands.Context) -> None:
         await ctx.send(f"There are `{ctx.guild.member_count}` **hopefully** corona-free people in {ctx.guild}.")
 
     @commands.command(name="csgo")
-    async def aju_csgo(self, ctx: commands.Context, num: int):
+    async def aju_csgo(self, ctx: commands.Context, num: int) -> None:
         await ctx.send(web_scrape(num - 1))
 
     @commands.command()
-    async def corona(self, ctx: commands.Context, country: str, args: str):
+    async def corona(self, ctx: commands.Context, country: str, args: str) -> None:
         if country.lower() == "global" and args == "confirmed":
             result = covid.get_total_confirmed_cases()
         elif country.lower() == "global" and args == "active":
@@ -63,7 +63,7 @@ class Stats(commands.Cog):
         await ctx.send(stmt)
 
     @corona.error
-    async def on_corona_error(self, ctx: commands.Context, error: commands.errors):
+    async def on_corona_error(self, ctx: commands.Context, error: commands.CommandError) -> None:
         if isinstance(error, (commands.MissingRequiredArgument, commands.UserInputError)):
             responses = [
                 "Corona cowcow?",
@@ -75,5 +75,5 @@ class Stats(commands.Cog):
             await ctx.send(random.choice(responses))
 
 
-def setup(bot):
+def setup(bot) -> None:
     bot.add_cog(Stats(bot))

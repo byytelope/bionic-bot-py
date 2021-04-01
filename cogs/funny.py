@@ -1,9 +1,7 @@
-import os
 import random
 from typing import Union
 
 import discord
-import psycopg2
 from discord.ext import commands
 
 
@@ -12,30 +10,11 @@ class Funny(commands.Cog):
     Beykaara commands
     """
 
-    def __init__(self, bot: commands.Bot):
+    def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
 
-        db_database = os.environ["AJU_DB_DATABASE"]
-        db_user = os.environ["AJU_DB_USER"]
-        db_password = os.environ["AJU_DB_PASSWORD"]
-        db_host = os.environ["AJU_DB_HOST"]
-        db_port = os.environ["AJU_DB_PORT"]
-
-        try:
-            self.db = psycopg2.connect(
-                database=db_database,
-                user=db_user,
-                password=db_password,
-                host=db_host,
-                port=db_port,
-            )
-        except psycopg2.OperationalError as db_error:
-            print(db_error)
-
-        self.cursor = self.db.cursor()
-
     @commands.command()
-    async def say(self, ctx: commands.Context, *, echo: str):
+    async def say(self, ctx: commands.Context, *, echo: str) -> None:
         sponged = []
         for char in echo:
             rand = random.randint(0, 1)
@@ -47,7 +26,7 @@ class Funny(commands.Cog):
         await ctx.send(f"{sponged_text}")
 
     @commands.command()
-    async def spam(self, ctx: commands.Context):
+    async def spam(self, ctx: commands.Context) -> None:
         spams = [
             "I'm Rick Harrison, and this is my pawn shop. I work here with my old man and my son, Big Hoss. Everything in here has a story and a price. One thing I've learned after 21 years - you never know what is gonna come through that door.",
             "So i was watching rick and morty right, and it was just a casual night and i was just watching rick and morty. Well, out of nowhere the funniest shit happened. Rick and Morty, Season 3, Episode 3, 56 seconds in. At the time, this was happening, The scientist guy, Rick, was nowhere to be found. Morty tried to look for him but all he found was just a mere little pickle on the desk. You know what happened? He heard ricks voice, somewhere around the room. Morty used a screwdriver to flip the pickle over and...you’ll never believe this, IT WAS RICK! HE WAS A PICKLE!! I kid you not, he’s called PICKLE RICK! PICKLE RICK!!! LMAO!!!! I was rolling on the floor laughing! My chest was in pain and i almost felt that i was going to suffocate!! Funniest shit i’d ever seen, i’ll tell you that. Im still laughing thinking about it. Awww man, you had to be there. It was just so funny.",
@@ -62,16 +41,15 @@ class Funny(commands.Cog):
             "I cannot FUCKING believe that Japanese-American musician Joji of 88rising is in actuality the popular Japanese-American YouTuber Joji Miller also know as Filthy Frank who was popular for his satirical content who has used a derogatory racial slur in his 2017 album ‘Pink Season’. I cannot believe this. I'm literally shaking. This can't be happening. My mom came into my room to bring me a plate of chicken nuggets and I literally screamed at her and hit the plate of chicken nuggets out of her hand. She started yelling and swearing at me and I slammed the door on her. I’m so distressed right now I don’t know what to do. I didn’t mean to do that to my mom but I’m literally in shock from the what happened today. I feel like I’m going to explode. This can’t be happening. I’m having a fucking breakdown. I don’t want to believe the world is so corrupt. I want a future to believe in. I cannot fucking deal with this right now. It wasn’t supposed to be like this. This is so fucked. I’m literally shaking right now... There’s no way Joji would do this... This can’t be real...",
         ]
 
-        self.cursor.execute(f"SELECT ch_id_general FROM main WHERE guild_id = ('{str(ctx.guild.id)}')")
-        result = self.cursor.fetchone()
+        result = self.bot.config.find_one({"guild_id": ctx.guild.id, "ch_id_general": {"$exists": True}})
 
-        if ctx.channel.id == int(result[0]):
+        if ctx.channel.id == result["ch_id_general"]:
             await ctx.send("Thebai nihigaahe mi channel aki.")
         else:
             await ctx.send(f"{random.choice(spams)}")
 
     @commands.command("avatar")
-    async def avatar(self, ctx: commands.Context, *, member: Union[discord.Member, str, int]):
+    async def avatar(self, ctx: commands.Context, *, member: Union[discord.Member, str, int]) -> None:
         if isinstance(member, discord.Member):
             embed = discord.Embed(
                 title=f"{member}'s avatar",
@@ -99,7 +77,7 @@ class Funny(commands.Cog):
                 await ctx.send("Aju ah themeehaa nifenene.")
 
     @commands.command(aliases=["aju"])
-    async def aju_bot(self, ctx: commands.Context):
+    async def aju_bot(self, ctx: commands.Context) -> None:
         responses = [
             "I don't have an attitude I've got coronavirus and u can't handle it.",
             "I'm fine.",
@@ -117,7 +95,7 @@ class Funny(commands.Cog):
         await ctx.send(f"{random.choice(responses)}")
 
     @aju_bot.error
-    async def on_aju_bot_error(self, ctx: commands.Context, error: commands.errors):
+    async def on_aju_bot_error(self, ctx: commands.Context, error: commands.errors) -> None:
         if isinstance(error, commands.MissingRequiredArgument):
             responses = [
                 "Wot?",
@@ -132,5 +110,5 @@ class Funny(commands.Cog):
             await ctx.send(random.choice(responses))
 
 
-def setup(bot):
+def setup(bot) -> None:
     bot.add_cog(Funny(bot))

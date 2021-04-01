@@ -136,3 +136,5 @@ dmypy.json
 img_cache/*
 *_test.py
 *_old.py
+
+postgres_compat/

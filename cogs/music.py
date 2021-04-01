@@ -7,7 +7,6 @@ import random
 import discord
 import youtube_dl
 from async_timeout import timeout
-from discord.channel import VoiceChannel
 from discord.ext import commands
 
 # youtube_dl.utils.bug_reports_message = lambda: ""
@@ -414,5 +413,5 @@ class Music(commands.Cog):
                 raise commands.CommandError("Bot is already in a voice channel.")
 
 
-def setup(bot):
+def setup(bot) -> None:
     bot.add_cog(Music(bot))
