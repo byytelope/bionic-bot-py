@@ -5,4 +5,6 @@ html5lib
 pymongo
 Google-Images-Search
 PyNaCl
+youtube_dl
+dnspython
 covid
