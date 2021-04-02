@@ -58,7 +58,7 @@ class ImageDownloader(commands.Cog):
         try:
             await ctx.send(file=file, embed=embed)
         except Exception as e:
-            print(e)
+            print(f"Error sending image: {e}")
 
     # @commands.command()
     # async def gif(self, ctx: commands.Context, *, query: str) -> None:

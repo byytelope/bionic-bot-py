@@ -16,9 +16,10 @@ bot.remove_command("help")
 @bot.event
 async def on_ready() -> None:
     await bot.change_presence(status=discord.Status.online, activity=discord.Game("use .help for help"))
-    mongo = MongoClient(
-        "mongodb+srv://admin:q3lCZambb2c34Rpm@testingcluster.jsl4x.mongodb.net/aju_bot_db?retryWrites=true&w=majority"
-    )
+    try:
+        mongo = MongoClient(os.environ["AJU_MONGO_URI"])
+    except Exception as e:
+        print(f"Error connecting to MongoDB: {e}")
     bot.db = mongo["aju_bot_db"]
     bot.config = bot.db["guild_config"]
     print("Aju is ready.")

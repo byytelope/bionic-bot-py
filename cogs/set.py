@@ -16,8 +16,13 @@ class Set(commands.Cog):
         embed.set_footer(text=f"{ctx.guild}", icon_url=f"{ctx.guild.icon_url}")
         embed.add_field(name="rolereactid", value="Set message id for role reactions.", inline=False)
         embed.add_field(
-            name="welctext",
-            value="Set welcome text. Available variables: \n`{mention}` (mentions member), \n`{user}` (member name without mentioning), \n`{guild}` (name of guild)",
+            name="welctextdefault",
+            value="Set welcome text for new users. Available variables: \n`{mention}` (mentions member), \n`{user}` (member name without mentioning), \n`{guild}` (name of guild)",
+            inline=False,
+        )
+        embed.add_field(
+            name="welctextbots",
+            value="Set welcome text for new bots. Available variables: \n`{mention}` (mentions bot), \n`{user}` (bot name without mentioning), \n`{guild}` (name of guild)",
             inline=False,
         )
         embed.add_field(name="welcch", value="Set welcome channel.", inline=False)
@@ -27,6 +32,11 @@ class Set(commands.Cog):
         embed.add_field(
             name="defaultrole",
             value="Set the default role given to new users.",
+            inline=False,
+        )
+        embed.add_field(
+            name="botrole",
+            value="Set the default role given to new bots.",
             inline=False,
         )
         embed.set_footer(text=f"Help requested by: {ctx.author}", icon_url=ctx.author.avatar_url)
@@ -44,10 +54,9 @@ class Set(commands.Cog):
                 {"$set": {"msg_id_reaction": msg_id}},
                 upsert=True,
             )
-        except:
-            print("Error updating role reaction ID.")
+        except Exception as e:
+            print(f"Error updating role reaction ID: {e}")
             await ctx.send("Couldn't set role reactions message.")
-
         else:
             print("Role reaction ID updated.")
 
@@ -77,27 +86,27 @@ class Set(commands.Cog):
                     embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
                     await audit_ch.send(embed=embed)
 
-    @set.command(aliases=["welctext"])
+    @set.command(aliases=["welctextdefault"])
     @commands.has_guild_permissions(manage_guild=True)
-    async def set_welc_text(self, ctx: commands.Context, *, welc_text: str) -> None:
-        result: dict = self.bot.config.find_one({"guild_id": ctx.guild.id, "welc_text": {"$exists": True}})
+    async def set_welc_text_default(self, ctx: commands.Context, *, welc_text: str) -> None:
+        result: dict = self.bot.config.find_one({"guild_id": ctx.guild.id, "welc_text_default": {"$exists": True}})
         result_1: dict = self.bot.config.find_one({"guild_id": ctx.guild.id, "ch_id_audit": {"$exists": True}})
 
         try:
             self.bot.config.update_one(
                 {"guild_id": ctx.guild.id},
-                {"$set": {"welc_text": str(welc_text)}},
+                {"$set": {"welc_text_default": str(welc_text)}},
                 upsert=True,
             )
-        except:
-            print("Error updating welcome text.")
+        except Exception as e:
+            print(f"Error updating members welcome text: {e}")
         else:
-            print("Welcome text updated.")
+            print("Members welcome text updated.")
 
         if result is None:
             await ctx.send(
                 f"""
-                Welcome text has been set to **"{welc_text}"**
+                Welcome text for new users has been set to **"{welc_text}"**
                 """
             )
             if result_1 is None:
@@ -105,7 +114,7 @@ class Set(commands.Cog):
             else:
                 audit_ch = self.bot.get_channel(result_1["ch_id_audit"])
                 embed = discord.Embed(
-                    description=f'set welcome text to **"{welc_text}"**',
+                    description=f'set welcome text for new users to **"{welc_text}"**',
                     colour=discord.Colour(0xE9ACFD),
                 )
                 embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
@@ -113,7 +122,7 @@ class Set(commands.Cog):
         else:
             await ctx.send(
                 f"""
-                Welcome text has been changed to "{welc_text}"
+                Welcome text for new users has been changed to "{welc_text}"
                 """
             )
             if result_1 is None:
@@ -122,7 +131,58 @@ class Set(commands.Cog):
                 audit_ch = self.bot.get_channel(result_1["ch_id_audit"])
 
                 embed = discord.Embed(
-                    description=f'changed welcome text to **"{welc_text}"**',
+                    description=f'changed welcome text for new users to **"{welc_text}"**',
+                    colour=discord.Colour(0xE9ACFD),
+                )
+                embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
+                await audit_ch.send(embed=embed)
+
+    @set.command(aliases=["welctextbots"])
+    @commands.has_guild_permissions(manage_guild=True)
+    async def set_welc_text_bots(self, ctx: commands.Context, *, welc_text: str) -> None:
+        result: dict = self.bot.config.find_one({"guild_id": ctx.guild.id, "welc_text_bots": {"$exists": True}})
+        result_1: dict = self.bot.config.find_one({"guild_id": ctx.guild.id, "ch_id_audit": {"$exists": True}})
+
+        try:
+            self.bot.config.update_one(
+                {"guild_id": ctx.guild.id},
+                {"$set": {"welc_text_bots": str(welc_text)}},
+                upsert=True,
+            )
+        except Exception as e:
+            print(f"Error updating bots welcome text: {e}")
+        else:
+            print("Bots welcome text updated.")
+
+        if result is None:
+            await ctx.send(
+                f"""
+                Welcome text for bots has been set to **"{welc_text}"**
+                """
+            )
+            if result_1 is None:
+                return
+            else:
+                audit_ch = self.bot.get_channel(result_1["ch_id_audit"])
+                embed = discord.Embed(
+                    description=f'set welcome text for bots to **"{welc_text}"**',
+                    colour=discord.Colour(0xE9ACFD),
+                )
+                embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
+                await audit_ch.send(embed=embed)
+        else:
+            await ctx.send(
+                f"""
+                Welcome text for bots has been changed to "{welc_text}"
+                """
+            )
+            if result_1 is None:
+                return
+            else:
+                audit_ch = self.bot.get_channel(result_1["ch_id_audit"])
+
+                embed = discord.Embed(
+                    description=f'changed welcome text for bots to **"{welc_text}"**',
                     colour=discord.Colour(0xE9ACFD),
                 )
                 embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
@@ -182,8 +242,8 @@ class Set(commands.Cog):
                 {"$set": {"ch_id_audit": audit_ch.id}},
                 upsert=True,
             )
-        except:
-            print("Error updating audit channel ID.")
+        except Exception as e:
+            print(f"Error updating audit channel ID: {e}")
         else:
             print("Audit channel ID updated.")
 
@@ -219,8 +279,8 @@ class Set(commands.Cog):
                 {"$set": {"ch_id_admin": admin_ch.id}},
                 upsert=True,
             )
-        except:
-            print("Error updating admin channel ID.")
+        except Exception as e:
+            print(f"Error updating admin channel ID: {e}")
         else:
             print("Admin channel ID updated.")
 
@@ -262,8 +322,8 @@ class Set(commands.Cog):
                 {"$set": {"ch_id_general": general_ch.id}},
                 upsert=True,
             )
-        except:
-            print("Error updating general channel ID.")
+        except Exception as e:
+            print(f"Error updating general channel ID: {e}")
         else:
             print("General channel ID updated.")
 
@@ -295,42 +355,85 @@ class Set(commands.Cog):
 
     @set.command(aliases=["defaultrole"])
     @commands.has_guild_permissions(manage_guild=True)
-    async def set_role_id_default(self, ctx: commands.Context, *, role: discord.Role) -> None:
+    async def set_role_id_default(self, ctx: commands.Context, default_role: discord.Role) -> None:
         result: dict = self.bot.config.find_one({"guild_id": ctx.guild.id, "role_id_default": {"$exists": True}})
         result_1: dict = self.bot.config.find_one({"guild_id": ctx.guild.id, "ch_id_audit": {"$exists": True}})
 
         try:
             self.bot.config.update_one(
                 {"guild_id": ctx.guild.id},
-                {"$set": {"role_id_default": role.id}},
+                {"$set": {"role_id_default": default_role.id}},
                 upsert=True,
             )
-        except:
-            print("Error updating default role ID.")
+        except Exception as e:
+            print(f"Error updating default role ID: {e}")
         else:
             print("Default role ID updated.")
 
         if result is None:
-            await ctx.send(f"Default role has been set to: {str(role)}.")
+            await ctx.send(f"Default role has been set to: {str(default_role)}.")
             if result_1 is None:
                 return
             else:
                 audit_ch = self.bot.get_channel(result_1["ch_id_audit"])
                 embed = discord.Embed(
-                    description=f"set default role to: {str(role)}",
+                    description=f"set default role to: {str(default_role)}",
                     colour=discord.Colour(0xE9ACFD),
                 )
                 embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
                 await audit_ch.send(embed=embed)
         else:
-            await ctx.send("Default role has been changed.")
+            await ctx.send(f"Default role has been changed to: {str(default_role)}")
             if result_1 is None:
                 return
             else:
                 audit_ch = self.bot.get_channel(result_1["ch_id_audit"])
 
                 embed = discord.Embed(
-                    description=f"changed default role to: {str(role)}",
+                    description=f"changed default role to: {str(default_role)}",
+                    colour=discord.Colour(0xE9ACFD),
+                )
+                embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
+                await audit_ch.send(embed=embed)
+
+    @set.command(aliases=["botrole"])
+    @commands.has_guild_permissions(manage_guild=True)
+    async def set_role_id_bots(self, ctx: commands.Context, bot_role: discord.Role) -> None:
+        result: dict = self.bot.config.find_one({"guild_id": ctx.guild.id, "role_id_bots": {"$exists": True}})
+        result_1: dict = self.bot.config.find_one({"guild_id": ctx.guild.id, "ch_id_audit": {"$exists": True}})
+
+        try:
+            self.bot.config.update_one(
+                {"guild_id": ctx.guild.id},
+                {"$set": {"role_id_bots": bot_role.id}},
+                upsert=True,
+            )
+        except Exception as e:
+            print(f"Error updating default bot role ID: {e}")
+        else:
+            print("Default bot role ID updated.")
+
+        if result is None:
+            await ctx.send(f"Default role for bots has been set to: {str(bot_role)}.")
+            if result_1 is None:
+                return
+            else:
+                audit_ch = self.bot.get_channel(result_1["ch_id_audit"])
+                embed = discord.Embed(
+                    description=f"set default role for bots to: {str(bot_role)}",
+                    colour=discord.Colour(0xE9ACFD),
+                )
+                embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
+                await audit_ch.send(embed=embed)
+        else:
+            await ctx.send(f"Default role for bots has been changed to: {str(bot_role)}")
+            if result_1 is None:
+                return
+            else:
+                audit_ch = self.bot.get_channel(result_1["ch_id_audit"])
+
+                embed = discord.Embed(
+                    description=f"changed default role for bots to: {str(bot_role)}",
                     colour=discord.Colour(0xE9ACFD),
                 )
                 embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
