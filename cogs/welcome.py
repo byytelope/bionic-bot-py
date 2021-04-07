@@ -12,7 +12,6 @@ class Welcome(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_join(self, member: discord.Member) -> None:
-        print(member.bot)
         result = self.bot.config.find_one({"guild_id": member.guild.id, "role_id_default": {"$exists": True}})
         result_1 = self.bot.config.find_one({"guild_id": member.guild.id, "role_id_bots": {"$exists": True}})
         result_2 = self.bot.config.find_one({"guild_id": member.guild.id, "ch_id_welcome": {"$exists": True}})
