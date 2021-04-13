@@ -37,6 +37,9 @@ class ImageDownloader(commands.Cog):
         response.search(search_params=args, path_to_dir=out_dir)
 
         source_name = glob.glob(f"{src_path}")
+        embed: discord.Embed = None
+        file: discord.File = None
+
         if source_name:
             path, fullname = os.path.split(f"{source_name[0]}")
             basename, ext = os.path.splitext(fullname)

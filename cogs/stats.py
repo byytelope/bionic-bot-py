@@ -1,11 +1,7 @@
 import random
-import sys
-from os import path
 
 from covid import Covid
 from discord.ext import commands
-
-sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 from utils.web_scraper import web_scrape
 
 covid = Covid()

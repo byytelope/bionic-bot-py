@@ -1,4 +1,5 @@
 import discord
+from discord.abc import _Undefined
 from discord.ext import commands
 
 
@@ -9,6 +10,8 @@ class AdminCommands(commands.Cog):
 
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
+        self.inv_author = _Undefined
+        self.inv_ch = _Undefined
 
     @commands.command(aliases=["clear"])
     @commands.has_permissions(manage_messages=True)
@@ -57,10 +60,8 @@ class AdminCommands(commands.Cog):
 
     @commands.command(aliases=["reqinv"])
     async def req_invite(self, ctx: commands.Context) -> None:
-        global inv_author
-        inv_author = ctx.author
-        global auth_ch
-        auth_ch = ctx.channel
+        self.inv_author = ctx.author
+        self.auth_ch = ctx.channel
         result = self.bot.config.find_one({"guild_id": ctx.guild.id, "ch_id_admin": {"$exists": True}})
 
         if result is None:
@@ -69,24 +70,24 @@ class AdminCommands(commands.Cog):
             admin_ch = self.bot.get_channel(result["ch_id_admin"])
             await ctx.channel.send("Requesting invite link from admins...")
             await admin_ch.send(
-                f"{inv_author.mention} is requesting an invite link for {ctx.channel.mention}. Use `.confirm` or `.deny`"
+                f"{self.inv_author.mention} is requesting an invite link for {ctx.channel.mention}. Use `.confirm` or `.deny`"
             )
 
     @commands.command()
     @commands.has_guild_permissions(manage_guild=True)
     async def confirm(self, ctx: commands.Context) -> None:
-        link = await ctx.channel.create_invite(max_age=86400, max_uses=5)
-        dm = self.bot.get_user(inv_author.id)
+        link = await ctx.channel.create_invite(max_age=86400, max_uses=2)
+        dm = self.bot.get_user(self.inv_author.id)
 
         embed = discord.Embed(
             title="**confirmed** an invite link request.",
-            description=f"from **{inv_author}** for {auth_ch.mention}",
+            description=f"from **{self.inv_author}** for {self.auth_ch.mention}",
             colour=discord.Colour(0xE9ACFD),
         )
         embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
 
-        await auth_ch.send(
-            f"Invite link requested by {inv_author.mention} was **confirmed**. Pls check your dms for the link."
+        await self.auth_ch.send(
+            f"Invite link requested by {self.inv_author.mention} was **confirmed**. Pls check your dms for the link."
         )
         await dm.send(f"{link}")
 
@@ -103,12 +104,12 @@ class AdminCommands(commands.Cog):
     async def deny(self, ctx: commands.Context) -> None:
         embed = discord.Embed(
             title="**denied** an invite link request.",
-            description=f"from **{inv_author}** for {auth_ch.mention}",
+            description=f"from **{self.inv_author}** for {self.auth_ch.mention}",
             colour=discord.Colour(0xE9ACFD),
         )
         embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
 
-        await auth_ch.send(f"Invite link requested by {inv_author.mention} was **denied**.")
+        await self.auth_ch.send(f"Invite link requested by {self.inv_author.mention} was **denied**.")
 
         result = self.bot.config.find_one({"guild_id": ctx.guild.id, "ch_id_audit": {"$exists": True}})
 

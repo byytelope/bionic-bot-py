@@ -62,7 +62,7 @@ class Funny(commands.Cog):
         else:
             members = ctx.guild.members
             for m in members:
-                if member.lower() in m.display_name.lower():
+                if str(member).lower() in m.display_name.lower():
                     member = m
                     embed = discord.Embed(
                         title=f"{member}'s avatar",
