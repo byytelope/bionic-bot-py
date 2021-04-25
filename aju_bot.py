@@ -19,6 +19,7 @@ async def on_ready() -> None:
     try:
         mongo = MongoClient(os.environ["AJU_MONGO_URI"])
     except Exception as e:
+        mongo = None
         print(f"Error connecting to MongoDB: {e}")
     bot.db = mongo["aju_bot_db"]
     bot.config = bot.db["guild_config"]
@@ -27,7 +28,7 @@ async def on_ready() -> None:
 
 @bot.event
 async def on_message(message) -> None:
-    if bot.user.mentioned_in(message):
+    if bot.user.mentioned_in(message) and message.mention_everyone == False:
         prefix = await bot.get_prefix(message)
         await message.channel.send(f"Type {prefix[-1]}help for help.")
     await bot.process_commands(message)
