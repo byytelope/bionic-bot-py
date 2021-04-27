@@ -1,3 +1,4 @@
+import logging
 import os
 import random
 
@@ -5,6 +6,8 @@ import discord
 from discord.ext import commands
 from pymongo import MongoClient
 
+logger = logging.getLogger("discord")
+logger.setLevel(logging.DEBUG)
 
 intents = discord.Intents.default()
 intents.members = True
