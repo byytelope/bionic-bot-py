@@ -43,10 +43,13 @@ class Funny(commands.Cog):
 
         result = self.bot.config.find_one({"guild_id": ctx.guild.id, "ch_id_general": {"$exists": True}})
 
-        if ctx.channel.id == result["ch_id_general"]:
-            await ctx.send("Thebai nihigaahe mi channel aki.")
-        else:
+        if not result:
             await ctx.send(f"{random.choice(spams)}")
+        else:
+            if ctx.channel.id == result["ch_id_general"]:
+                await ctx.send("Thebai nihigaahe mi channel aki.")
+            else:
+                await ctx.send(f"{random.choice(spams)}")
 
     @commands.command("avatar")
     async def avatar(self, ctx: commands.Context, *, member: Union[discord.Member, str, int]) -> None:

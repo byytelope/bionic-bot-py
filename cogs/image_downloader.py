@@ -15,7 +15,7 @@ class ImageDownloader(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
 
-    @commands.command()
+    @commands.command(aliases=["image"])
     async def img(self, ctx: commands.Context, *, query: str) -> None:
         await ctx.send("Aju photo ah hoadhaathaan...")
 

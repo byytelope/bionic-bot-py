@@ -19,7 +19,7 @@ class HelpCommands(commands.Cog):
         )
         embed.add_field(name="aju", value="Talk to Aju when you're bored.", inline=False)
         embed.add_field(name="say", value="MaKe ajU say AnYThinG.", inline=False)
-        embed.add_field(name="corona", value="Get realtime corona stats.", inline=False)
+        embed.add_field(name="covid/corona", value="Get realtime corona stats.", inline=False)
         embed.add_field(
             name="members",
             value="Aju counts the number of members in your server.",

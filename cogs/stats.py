@@ -23,7 +23,7 @@ class Stats(commands.Cog):
     async def aju_csgo(self, ctx: commands.Context, num: int) -> None:
         await ctx.send(web_scrape(num - 1))
 
-    @commands.command()
+    @commands.command(aliases=["covid"])
     async def corona(self, ctx: commands.Context, country: str, args: str) -> None:
         if country.lower() == "global" and args == "confirmed":
             result = covid.get_total_confirmed_cases()
@@ -35,7 +35,7 @@ class Stats(commands.Cog):
             result = covid.get_total_recovered()
         elif country.lower() == "mv":
             result = covid.get_status_by_country_name("Maldives")[args.lower()]
-        elif country.lower() == "usa":
+        elif country.lower() == "usa" or country.lower() == "us":
             result = covid.get_status_by_country_name("US")[args.lower()]
         else:
             country_name = []

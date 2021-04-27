@@ -26,14 +26,6 @@ async def on_ready() -> None:
     print("Aju is ready.")
 
 
-@bot.event
-async def on_message(message) -> None:
-    if bot.user.mentioned_in(message) and message.mention_everyone == False:
-        prefix = await bot.get_prefix(message)
-        await message.channel.send(f"Type {prefix[-1]}help for help.")
-    await bot.process_commands(message)
-
-
 @bot.command(
     aliases=[
         ".",
@@ -59,18 +51,6 @@ async def ignore() -> None:
 async def on_command_error(ctx, error) -> None:
     if isinstance(error, commands.CommandNotFound):
         responses = ["They aju ah niegey command ah.", "Aju ah egey ehthakaau keyfele."]
-        await ctx.send(random.choice(responses))
-
-
-@bot.event
-async def on_cls_error(ctx, error) -> None:
-    if isinstance(error, (commands.MissingPermissions, commands.MissingAnyRole)):
-        responses = [
-            "Adhi the command beynun vey varah ekalo bondo nivei.",
-            "Hoho kanthethi.",
-            "Nononono.",
-            "U cannot la.",
-        ]
         await ctx.send(random.choice(responses))
 
 
