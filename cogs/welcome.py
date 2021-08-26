@@ -34,7 +34,7 @@ class Welcome(commands.Cog):
         if result_2 is None:
             return
         else:
-            welc_ch = self.bot.get_channel(result_2["ch_id_welcome"])
+            welc_ch: discord.TextChannel = self.bot.get_channel(result_2["ch_id_welcome"])
             if member.bot:
                 msg = result_3.get("welc_text_bots") or "Say hello to {mention}!"
             else:

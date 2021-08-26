@@ -1,5 +1,8 @@
 import random
+from typing import List
 
+import discord
+import requests
 from covid import Covid
 from discord.ext import commands
 from utils.web_scraper import web_scrape
@@ -58,17 +61,80 @@ class Stats(commands.Cog):
                 stmt = f"{result:,d} hei meehun."
         await ctx.send(stmt)
 
-    @corona.error
-    async def on_corona_error(self, ctx: commands.Context, error: commands.CommandError) -> None:
-        if isinstance(error, (commands.MissingRequiredArgument, commands.UserInputError)):
-            responses = [
-                "Corona cowcow?",
-                "Adhi ada neevene ey.",
-                "Thankeda baaraa benafele.",
-                "Corona wot?",
-                "Thehen ekani benagen keraah vee kamah aju ah egei?",
-            ]
-            await ctx.send(random.choice(responses))
+    @commands.command(name="vlrrank")
+    async def vlr_rank(self, ctx: commands.Context, username: str, region: str) -> None:
+        await ctx.send("Fetching your Valorant MMR...", delete_after=0)
+
+        username_lst = username.split("#")
+        url = f"https://api.henrikdev.xyz/valorant/v1/mmr/{region}/{username_lst[0]}/{username_lst[1]}"
+        res = requests.get(url).json()
+
+        if res["status"] == "200":
+            rank: str = res["data"]["currenttierpatched"]
+            rank_lower = rank.replace(" ", "").lower()
+
+            embed = discord.Embed(
+                description=f"**{res['data']['name']}**#{res['data']['tag']}",
+                colour=discord.Colour.from_rgb(255, 70, 84),
+            )
+
+            file = discord.File(f"assets/ranks/{rank_lower}.png", filename=f"{rank_lower}.png")
+
+            embed.set_thumbnail(url=f"attachment://{rank_lower}.png")
+            embed.set_footer(text=f"Requested by: {ctx.author}", icon_url=ctx.author.avatar_url)
+            embed.add_field(name="Rank", value=res["data"]["currenttierpatched"])
+            embed.add_field(name="Elo", value=res["data"]["elo"])
+
+            await ctx.send(embed=embed, file=file)
+        else:
+            await ctx.send(res["message"])
+
+    @commands.command(aliases=["vlrleaderboard", "vlrlb"])
+    async def vlr_leaderboard(self, ctx: commands.Context, region: str = "ap"):
+        await ctx.send("Fetching Valorant leaderboard...", delete_after=0)
+
+        url = f"https://api.henrikdev.xyz/valorant/v1/leaderboard/{region}"
+        res: List[dict] = requests.get(url).json()
+        top_10_lst = res[:10]
+
+        embed = discord.Embed(
+            title=f"Valorant {region.upper()} Top 10",
+            colour=discord.Colour.from_rgb(255, 70, 84),
+        )
+
+        file = discord.File("assets/vlrlogo.png", filename="vlrlogo.png")
+
+        embed.set_thumbnail(url="attachment://vlrlogo.png")
+        embed.set_footer(text=f"Requested by: {ctx.author}", icon_url=ctx.author.avatar_url)
+
+        for player in top_10_lst:
+            player_name: str = ""
+            player_tag: str = ""
+
+            if player["gameName"] != "":
+                player_name = player["gameName"]
+                player_tag = "#" + player["tagLine"]
+            else:
+                player_name = "**-Anon-**"
+
+            embed.add_field(
+                name=f"{player['leaderboardRank']}",
+                value=f"**{player_name}**{player_tag}",
+            )
+
+        await ctx.send(embed=embed, file=file)
+
+    # @corona.error
+    # async def on_corona_error(self, ctx: commands.Context, error: commands.CommandError) -> None:
+    #     if isinstance(error, (commands.MissingRequiredArgument, commands.UserInputError)):
+    #         responses = [
+    #             "Corona cowcow?",
+    #             "Adhi ada neevene ey.",
+    #             "Thankeda baaraa benafele.",
+    #             "Corona wot?",
+    #             "Thehen ekani benagen keraah vee kamah aju ah egei?",
+    #         ]
+    #         await ctx.send(random.choice(responses))
 
 
 def setup(bot) -> None:

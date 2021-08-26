@@ -1,7 +1,6 @@
 import random
 
 import discord
-from discord.abc import _Undefined
 from discord.ext import commands
 
 
@@ -12,8 +11,8 @@ class AdminCommands(commands.Cog):
 
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
-        self.inv_author = _Undefined
-        self.inv_ch = _Undefined
+        self.inv_author: discord.User
+        self.inv_ch: discord.TextChannel
 
     @commands.command(aliases=["clear"])
     @commands.has_permissions(manage_messages=True)
@@ -38,19 +37,19 @@ class AdminCommands(commands.Cog):
                 )
 
             embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
-            audit_ch = self.bot.get_channel(result["ch_id_audit"])
+            audit_ch: discord.TextChannel = self.bot.get_channel(result["ch_id_audit"])
             await audit_ch.send(embed=embed)
 
-    @cls.error
-    async def on_cls_error(self, ctx, error) -> None:
-        if isinstance(error, (commands.MissingPermissions, commands.MissingAnyRole)):
-            responses = [
-                "Adhi the command beynun vey varah ekalo bondo nivei.",
-                "Hoho kanthethi.",
-                "Nononono.",
-                "U cannot la.",
-            ]
-            await ctx.send(random.choice(responses))
+    # @cls.error
+    # async def on_cls_error(self, ctx, error) -> None:
+    #     if isinstance(error, (commands.MissingPermissions, commands.MissingAnyRole)):
+    #         responses = [
+    #             "Adhi the command beynun vey varah ekalo bondo nivei.",
+    #             "Hoho kanthethi.",
+    #             "Nononono.",
+    #             "U cannot la.",
+    #         ]
+    #         await ctx.send(random.choice(responses))
 
     @commands.command()
     @commands.has_guild_permissions(kick_members=True)
@@ -69,7 +68,7 @@ class AdminCommands(commands.Cog):
                 colour=discord.Colour(0xE9ACFD),
             )
             embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
-            audit_ch = self.bot.get_channel(result["ch_id_audit"])
+            audit_ch: discord.TextChannel = self.bot.get_channel(result["ch_id_audit"])
             await audit_ch.send(embed=embed)
 
     @commands.command(aliases=["reqinv"])
@@ -83,7 +82,7 @@ class AdminCommands(commands.Cog):
             await ctx.send("Please set admin channel first. Use `.set` for more info.")
         else:
             await ctx.channel.send("Requesting invite link from admins...")
-            admin_ch = self.bot.get_channel(result["ch_id_admin"])
+            admin_ch: discord.TextChannel = self.bot.get_channel(result["ch_id_admin"])
             await admin_ch.send(
                 f"{self.inv_author.mention} is requesting an invite link for {ctx.channel.mention}. Use `.confirm` or `.deny`"
             )
@@ -92,7 +91,7 @@ class AdminCommands(commands.Cog):
     @commands.has_guild_permissions(manage_guild=True)
     async def confirm(self, ctx: commands.Context) -> None:
         link = await ctx.channel.create_invite(max_age=86400, max_uses=2)
-        dm = self.bot.get_user(self.inv_author.id)
+        dm: discord.User = self.bot.get_user(self.inv_author.id)
 
         await self.auth_ch.send(
             f"Invite link requested by {self.inv_author.mention} was **confirmed**. Pls check your dms for the link."
@@ -110,7 +109,7 @@ class AdminCommands(commands.Cog):
                 colour=discord.Colour(0xE9ACFD),
             )
             embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
-            audit_ch = self.bot.get_channel(result["ch_id_audit"])
+            audit_ch: discord.TextChannel = self.bot.get_channel(result["ch_id_audit"])
             await audit_ch.send(embed=embed)
 
     @commands.command()
@@ -129,7 +128,7 @@ class AdminCommands(commands.Cog):
                 colour=discord.Colour(0xE9ACFD),
             )
             embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
-            audit_ch = self.bot.get_channel(result["ch_id_audit"])
+            audit_ch: discord.TextChannel = self.bot.get_channel(result["ch_id_audit"])
             await audit_ch.send(embed=embed)
 
 

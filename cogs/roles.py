@@ -17,7 +17,7 @@ class Roles(commands.Cog):
 
         if message_id == result["msg_id_reaction"]:
             guild_id = payload.guild_id
-            guild = discord.utils.find(lambda f: f.id == guild_id, self.bot.guilds)
+            guild: discord.Guild = discord.utils.find(lambda f: f.id == guild_id, self.bot.guilds)
             role = discord.utils.get(iterable=guild.roles, name=payload.emoji.name)
 
             if role is not None:
@@ -37,7 +37,7 @@ class Roles(commands.Cog):
 
         if message_id == result["msg_id_reaction"]:
             guild_id = payload.guild_id
-            guild = discord.utils.find(lambda bruh: bruh.id == guild_id, self.bot.guilds)
+            guild: discord.Guild = discord.utils.find(lambda bruh: bruh.id == guild_id, self.bot.guilds)
             role = discord.utils.get(iterable=guild.roles, name=payload.emoji.name)
 
             if role is not None:

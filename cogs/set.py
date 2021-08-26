@@ -65,7 +65,7 @@ class Set(commands.Cog):
                 if result_1 is None:
                     return
                 else:
-                    audit_ch = self.bot.get_channel(result_1["ch_id_audit"])
+                    audit_ch: discord.TextChannel = self.bot.get_channel(result_1["ch_id_audit"])
                     embed = discord.Embed(
                         description="set the message for role reactions",
                         colour=discord.Colour(0xE9ACFD),
@@ -112,7 +112,7 @@ class Set(commands.Cog):
             if result_1 is None:
                 return
             else:
-                audit_ch = self.bot.get_channel(result_1["ch_id_audit"])
+                audit_ch: discord.TextChannel = self.bot.get_channel(result_1["ch_id_audit"])
                 embed = discord.Embed(
                     description=f'set welcome text for new users to **"{welc_text}"**',
                     colour=discord.Colour(0xE9ACFD),
@@ -163,7 +163,7 @@ class Set(commands.Cog):
             if result_1 is None:
                 return
             else:
-                audit_ch = self.bot.get_channel(result_1["ch_id_audit"])
+                audit_ch: discord.TextChannel = self.bot.get_channel(result_1["ch_id_audit"])
                 embed = discord.Embed(
                     description=f'set welcome text for bots to **"{welc_text}"**',
                     colour=discord.Colour(0xE9ACFD),
@@ -210,7 +210,7 @@ class Set(commands.Cog):
             if result_1 is None:
                 return
             else:
-                audit_ch = self.bot.get_channel(result_1["ch_id_audit"])
+                audit_ch: discord.TextChannel = self.bot.get_channel(result_1["ch_id_audit"])
                 embed = discord.Embed(
                     description=f"set welcome channel to {welc_ch.mention}",
                     colour=discord.Colour(0xE9ACFD),
@@ -289,7 +289,7 @@ class Set(commands.Cog):
             if result_1 is None:
                 return
             else:
-                audit_ch = self.bot.get_channel(result_1["ch_id_audit"])
+                audit_ch: discord.TextChannel = self.bot.get_channel(result_1["ch_id_audit"])
                 embed = discord.Embed(
                     description=f"set admin channel to {admin_ch.mention}",
                     colour=discord.Colour(0xE9ACFD),
@@ -332,7 +332,7 @@ class Set(commands.Cog):
             if result_1 is None:
                 return
             else:
-                audit_ch = self.bot.get_channel(result_1["ch_id_audit"])
+                audit_ch: discord.TextChannel = self.bot.get_channel(result_1["ch_id_audit"])
                 embed = discord.Embed(
                     description=f"set general channel to {general_ch.mention}",
                     colour=discord.Colour(0xE9ACFD),
@@ -375,7 +375,7 @@ class Set(commands.Cog):
             if result_1 is None:
                 return
             else:
-                audit_ch = self.bot.get_channel(result_1["ch_id_audit"])
+                audit_ch: discord.TextChannel = self.bot.get_channel(result_1["ch_id_audit"])
                 embed = discord.Embed(
                     description=f"set default role to: {str(default_role)}",
                     colour=discord.Colour(0xE9ACFD),
@@ -418,7 +418,7 @@ class Set(commands.Cog):
             if result_1 is None:
                 return
             else:
-                audit_ch = self.bot.get_channel(result_1["ch_id_audit"])
+                audit_ch: discord.TextChannel = self.bot.get_channel(result_1["ch_id_audit"])
                 embed = discord.Embed(
                     description=f"set default role for bots to: {str(bot_role)}",
                     colour=discord.Colour(0xE9ACFD),

@@ -21,11 +21,11 @@ async def on_ready() -> None:
     await bot.change_presence(status=discord.Status.online, activity=discord.Game("use .help for help"))
     try:
         mongo = MongoClient(os.environ["AJU_MONGO_URI"])
+        bot.db = mongo["aju_bot_db"]
+        bot.config = bot.db["guild_config"]
     except Exception as e:
         mongo = None
         print(f"Error connecting to MongoDB: {e}")
-    bot.db = mongo["aju_bot_db"]
-    bot.config = bot.db["guild_config"]
     print("Aju is ready.")
 
 
@@ -50,11 +50,11 @@ async def ignore() -> None:
         pass
 
 
-@bot.event
-async def on_command_error(ctx, error) -> None:
-    if isinstance(error, commands.CommandNotFound):
-        responses = ["They aju ah niegey command ah.", "Aju ah egey ehthakaau keyfele."]
-        await ctx.send(random.choice(responses))
+# @bot.event
+# async def on_command_error(ctx, error) -> None:
+#     if isinstance(error, commands.CommandNotFound):
+#         responses = ["They aju ah niegey command ah.", "Aju ah egey ehthakaau keyfele."]
+#         await ctx.send(random.choice(responses))
 
 
 cogs: list[str] = [
