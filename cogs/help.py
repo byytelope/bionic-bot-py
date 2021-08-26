@@ -31,6 +31,16 @@ class HelpCommands(commands.Cog):
             value="HLTV rankings for all time best CS:GO players.",
             inline=False,
         )
+        embed.add_field(
+            name="vlrrank",
+            value="Get your Valorant rank and elo.",
+            inline=False,
+        )
+        embed.add_field(
+            name="vlrlb",
+            value="Get top 10 in Valorant regional leaderboard.",
+            inline=False,
+        )
         embed.add_field(name="reqinv", value="Request an invite link.", inline=False)
         embed.add_field(name="avatar", value="Get a user's avatar.", inline=False)
         embed.add_field(name="img", value="Search Google for images.", inline=False)
@@ -157,6 +167,26 @@ class HelpCommands(commands.Cog):
             colour=Colour.blurple(),
             title="Clear the bs",
             description="Use `.cls` or `.clear` followed by a number to clear texts. If not specified, 2 texts will be cleared.",
+        )
+        embed.set_footer(text=f"Help requested by: {ctx.author}", icon_url=ctx.author.avatar_url)
+        await ctx.send(embed=embed)
+
+    @help.command(aliases=["vlrrank", "vlr_rank"])
+    async def help_vlr_rank(self, ctx: commands.Context) -> None:
+        embed = Embed(
+            colour=Colour.blurple(),
+            title="Get Valorant rank and elo",
+            description="Use `.vlrrank` followed by `username#tag` and `eu` (Europe), `na` (US, LATAM, BR), `kr` (Korea) or `ap` (Asia Pacific) for region.",
+        )
+        embed.set_footer(text=f"Help requested by: {ctx.author}", icon_url=ctx.author.avatar_url)
+        await ctx.send(embed=embed)
+
+    @help.command(aliases=["vlrlb", "vlr_lb"])
+    async def help_vlr_lb(self, ctx: commands.Context) -> None:
+        embed = Embed(
+            colour=Colour.blurple(),
+            title="Get top 10 players in Valorant leaderboard",
+            description="Use `.vlrlb` followed by `eu` (Europe), `na` (US, LATAM, BR), `kr` (Korea) or `ap` (Asia Pacific) for region.",
         )
         embed.set_footer(text=f"Help requested by: {ctx.author}", icon_url=ctx.author.avatar_url)
         await ctx.send(embed=embed)

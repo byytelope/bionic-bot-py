@@ -102,20 +102,20 @@ class Funny(commands.Cog):
         ]
         await ctx.send(f"{random.choice(responses)}")
 
-    # @aju_bot.error
-    # async def on_aju_bot_error(self, ctx: commands.Context, error: commands.errors) -> None:
-    #     if isinstance(error, commands.MissingRequiredArgument):
-    #         responses = [
-    #             "Wot?",
-    #             "Eyn?",
-    #             "O?",
-    #             "Oo?",
-    #             "Sup?",
-    #             "Hm????",
-    #             "P L E A S E  C O M P L E T E  T H E  S E N T E N C E .",
-    #             "Aju kiyan koh dhey vee?",
-    #         ]
-    #         await ctx.send(random.choice(responses))
+    @aju_bot.error
+    async def on_aju_bot_error(self, ctx: commands.Context, error: commands.errors) -> None:
+        if isinstance(error, commands.MissingRequiredArgument):
+            responses = [
+                "Wot?",
+                "Eyn?",
+                "O?",
+                "Oo?",
+                "Sup?",
+                "Hm????",
+                "P L E A S E  C O M P L E T E  T H E  S E N T E N C E .",
+                "Aju kiyan koh dhey vee?",
+            ]
+            await ctx.send(random.choice(responses))
 
 
 def setup(bot) -> None:

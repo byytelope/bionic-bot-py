@@ -40,16 +40,16 @@ class AdminCommands(commands.Cog):
             audit_ch: discord.TextChannel = self.bot.get_channel(result["ch_id_audit"])
             await audit_ch.send(embed=embed)
 
-    # @cls.error
-    # async def on_cls_error(self, ctx, error) -> None:
-    #     if isinstance(error, (commands.MissingPermissions, commands.MissingAnyRole)):
-    #         responses = [
-    #             "Adhi the command beynun vey varah ekalo bondo nivei.",
-    #             "Hoho kanthethi.",
-    #             "Nononono.",
-    #             "U cannot la.",
-    #         ]
-    #         await ctx.send(random.choice(responses))
+    @cls.error
+    async def on_cls_error(self, ctx, error) -> None:
+        if isinstance(error, (commands.MissingPermissions, commands.MissingAnyRole)):
+            responses = [
+                "Adhi the command beynun vey varah ekalo bondo nivei.",
+                "Hoho kanthethi.",
+                "Nononono.",
+                "U cannot la.",
+            ]
+            await ctx.send(random.choice(responses))
 
     @commands.command()
     @commands.has_guild_permissions(kick_members=True)

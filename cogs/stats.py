@@ -61,6 +61,18 @@ class Stats(commands.Cog):
                 stmt = f"{result:,d} hei meehun."
         await ctx.send(stmt)
 
+    @corona.error
+    async def on_corona_error(self, ctx: commands.Context, error: commands.CommandError) -> None:
+        if isinstance(error, (commands.MissingRequiredArgument, commands.UserInputError)):
+            responses = [
+                "Corona cowcow?",
+                "Adhi ada neevene ey.",
+                "Thankeda baaraa benafele.",
+                "Corona wot?",
+                "Thehen ekani benagen keraah vee kamah aju ah egei?",
+            ]
+            await ctx.send(random.choice(responses))
+
     @commands.command(name="vlrrank")
     async def vlr_rank(self, ctx: commands.Context, username: str, region: str) -> None:
         await ctx.send("Fetching your Valorant MMR...", delete_after=0)
@@ -72,10 +84,28 @@ class Stats(commands.Cog):
         if res["status"] == "200":
             rank: str = res["data"]["currenttierpatched"]
             rank_lower = rank.replace(" ", "").lower()
+            embed_color = discord.Colour.from_rgb(255, 70, 84)
+
+            if "iron" in rank_lower:
+                embed_color = discord.Colour.from_rgb(86, 88, 86)
+            elif "bronze" in rank_lower:
+                embed_color = discord.Colour.from_rgb(130, 93, 29)
+            elif "silver" in rank_lower:
+                embed_color = discord.Colour.from_rgb(200, 206, 206)
+            elif "gold" in rank_lower:
+                embed_color = discord.Colour.from_rgb(228, 199, 98)
+            elif "platinum" in rank_lower:
+                embed_color = discord.Colour.from_rgb(119, 208, 220)
+            elif "diamond" in rank_lower:
+                embed_color = discord.Colour.from_rgb(226, 154, 237)
+            elif "immortal" in rank_lower:
+                embed_color = discord.Colour.from_rgb(161, 51, 61)
+            elif "radiant" in rank_lower:
+                embed_color = discord.Colour.from_rgb(245, 245, 230)
 
             embed = discord.Embed(
                 description=f"**{res['data']['name']}**#{res['data']['tag']}",
-                colour=discord.Colour.from_rgb(255, 70, 84),
+                colour=embed_color,
             )
 
             file = discord.File(f"assets/ranks/{rank_lower}.png", filename=f"{rank_lower}.png")
@@ -88,6 +118,11 @@ class Stats(commands.Cog):
             await ctx.send(embed=embed, file=file)
         else:
             await ctx.send(res["message"])
+
+    @vlr_rank.error
+    async def on_vlr_rank_error(self, ctx: commands.Context, error: commands.CommandError) -> None:
+        if isinstance(error, (commands.MissingRequiredArgument, commands.UserInputError)):
+            await ctx.send("Provide a valid user with # tag and the region.")
 
     @commands.command(aliases=["vlrleaderboard", "vlrlb"])
     async def vlr_leaderboard(self, ctx: commands.Context, region: str = "ap"):
@@ -123,18 +158,6 @@ class Stats(commands.Cog):
             )
 
         await ctx.send(embed=embed, file=file)
-
-    # @corona.error
-    # async def on_corona_error(self, ctx: commands.Context, error: commands.CommandError) -> None:
-    #     if isinstance(error, (commands.MissingRequiredArgument, commands.UserInputError)):
-    #         responses = [
-    #             "Corona cowcow?",
-    #             "Adhi ada neevene ey.",
-    #             "Thankeda baaraa benafele.",
-    #             "Corona wot?",
-    #             "Thehen ekani benagen keraah vee kamah aju ah egei?",
-    #         ]
-    #         await ctx.send(random.choice(responses))
 
 
 def setup(bot) -> None:
