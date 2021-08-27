@@ -131,6 +131,8 @@ class Stats(commands.Cog):
         url = f"https://api.henrikdev.xyz/valorant/v1/leaderboard/{region}"
         res: List[dict] = requests.get(url).json()
         top_10_lst = res[:10]
+        top_10_str = ""
+        ranks = ""
 
         embed = discord.Embed(
             title=f"Valorant {region.upper()} Top 10",
@@ -142,20 +144,19 @@ class Stats(commands.Cog):
         embed.set_thumbnail(url="attachment://vlrlogo.png")
         embed.set_footer(text=f"Requested by: {ctx.author}", icon_url=ctx.author.avatar_url)
 
-        for player in top_10_lst:
+        for i, player in enumerate(top_10_lst):
             player_name: str = ""
-            player_tag: str = ""
 
             if player["gameName"] != "":
-                player_name = player["gameName"]
-                player_tag = "#" + player["tagLine"]
+                player_name = f"**{player['gameName']}**" + "#" + player["tagLine"]
             else:
                 player_name = "**-Anon-**"
 
-            embed.add_field(
-                name=f"{player['leaderboardRank']}",
-                value=f"**{player_name}**{player_tag}",
-            )
+            top_10_str += player_name + "\n\n"
+            ranks += str(i+1) + "\n\n"
+
+        embed.add_field(name="Rank", value=ranks)
+        embed.add_field(name="Player", value=top_10_str)
 
         await ctx.send(embed=embed, file=file)
 
