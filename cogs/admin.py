@@ -18,7 +18,7 @@ class AdminCommands(commands.Cog):
     @commands.has_permissions(manage_messages=True)
     async def cls(self, ctx: commands.Context, amount: int = 2) -> None:
         await ctx.channel.purge(limit=amount + 1)
-        await ctx.channel.send(f"Aju `{amount}` message delete kollin.")
+        await ctx.channel.send(f"`{amount}` message delete kollin.")
 
         result = self.bot.config.find_one({"guild_id": ctx.guild.id, "ch_id_audit": {"$exists": True}})
 

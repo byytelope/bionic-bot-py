@@ -13,16 +13,16 @@ class HelpCommands(commands.Cog):
     @commands.group(invoke_without_command=True)
     async def help(self, ctx: commands.Context) -> None:
         embed = Embed(
-            title="Hello Am Aju",
+            title="Hello Am BionicBot",
             description="Use `.help` and a command from below for more info.",
             colour=Colour(0xE9ACFD),
         )
-        embed.add_field(name="aju", value="Talk to Aju when you're bored.", inline=False)
-        embed.add_field(name="say", value="MaKe ajU say AnYThinG.", inline=False)
+        embed.add_field(name="hello", value="Talk to me when you're bored.", inline=False)
+        embed.add_field(name="say", value="MaKe mE say AnYThinG.", inline=False)
         embed.add_field(name="covid/corona", value="Get realtime corona stats.", inline=False)
         embed.add_field(
             name="members",
-            value="Aju counts the number of members in your server.",
+            value="I count the number of members in your server.",
             inline=False,
         )
         embed.add_field(name="spam", value="Don't.", inline=False)
@@ -59,12 +59,12 @@ class HelpCommands(commands.Cog):
 
         await ctx.send(embed=embed)
 
-    @help.command(aliases=["aju"])
-    async def help_aju(self, ctx: commands.Context) -> None:
+    @help.command(aliases=["hello"])
+    async def help_hello(self, ctx: commands.Context) -> None:
         embed = Embed(
             colour=Colour(0xE9ACFD),
-            title="Talk to Aju",
-            description="Use `.aju` and say anything.",
+            title="Talk to me",
+            description="Use `.hello` and say anything.",
         )
         embed.set_footer(text=f"Help requested by: {ctx.author}", icon_url=ctx.author.avatar_url)
         await ctx.send(embed=embed)
@@ -74,7 +74,7 @@ class HelpCommands(commands.Cog):
         embed = Embed(
             colour=Colour(0xE9ACFD),
             title="@eCho On",
-            description="Use `.say` and Aju will RePEaT aNYTHINg AFtEr the coMmAnd.",
+            description="Use `.say` and I will RePEaT aNYTHINg AFtEr the coMmAnd.",
         )
         embed.set_footer(text=f"Help requested by: {ctx.author}", icon_url=ctx.author.avatar_url)
         await ctx.send(embed=embed)
@@ -126,7 +126,7 @@ class HelpCommands(commands.Cog):
         embed = Embed(
             colour=Colour(0xE9ACFD),
             title="Request an invite link from the admins.",
-            description="`.reqinv` will send a request for an invite link to the admin channel of the guild. Only works if admin channel is setup in Aju.",
+            description="`.reqinv` will send a request for an invite link to the admin channel of the guild. Only works if admin channel is setup.",
         )
         embed.set_footer(text=f"Help requested by: {ctx.author}", icon_url=ctx.author.avatar_url)
         await ctx.send(embed=embed)

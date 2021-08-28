@@ -17,7 +17,7 @@ class ImageDownloader(commands.Cog):
 
     @commands.command(aliases=["image"])
     async def img(self, ctx: commands.Context, *, query: str) -> None:
-        await ctx.send("Aju photo ah hoadhaathaan...")
+        await ctx.send("Photo ah hoadhaathaan...")
 
         out_dir = Path("img_cache")
         src_path = Path("img_cache/*")
@@ -65,7 +65,7 @@ class ImageDownloader(commands.Cog):
 
     # @commands.command()
     # async def gif(self, ctx: commands.Context, *, query: str) -> None:
-    #     await ctx.send("Aju gif ah hoadhaathaan...")
+    #     await ctx.send("Gif ah hoadhaathaan...")
 
     #     out_dir = Path("img_cache")
     #     src_path = Path("img_cache/*")

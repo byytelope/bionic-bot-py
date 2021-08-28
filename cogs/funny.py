@@ -82,10 +82,10 @@ class Funny(commands.Cog):
                     await ctx.send(embed=embed)
                     break
             else:
-                await ctx.send("Aju ah themeehaa nifenene.")
+                await ctx.send("Makah themeehaa nifenene.")
 
-    @commands.command(aliases=["aju"])
-    async def aju_bot(self, ctx: commands.Context) -> None:
+    @commands.command(aliases=["hello"])
+    async def hello_bot(self, ctx: commands.Context) -> None:
         responses = [
             "I don't have an attitude I've got coronavirus and u can't handle it.",
             "I'm fine.",
@@ -94,7 +94,7 @@ class Funny(commands.Cog):
             "If you are not coffee, chocolate, or coronavirus, I'm gonna need u to go away.",
             "I hate running. You know what I love though? Coronavirus.",
             "That's it! I'm calling China.",
-            "They aju dhenne meehakee?",
+            "They ma dhenne meehakee?",
             "Achoo. U are now corona-aladeen.",
             "Heil Kim Jong-Un.",
             "Hanagen aase.",
@@ -102,8 +102,8 @@ class Funny(commands.Cog):
         ]
         await ctx.send(f"{random.choice(responses)}")
 
-    @aju_bot.error
-    async def on_aju_bot_error(self, ctx: commands.Context, error: commands.errors) -> None:
+    @hello_bot.error
+    async def on_hello_bot_error(self, ctx: commands.Context, error: commands.errors) -> None:
         if isinstance(error, commands.MissingRequiredArgument):
             responses = [
                 "Wot?",
@@ -113,7 +113,7 @@ class Funny(commands.Cog):
                 "Sup?",
                 "Hm????",
                 "P L E A S E  C O M P L E T E  T H E  S E N T E N C E .",
-                "Aju kiyan koh dhey vee?",
+                "Kiyan koh dhey vee?",
             ]
             await ctx.send(random.choice(responses))
 

@@ -16,14 +16,14 @@ class Stats(commands.Cog):
 
     @commands.command()
     async def ping(self, ctx: commands.Context) -> None:
-        await ctx.send(f"{round(self.bot.latency * 1000)}ms in thiyaa aju ah libenei.")
+        await ctx.send(f"{round(self.bot.latency * 1000)}ms in thiyaa libenei.")
 
     @commands.command()
     async def members(self, ctx: commands.Context) -> None:
         await ctx.send(f"There are `{ctx.guild.member_count}` **hopefully** corona-free people in {ctx.guild}.")
 
     @commands.command(name="csgo")
-    async def aju_csgo(self, ctx: commands.Context, num: int) -> None:
+    async def csgo(self, ctx: commands.Context, num: int) -> None:
         await ctx.send(web_scrape(num - 1))
 
     @commands.command(aliases=["covid"])
@@ -52,7 +52,7 @@ class Stats(commands.Cog):
             else:
                 result = covid.get_status_by_country_name(country_name[0])[args.lower()]
         if not result:
-            stmts = ["Aju ah the gaumu nifenene.", "Adhi niegene.", "They konthaan?", "Hadhaganfe thehen key gaumah."]
+            stmts = ["The gaumu nifenene.", "Adhi niegene.", "They konthaan?", "Hadhaganfe thehen key gaumah."]
             stmt = random.choice(stmts)
         else:
             if result <= 10:
@@ -69,7 +69,7 @@ class Stats(commands.Cog):
                 "Adhi ada neevene ey.",
                 "Thankeda baaraa benafele.",
                 "Corona wot?",
-                "Thehen ekani benagen keraah vee kamah aju ah egei?",
+                "Thehen ekani benagen keraah vee kamah mah egei?",
             ]
             await ctx.send(random.choice(responses))
 

@@ -1,1 +1,1 @@
-worker: python aju_bot.py
+worker: python bionic_bot.py
