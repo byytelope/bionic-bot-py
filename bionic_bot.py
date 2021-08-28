@@ -50,11 +50,11 @@ async def ignore() -> None:
         pass
 
 
-# @bot.event
-# async def on_command_error(ctx, error) -> None:
-#     if isinstance(error, commands.CommandNotFound):
-#         responses = ["They mah ah niegey command ah.", "Mah egey ehthakaau keyfele."]
-#         await ctx.send(random.choice(responses))
+@bot.event
+async def on_command_error(ctx, error) -> None:
+    if isinstance(error, commands.CommandNotFound):
+        responses = ["They mah ah niegey command ah.", "Mah egey ehthakaau keyfele."]
+        await ctx.send(random.choice(responses))
 
 
 cogs: list[str] = [
@@ -62,7 +62,6 @@ cogs: list[str] = [
     "cogs.funny",
     "cogs.help",
     "cogs.image_downloader",
-    "cogs.music",
     "cogs.roles",
     "cogs.set",
     "cogs.stats",
