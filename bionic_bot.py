@@ -15,19 +15,19 @@ intents.members = True
 bot = commands.Bot(command_prefix=commands.when_mentioned_or("."), intents=intents, owner_id=367686193242177536)
 bot.remove_command("help")
 
-
 @bot.event
 async def on_ready() -> None:
     await bot.change_presence(status=discord.Status.online, activity=discord.Game("use .help for help"))
+
     try:
         mongo = MongoClient(os.environ["BIONIC_MONGO_URI"])
-        bot.db = mongo["bionic_bot_db"]
-        bot.config = bot.db["guild_config"]
+        bot.db = mongo["bionic_bot_db"] # type: ignore
+        bot.config = bot.db["guild_config"] # type: ignore
     except Exception as e:
         mongo = None
         print(f"Error connecting to MongoDB: {e}")
-    print("Bot is ready.")
 
+    print("Bot is ready.")
 
 @bot.command(
     aliases=[
