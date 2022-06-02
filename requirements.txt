@@ -1,0 +1,4 @@
+git+https://github.com/Rapptz/discord.py.git
+python-dotenv==0.20.0
+requests==2.26.0
+requests_cache==0.9.4
