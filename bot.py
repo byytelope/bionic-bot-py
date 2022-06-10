@@ -56,7 +56,7 @@ async def main() -> None:
             print(f"Failed to load cog: {ext}")
 
     try:
-        await bot.start(str(os.getenv("TEST_BOT_TOKEN")))
+        await bot.start(str(os.getenv("BOT_TOKEN")))
     except KeyboardInterrupt:
         await bot.close()
         print("Bot offline.")
