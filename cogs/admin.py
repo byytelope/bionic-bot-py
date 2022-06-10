@@ -1,18 +1,26 @@
+import sys
+import os
+
 import discord
 from discord import app_commands
 from discord.ext import commands
+
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from bot import BionicBot
+
 
 # MY_GUILD = discord.Object(id=835682783338561549)
 MY_GUILD = discord.Object(id=585576337041784862)
 
 
 class Admin(commands.Cog):
-    def __init__(self, bot: commands.Bot) -> None:
+    def __init__(self, bot: BionicBot) -> None:
         self.bot = bot
 
     @commands.command()
     @commands.is_owner()
-    async def sync(self, ctx: commands.Context[commands.Bot]) -> None:
+    async def sync(self, ctx: commands.Context[BionicBot]) -> None:
         self.bot.tree.copy_global_to(guild=MY_GUILD)
         await self.bot.tree.sync(guild=MY_GUILD)
         await ctx.send("App commands successfully synced. ✅")
@@ -30,11 +38,11 @@ class Admin(commands.Cog):
         )
 
     @sync.error
-    async def sync_error(self, ctx: commands.Context[commands.Bot], error: commands.CommandError) -> None:
+    async def sync_error(self, ctx: commands.Context[BionicBot], error: commands.CommandError) -> None:
         if isinstance(error, commands.NotOwner):
             app_info = await self.bot.application_info()
             await ctx.send(f"Only {app_info.owner.mention} is allowed to use this command.")
 
 
-async def setup(bot: commands.Bot) -> None:
+async def setup(bot: BionicBot) -> None:
     await bot.add_cog(Admin(bot))

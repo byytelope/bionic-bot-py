@@ -3,6 +3,7 @@ import logging
 import os
 import pathlib
 
+import asyncpg
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv  # type: ignore
@@ -20,11 +21,30 @@ class BionicBot(commands.Bot):
     def __init__(self) -> None:
         super().__init__(command_prefix="$", intents=discord.Intents.all())
 
+    async def setup_hook(self) -> None:
+        _db = await asyncpg.create_pool(dsn=str(os.getenv("DATABASE_URL")))
+        assert _db != None, "Failed to connect to db."
+        self.db = _db
 
-bot = BionicBot()
+        await self.db.execute(
+            """
+            CREATE TABLE IF NOT EXISTS guilds
+            (
+                id bigint PRIMARY KEY,
+                ch_id_welcome bigint,
+                ch_id_logs bigint
+            );
+            """
+        )
+
+        print("Connected to db.")
+        print(f"\nLogged in as: {self.user}")
+        return await super().setup_hook()
 
 
 async def main() -> None:
+    bot = BionicBot()
+
     for file in pathlib.Path("cogs").glob("**/[!_]*.py"):
         cog_name = file.parts[1].removesuffix(".py")
         ext = ".".join(file.parts).removesuffix(".py")
@@ -36,10 +56,9 @@ async def main() -> None:
             print(f"Failed to load cog: {ext}")
 
     try:
-        await bot.start(token=str(os.getenv("BOT_TOKEN")))
+        await bot.start(str(os.getenv("TEST_BOT_TOKEN")))
     except KeyboardInterrupt:
         await bot.close()
-    finally:
         print("Bot offline.")
 
 

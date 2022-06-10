@@ -1,12 +1,18 @@
 import random
+import sys
+import os
 
 import discord
 from discord import app_commands
 from discord.ext import commands
 
 
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from bot import BionicBot
+
+
 class Commands(commands.Cog):
-    def __init__(self, bot: commands.Bot) -> None:
+    def __init__(self, bot: BionicBot) -> None:
         self.bot = bot
 
     @app_commands.command(description="Check latency")
@@ -37,5 +43,5 @@ class Commands(commands.Cog):
         await interaction.response.send_message(funnied)
 
 
-async def setup(bot: commands.Bot) -> None:
+async def setup(bot: BionicBot) -> None:
     await bot.add_cog(Commands(bot))

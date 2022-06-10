@@ -1,3 +1,5 @@
+import os
+import sys
 from typing import Union
 
 import discord
@@ -6,11 +8,14 @@ import requests_cache
 from discord import app_commands
 from discord.ext import commands
 
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from bot import BionicBot
+
 session = requests_cache.CachedSession("bot_cache")
 
 
 class Valorant(commands.Cog):
-    def __init__(self, bot: commands.Bot) -> None:
+    def __init__(self, bot: BionicBot) -> None:
         self.bot = bot
 
     @app_commands.command(description="Get your Valorant rank info")
@@ -47,11 +52,11 @@ class Valorant(commands.Cog):
             tiers_json = tiers_res.json()
             tiers_data: list[dict[str, Union[str, int, None]]] = tiers_json["data"][-1]["tiers"]
             current_tier_data: dict[str, Union[str, int, None]] = {}
+            rank_name: str = mmr_data["currenttierpatched"] if mmr_data["currenttierpatched"] != None else "UNRANKED"
+            rank_progress = mmr_data["ranking_in_tier"] if mmr_data["ranking_in_tier"] != None else "??"
 
             for tier in tiers_data:
-                current_tier_name: str = mmr_data["currenttierpatched"]
-
-                if tier["tierName"] == current_tier_name.upper():
+                if tier["tierName"] == rank_name.upper():
                     current_tier_data = tier
 
             color = str(current_tier_data["color"])
@@ -61,19 +66,18 @@ class Valorant(commands.Cog):
                 discord.Embed(colour=discord.Colour.from_str(color))
                 .set_author(
                     name=username,
-                    # icon_url="https://seeklogo.com/images/V/valorant-logo-3D72D9117F-seeklogo.com.png",
                     icon_url="attachment://vlr_logo.png",
                 )
                 .set_thumbnail(url=current_tier_data["largeIcon"])
                 .add_field(
                     inline=True,
                     name="Rank",
-                    value=mmr_data["currenttierpatched"],
+                    value=rank_name,
                 )
                 .add_field(
                     inline=True,
                     name="Progress",
-                    value=f"{mmr_data['ranking_in_tier']}/100",
+                    value=f"{rank_progress}/100",
                 )
                 .set_footer(
                     icon_url=interaction.user.display_avatar.url,
@@ -85,5 +89,5 @@ class Valorant(commands.Cog):
             await interaction.response.send_message(file=file, embed=embed)
 
 
-async def setup(bot: commands.Bot) -> None:
+async def setup(bot: BionicBot) -> None:
     await bot.add_cog(Valorant(bot))
