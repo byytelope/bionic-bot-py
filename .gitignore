@@ -138,3 +138,4 @@ img_cache/*
 *_old.py
 
 postgres_compat/
+.DS_Store
