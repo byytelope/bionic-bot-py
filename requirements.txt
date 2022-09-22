@@ -1,6 +1,6 @@
 discord-py
 python-dotenv
-"pymongo[srv]"
+pymongo [srv]
 requests
 requests_cache
 urllib3
