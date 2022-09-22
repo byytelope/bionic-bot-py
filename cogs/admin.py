@@ -10,10 +10,10 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from bot import BionicBot
 
 # TEST
-MY_GUILD = discord.Object(id=835682783338561549)
+# MY_GUILD = discord.Object(id=835682783338561549)
 
 # BIONIC
-# MY_GUILD = discord.Object(id=585576337041784862)
+MY_GUILD = discord.Object(id=585576337041784862)
 
 
 class Admin(commands.Cog):
