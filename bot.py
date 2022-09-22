@@ -2,9 +2,10 @@ import asyncio
 import logging
 import os
 import pathlib
+from typing import Any
 
-import asyncpg
 import discord
+import pymongo
 from discord.ext import commands
 from dotenv import load_dotenv  # type: ignore
 
@@ -13,7 +14,9 @@ load_dotenv()
 logger = logging.getLogger("discord")
 logger.setLevel(logging.DEBUG)
 handler = logging.FileHandler(filename="discord.log", encoding="utf-8", mode="w")
-handler.setFormatter(logging.Formatter("%(asctime)s:%(levelname)s:%(name)s: %(message)s"))
+handler.setFormatter(
+    logging.Formatter("%(asctime)s:%(levelname)s:%(name)s: %(message)s")
+)
 logger.addHandler(handler)
 
 
@@ -22,22 +25,29 @@ class BionicBot(commands.Bot):
         super().__init__(command_prefix="$", intents=discord.Intents.all())
 
     async def setup_hook(self) -> None:
-        _db = await asyncpg.create_pool(dsn=str(os.getenv("DATABASE_URL")))
-        assert _db != None, "Failed to connect to db."
-        self.db = _db
-
-        await self.db.execute(
-            """
-            CREATE TABLE IF NOT EXISTS guilds
-            (
-                id bigint PRIMARY KEY,
-                ch_id_welcome bigint,
-                ch_id_logs bigint
-            );
-            """
+        client = pymongo.MongoClient(
+            str(os.getenv("DB_URL")), document_class=dict[str, Any]
         )
 
-        print("Connected to db.")
+        try:
+            client.server_info()
+            print("Connected to MongoDB")
+        except Exception:
+            print("Couldn't connect to MongoDB")
+
+        self.db = client.bionic_bot_py
+
+        # await self.db.execute(
+        #     """
+        #     CREATE TABLE IF NOT EXISTS guilds
+        #     (
+        #         id bigint PRIMARY KEY,
+        #         ch_id_welcome bigint,
+        #         ch_id_logs bigint
+        #     );
+        #     """
+        # )
+
         print(f"\nLogged in as: {self.user}")
         return await super().setup_hook()
 
