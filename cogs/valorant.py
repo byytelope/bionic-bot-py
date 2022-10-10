@@ -33,27 +33,45 @@ class Valorant(commands.Cog):
             app_commands.Choice(name="North America", value="na"),
         ]
     )
-    async def vlrrank(self, interaction: discord.Interaction, username: str, region: str) -> None:
+    async def vlrrank(
+        self,
+        interaction: discord.Interaction,
+        username: str,
+        region: app_commands.Choice[str],
+    ) -> None:
+        print("lol")
         username_parts = username.split("#")
 
         mmr_res = requests.get(
-            f"https://api.henrikdev.xyz/valorant/v1/mmr/{region}/{username_parts[0]}/{username_parts[1]}"
+            f"https://api.henrikdev.xyz/valorant/v1/mmr/{region.value}/{username_parts[0]}/{username_parts[1]}"
         )
         mmr_json = mmr_res.json()
         status = mmr_json["status"]
 
         if status == 403:
-            await interaction.response.send_message("Riot server is down for maintenance. Try again.")
+            await interaction.response.send_message(
+                "Riot server is down for maintenance. Try again."
+            )
         elif status == 404:
             await interaction.response.send_message("Player not found.")
         else:
             mmr_data = mmr_json["data"]
             tiers_res = session.get("https://valorant-api.com/v1/competitivetiers")
             tiers_json = tiers_res.json()
-            tiers_data: list[dict[str, Union[str, int, None]]] = tiers_json["data"][-1]["tiers"]
+            tiers_data: list[dict[str, Union[str, int, None]]] = tiers_json["data"][-1][
+                "tiers"
+            ]
             current_tier_data: dict[str, Union[str, int, None]] = {}
-            rank_name: str = mmr_data["currenttierpatched"] if mmr_data["currenttierpatched"] != None else "UNRANKED"
-            rank_progress = mmr_data["ranking_in_tier"] if mmr_data["ranking_in_tier"] != None else "??"
+            rank_name: str = (
+                mmr_data["currenttierpatched"]
+                if mmr_data["currenttierpatched"] != None
+                else "UNRANKED"
+            )
+            rank_progress = (
+                mmr_data["ranking_in_tier"]
+                if mmr_data["ranking_in_tier"] != None
+                else "??"
+            )
 
             for tier in tiers_data:
                 if tier["tierName"] == rank_name.upper():

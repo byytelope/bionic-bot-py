@@ -59,7 +59,7 @@ class Admin(commands.Cog):
 
     @app_commands.command(description="Set default role")
     @app_commands.describe(
-        channel="Set role that is automatically assigned to new members"
+        role="Set role that is automatically assigned to new members"
     )
     async def set_default_role(
         self, interaction: discord.Interaction, role: discord.Role
