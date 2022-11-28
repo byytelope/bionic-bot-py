@@ -9,11 +9,7 @@ from discord.ext import commands
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from bot import BionicBot
 
-# TEST
-MY_GUILD = discord.Object(id=835682783338561549)
-
-# BIONIC
-# MY_GUILD = discord.Object(id=585576337041784862)
+GUILD_ID = discord.Object(str(os.getenv("GUILD_ID")))
 
 
 class Admin(commands.Cog):
@@ -23,8 +19,8 @@ class Admin(commands.Cog):
     @commands.command()
     @commands.is_owner()
     async def sync(self, ctx: commands.Context[BionicBot]) -> None:
-        self.bot.tree.copy_global_to(guild=MY_GUILD)
-        await self.bot.tree.sync(guild=MY_GUILD)
+        self.bot.tree.copy_global_to(guild=GUILD_ID)
+        await self.bot.tree.sync(guild=GUILD_ID)
         await ctx.send("App commands successfully synced. ✅")
 
     @app_commands.command(
