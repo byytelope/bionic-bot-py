@@ -17,6 +17,7 @@ session = requests_cache.CachedSession("bot_cache")
 class Valorant(commands.Cog):
     def __init__(self, bot: BionicBot) -> None:
         self.bot = bot
+        self.bot.tree.on_error = self.on_err
 
     @app_commands.command(description="Get your Valorant rank info")
     @app_commands.describe(
@@ -39,7 +40,6 @@ class Valorant(commands.Cog):
         username: str,
         region: app_commands.Choice[str],
     ) -> None:
-        print("lol")
         username_parts = username.split("#")
 
         mmr_res = requests.get(
@@ -105,6 +105,12 @@ class Valorant(commands.Cog):
             file = discord.File("assets/vlr_logo.png", filename="vlr_logo.png")
 
             await interaction.response.send_message(file=file, embed=embed)
+
+    @staticmethod
+    async def on_err(
+        interaction: discord.Interaction, error: app_commands.AppCommandError
+    ) -> None:
+        print(f"Error: {error}")
 
 
 async def setup(bot: BionicBot) -> None:

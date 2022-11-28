@@ -37,17 +37,6 @@ class BionicBot(commands.Bot):
 
         self.db = client.bionic_bot_py
 
-        # await self.db.execute(
-        #     """
-        #     CREATE TABLE IF NOT EXISTS guilds
-        #     (
-        #         id bigint PRIMARY KEY,
-        #         ch_id_welcome bigint,
-        #         ch_id_logs bigint
-        #     );
-        #     """
-        # )
-
         print(f"\nLogged in as: {self.user}")
         return await super().setup_hook()
 

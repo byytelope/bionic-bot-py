@@ -2,5 +2,5 @@ discord-py
 python-dotenv
 pymongo [srv]
 requests
-requests_cache
+requests-cache
 urllib3
